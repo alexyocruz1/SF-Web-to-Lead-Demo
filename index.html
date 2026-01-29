@@ -71,21 +71,15 @@
                     </div>
                     <div class="dmforminput small-12 medium-9 large-9">
                         <label for="country">País</label>
-                        <select id="country" name="country" title="País" required>
-                            <option value="">— Seleccione país —</option>
-                        </select>
-                    </div>
-                    <div class="dmforminput small-12 medium-6 large-6">
-                        <label for="state">Departamento</label>
-                        <select id="state" name="state" title="Departamento" required>
-                            <option value="">— Seleccione departamento —</option>
-                        </select>
+                        <input type="text" id="country" name="country" title="País" maxlength="40" size="20" required />
                     </div>
                     <div class="dmforminput small-12 medium-6 large-6">
                         <label for="city">Ciudad</label>
-                        <select id="city" name="city" title="Ciudad" required>
-                            <option value="">— Seleccione ciudad —</option>
-                        </select>
+                        <input type="text" id="city" name="city" title="Ciudad" maxlength="40" size="20" required />
+                    </div>
+                    <div class="dmforminput small-12 medium-6 large-6">
+                        <label for="state">Departamento</label>
+                        <input type="text" id="state" name="state" title="Departamento" maxlength="20" size="20" required />
                     </div>
                     <div class="dmforminput small-12">
                         <label for="00NOx00000g8O09">Categoría de Producto</label>
@@ -180,21 +174,15 @@
                     </div>
                     <div class="dmforminput small-12 medium-9 large-9">
                         <label for="cat_country">País</label>
-                        <select id="cat_country" name="country" title="País" required>
-                            <option value="">— Seleccione país —</option>
-                        </select>
-                    </div>
-                    <div class="dmforminput small-12 medium-6 large-6">
-                        <label for="cat_state">Departamento</label>
-                        <select id="cat_state" name="state" title="Departamento" required>
-                            <option value="">— Seleccione departamento —</option>
-                        </select>
+                        <input type="text" id="cat_country" name="country" title="País" maxlength="40" size="20" required />
                     </div>
                     <div class="dmforminput small-12 medium-6 large-6">
                         <label for="cat_city">Ciudad</label>
-                        <select id="cat_city" name="city" title="Ciudad" required>
-                            <option value="">— Seleccione ciudad —</option>
-                        </select>
+                        <input type="text" id="cat_city" name="city" title="Ciudad" maxlength="40" size="20" required />
+                    </div>
+                    <div class="dmforminput small-12 medium-6 large-6">
+                        <label for="cat_state">Departamento</label>
+                        <input type="text" id="cat_state" name="state" title="Departamento" maxlength="20" size="20" required />
                     </div>
                     <div class="dmforminput small-12">
                         <label for="cat_00NOx00000g8O09">Categoría de Producto</label>
@@ -239,7 +227,6 @@
         </div>
     </div>
 
-    <script type="module" src="cascading-location.js"></script>
     <script>
         function switchTab(tabName) {
             // Hide all tab contents
