@@ -116,8 +116,9 @@
                     <input type="hidden" name="status" id="status" value="Nuevo">
                     <!-- Fin de campos automaticos -->
 
-                    <div class="dmforminput small-12">
-                        <input type="submit" name="submit" />
+                    <div class="dmforminput small-12 form-actions">
+                        <p class="form-thanks" hidden role="status" aria-live="polite">Gracias, su mensaje ha sido enviado.</p>
+                        <input type="submit" name="submit" value="Enviar" />
                     </div>
                 </form>
             </div>
@@ -219,8 +220,9 @@
                     <input type="hidden" name="status" id="cat_status" value="Nuevo">
                     <!-- Fin de campos automaticos -->
 
-                    <div class="dmforminput small-12">
-                        <input type="submit" name="submit" />
+                    <div class="dmforminput small-12 form-actions">
+                        <p class="form-thanks" hidden role="status" aria-live="polite">Gracias, su mensaje ha sido enviado.</p>
+                        <input type="submit" name="submit" value="Enviar" />
                     </div>
                 </form>
             </div>
@@ -228,6 +230,38 @@
     </div>
 
     <script>
+        (function () {
+            function setupFormSubmit(form) {
+                if (!form) return;
+                form.addEventListener('submit', async function (e) {
+                    e.preventDefault();
+                    if (!form.checkValidity()) {
+                        form.reportValidity();
+                        return;
+                    }
+                    var thanks = form.querySelector('.form-thanks');
+                    var btn = form.querySelector('input[type="submit"]');
+                    if (thanks) thanks.hidden = true;
+                    var origLabel = btn ? btn.value : '';
+                    if (btn) { btn.disabled = true; btn.value = 'Enviando…'; }
+                    try {
+                        var fd = new FormData(form);
+                        var res = await fetch(form.action, { method: 'POST', body: fd });
+                        if (!res.ok) throw new Error('Submit failed');
+                        form.reset();
+                        if (thanks) thanks.hidden = false;
+                    } catch (err) {
+                        if (btn) { btn.disabled = false; btn.value = origLabel; }
+                        form.submit();
+                        return;
+                    }
+                    if (btn) { btn.disabled = false; btn.value = origLabel; }
+                });
+            }
+            setupFormSubmit(document.getElementById('form-comercial'));
+            setupFormSubmit(document.getElementById('form-cat'));
+        })();
+
         function switchTab(tabName) {
             // Hide all tab contents
             const contents = document.querySelectorAll(".tab-content");

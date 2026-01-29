@@ -225,8 +225,24 @@ body {
     width: 100%;
 }
 
+.form-container .dmforminput.form-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.form-container .form-thanks {
+    margin: 0;
+    padding: 10px 14px;
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
 .form-container .dmforminput input[type="submit"] {
-    margin-top: 24px;
+    margin-top: 0;
     padding: 12px 24px;
     font-size: 15px;
     cursor: pointer;
@@ -237,6 +253,11 @@ body {
     font-weight: 400;
 }
 
-.form-container .dmforminput input[type="submit"]:hover {
+.form-container .dmforminput input[type="submit"]:hover:not(:disabled) {
     background-color: rgb(65, 67, 69);
+}
+
+.form-container .dmforminput input[type="submit"]:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
 }
