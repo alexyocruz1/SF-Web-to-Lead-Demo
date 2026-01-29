@@ -78,3 +78,165 @@ body {
 .form-container {
     width: 100%;
 }
+
+/* dmforminput-style form layout */
+.form-container form {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -0.9375em;
+    margin-right: -0.9375em;
+    -webkit-font-smoothing: antialiased;
+}
+
+.form-container .dmforminput {
+    margin-top: 20px;
+    padding-left: 0.9375em;
+    padding-right: 0.9375em;
+    text-align: left;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.form-container .dmforminput label {
+    display: block;
+    font-size: 16px;
+    font-family: Poppins, "Poppins Fallback", sans-serif;
+    color: #000;
+    font-weight: 300;
+    margin-bottom: 4px;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.form-container .dmforminput input[type="text"],
+.form-container .dmforminput input[type="email"],
+.form-container .dmforminput input[type="tel"],
+.form-container .dmforminput textarea,
+.form-container .dmforminput select {
+    width: 100%;
+    max-width: 100%;
+    font-size: 16px;
+    font-family: Poppins, sans-serif;
+    color: #000;
+    padding: 8px 12px;
+    border: 1px solid #dee3ed;
+    border-radius: 4px;
+    background: #fff;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.form-container .dmforminput textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-container .dmforminput input[type="text"]:focus,
+.form-container .dmforminput input[type="email"]:focus,
+.form-container .dmforminput input[type="tel"]:focus,
+.form-container .dmforminput textarea:focus,
+.form-container .dmforminput select:focus {
+    outline: none;
+    border-color: #c2c9d6;
+}
+
+/* Column layout: full width by default */
+.form-container .dmforminput.small-12 {
+    flex: 0 0 100%;
+    width: 100%;
+}
+
+.form-container .dmforminput.small-4 {
+    flex: 0 0 33.333333%;
+    width: 33.333333%;
+}
+
+.form-container .dmforminput.medium-4 {
+    flex: 0 0 33.333333%;
+    width: 33.333333%;
+}
+
+.form-container .dmforminput.large-4 {
+    flex: 0 0 33.333333%;
+    width: 33.333333%;
+}
+
+.form-container .dmforminput.small-2 {
+    flex: 0 0 16.666666%;
+    width: 16.666666%;
+}
+
+.form-container .dmforminput.medium-2 {
+    flex: 0 0 16.666666%;
+    width: 16.666666%;
+}
+
+.form-container .dmforminput.large-2 {
+    flex: 0 0 16.666666%;
+    width: 16.666666%;
+}
+
+.form-container .dmforminput.small-3 {
+    flex: 0 0 25%;
+    width: 25%;
+}
+
+.form-container .dmforminput.medium-3 {
+    flex: 0 0 25%;
+    width: 25%;
+}
+
+.form-container .dmforminput.large-3 {
+    flex: 0 0 25%;
+    width: 25%;
+}
+
+.form-container .dmforminput.small-9 {
+    flex: 0 0 75%;
+    width: 75%;
+}
+
+.form-container .dmforminput.medium-9 {
+    flex: 0 0 75%;
+    width: 75%;
+}
+
+.form-container .dmforminput.large-9 {
+    flex: 0 0 75%;
+    width: 75%;
+}
+
+@media (min-width: 641px) {
+    .form-container .dmforminput.medium-6 {
+        flex: 0 0 50%;
+        width: 50%;
+    }
+}
+
+@media (min-width: 1025px) {
+    .form-container .dmforminput.large-6 {
+        flex: 0 0 50%;
+        width: 50%;
+    }
+}
+
+/* Full-width fields (textarea, long content) */
+.form-container .dmforminput.small-12.medium-12 {
+    flex: 0 0 100%;
+    width: 100%;
+}
+
+.form-container .dmforminput input[type="submit"] {
+    margin-top: 24px;
+    padding: 12px 24px;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 50px;
+    border: 1px solid transparent;
+    background-color: rgb(147, 147, 147);
+    color: #fff;
+    font-weight: 400;
+}
+
+.form-container .dmforminput input[type="submit"]:hover {
+    background-color: rgb(65, 67, 69);
+}
