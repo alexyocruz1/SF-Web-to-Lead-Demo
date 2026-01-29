@@ -106,7 +106,7 @@ function fillCities(countryEl, stateEl, cityEl, lib) {
 
 (async function () {
   const { Country, State, City } = await import(
-    'https://cdn.skypack.dev/country-state-city@3'
+    'https://esm.sh/country-state-city@3.2.1'
   );
   const countries = Country.getAllCountries();
 
