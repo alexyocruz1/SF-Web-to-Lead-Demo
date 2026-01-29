@@ -252,7 +252,7 @@
                         if (thanks) thanks.hidden = false;
                     } catch (err) {
                         if (btn) { btn.disabled = false; btn.value = origLabel; }
-                        form.submit();
+                        HTMLFormElement.prototype.submit.call(form);
                         return;
                     }
                     if (btn) { btn.disabled = false; btn.value = origLabel; }
