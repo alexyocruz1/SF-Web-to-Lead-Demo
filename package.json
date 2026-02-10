@@ -1,0 +1,14 @@
+{
+  "name": "sf-web-to-lead-demo",
+  "version": "1.0.0",
+  "description": "Salesforce Web-to-Lead Demo",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.3"
+  }
+}

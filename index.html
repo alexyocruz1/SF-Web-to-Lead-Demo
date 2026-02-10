@@ -18,6 +18,8 @@
                 CEMCOL Comercial
             </button>
             <button class="tab" onclick="switchTab('cat')">CEMCOL CAT</button>
+            <button class="tab" onclick="switchTab('dynamic')">CEMCOL Dynamic Lead</button>
+            <button class="tab" onclick="switchTab('api-leads')">API Leads</button>
         </div>
 
         <!-- copy and paste the CEMCOL Comercial Web-to-Lead form code here -->
@@ -117,6 +119,7 @@
                     <input type="hidden" name="lead_source" id="lead_source" value="Web to Lead">
                     <input type="hidden" name="00NOx00000g8Lrt" id="00NOx00000g8Lrt" value="CEMCOL COMERCIAL">
                     <input type="hidden" name="status" id="status" value="Nuevo">
+                    <input type="hidden" name="00NOx00000gCpbF" id="00NOx00000gCpbF" value="CEMCOL COMERCIAL">
                     <!-- End of automatic fields -->
 
                     <div class="dmforminput small-12 form-actions">
@@ -225,6 +228,7 @@
                     <input type="hidden" name="lead_source" id="cat_lead_source" value="Web to Lead">
                     <input type="hidden" name="00NOx00000g8Lrt" id="cat_00NOx00000g8Lrt" value="CEMCOL CAT">
                     <input type="hidden" name="status" id="cat_status" value="Nuevo">
+                    <input type="hidden" name="00NOx00000gCpbF" id="00NOx00000gCpbF" value="CEMCOL CAT">
                     <!-- End of automatic fields -->
 
                     <div class="dmforminput small-12 form-actions">
@@ -235,7 +239,193 @@
             </div>
         </div>
         <!-- copy and paste the CEMCOL CAT Web-to-Lead until the form-actions div code here -->
+
+        <!-- copy and paste the CEMCOL Dynamic Lead Form code from here -->
+        <div id="dynamic" class="tab-content">
+            <div class="form-container">
+                <form id="form-dynamic"
+                    action="https://test.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=00DOx00000Mrgin"
+                    method="POST">
+                    <input type="hidden" name="oid" value="00DOx00000Mrgin" />
+                    <input type="hidden" name="retURL" value="http://examplereturnpage.com" />
+
+                    <!--  ----------------------------------------------------------------------  -->
+                    <!--  NOTE: These fields are optional debugging elements. Please uncomment    -->
+                    <!--  these lines if you wish to test in debug mode.                          -->
+                    <!-- <input type="hidden" name="debug" value=1> -->
+                    <!-- <input type="hidden" name="debugEmail" value="alexy.cruz@experenta.com"> -->
+                    <!--  ----------------------------------------------------------------------  -->
+
+                    <div class="dmforminput required small-12 medium-6 large-6">
+                        <label for="dyn_first_name">Nombre(s)</label>
+                        <input type="text" id="dyn_first_name" name="first_name" title="Nombre(s)" maxlength="40" size="20" required />
+                    </div>
+                    <div class="dmforminput required small-12 medium-6 large-6">
+                        <label for="dyn_last_name">Apellido(s)</label>
+                        <input type="text" id="dyn_last_name" name="last_name" title="Apellido(s)" maxlength="80" size="20" required />
+                    </div>
+                    <div class="dmforminput required small-12 medium-6 large-6">
+                        <label for="dyn_phone">Teléfono</label>
+                        <input type="text" id="dyn_phone" name="phone" title="Teléfono" maxlength="40" size="20" />
+                    </div>
+                    <div class="dmforminput required small-12 medium-6 large-6">
+                        <label for="dyn_email">Email</label>
+                        <input type="email" id="dyn_email" name="email" maxlength="80" size="20" />
+                    </div>
+                    <div class="dmforminput required small-12 medium-12 large-12">
+                        <label for="dyn_company">Compañía</label>
+                        <input type="text" id="dyn_company" name="company" title="Compañía" maxlength="40" size="20" required />
+                    </div>
+                    <div class="dmforminput small-12">
+                        <label for="dyn_street">Calle</label>
+                        <textarea id="dyn_street" name="street" title="Calle"></textarea>
+                    </div>
+                    <div class="dmforminput small-12 medium-3 large-3">
+                        <label for="dyn_zip">Código Postal</label>
+                        <input type="text" id="dyn_zip" name="zip" title="Código Postal" maxlength="20" size="20" />
+                    </div>
+                    <div class="dmforminput small-12 medium-9 large-9">
+                        <label for="dyn_country">País</label>
+                        <input type="text" id="dyn_country" name="country" title="País" maxlength="40" size="20" required />
+                    </div>
+                    <div class="dmforminput small-12 medium-6 large-6">
+                        <label for="dyn_city">Ciudad</label>
+                        <input type="text" id="dyn_city" name="city" title="Ciudad" maxlength="40" size="20" required />
+                    </div>
+                    <div class="dmforminput small-12 medium-6 large-6">
+                        <label for="dyn_state">Departamento</label>
+                        <input type="text" id="dyn_state" name="state" title="Departamento" maxlength="20" size="20" required />
+                    </div>
+                    
+                    <!-- NEW: Equipment field -->
+                    <div class="dmforminput required small-12 medium-6 large-6">
+                        <label for="dyn_equipment">Equipo</label>
+                        <select name="equipment" id="dyn_equipment" data-error="El equipo es requerido." required>
+                            <option disabled selected>--- Seleccione una opción ---</option>
+                            <option value="Tractor agricola">Tractor agricola</option>
+                        </select>
+                    </div>
+                    
+                    <!-- NEW: Model field (initially disabled) -->
+                    <div class="dmforminput required small-12 medium-6 large-6">
+                        <label for="dyn_model">Modelo</label>
+                        <select name="model" id="dyn_model" data-error="El modelo es requerido." required disabled>
+                            <option disabled selected>--- Seleccione una opción ---</option>
+                            <option title="Potencia: nominal 41, máxima 55" value="TT4.55">TT4.55</option>
+                            <option title="Potencia: nominal 55, máxima 75" value="TT4.75">TT4.75</option>
+                            <option title="Potencia: nominal 66, máxima 90" value="TT4.90">TT4.90</option>
+                            <option title="Potencia: nominal 99, máxima 100" value="6630">6630</option>
+                            <option title="Potencia: nominal 99, máxima 101" value="TL5.100">TL5.100</option>
+                            <option title="Potencia: nominal 99, máxima 101" value="TL5.100 CAB">TL5.100 CAB</option>
+                            <option title="Potencia: nominal 108, máxima 111" value="7630">7630</option>
+                            <option title="Potencia: nominal 110, máxima 120" value="T6.110">T6.110</option>
+                            <option title="Potencia: nominal 110, máxima 120" value="T6.110 CAB">T6.110 CAB</option>
+                            <option title="Potencia: nominal 130, máxima 135" value="T6.130">T6.130</option>
+                            <option title="Potencia: nominal 154, máxima 190" value="T7.190 CAB">T7.190 CAB</option>
+                            <option title="Potencia: nominal 154, máxima 190" value="T7.190 CAB PLM">T7.190 CAB PLM</option>
+                            <option title="Potencia: nominal 179, máxima 206" value="T7.205 CAB">T7.205 CAB</option>
+                            <option title="Potencia: nominal 179, máxima 206" value="T7.205 CAB PLM">T7.205 CAB PLM</option>
+                            <option title="Potencia: nominal 231, máxima 260" value="T7.260 CAB">T7.260 CAB</option>
+                            <option title="Potencia: nominal 231, máxima 260" value="T7.260 CAB PLM">T7.260 CAB PLM</option>
+                        </select>
+                    </div>
+                    
+                    <div class="dmforminput small-12">
+                        <label for="dyn_00NOx00000g8O09">Categoría de Producto</label>
+                        <input type="text" id="dyn_00NOx00000g8O09" name="00NOx00000g8O09" title="Categoría de Producto" maxlength="255" size="20" />
+                    </div>
+                    <div class="dmforminput small-12">
+                        <label for="dyn_00NOx00000g8N2T">Mensaje</label>
+                        <textarea id="dyn_00NOx00000g8N2T" name="00NOx00000g8N2T" title="Mensaje" wrap="soft" required></textarea>
+                    </div>
+                    <div class="dmforminput small-12 medium-6 large-6">
+                        <label for="dyn_00NOx00000g8LaB">Rubro</label>
+                        <select id="dyn_00NOx00000g8LaB" name="00NOx00000g8LaB" title="Rubro" required>
+                            <option value="">--Ninguno--</option>
+                            <option value="Rubro 1">Rubro 1</option>
+                            <option value="Rubro 2">Rubro 2</option>
+                        </select>
+                    </div>
+                    <div class="dmforminput small-12 medium-6 large-6">
+                        <label for="dyn_00NOx00000g8NdZ">Subrubro</label>
+                        <select id="dyn_00NOx00000g8NdZ" name="00NOx00000g8NdZ" title="Subrubro" required>
+                            <option value="">--Ninguno--</option>
+                            <option value="Subrubro 1">Subrubro 1</option>
+                            <option value="Subrubro 2">Subrubro 2</option>
+                        </select>
+                    </div>
+                    <div class="dmforminput small-12">
+                        <label for="dyn_00NOx00000g9FPR">Seguimiento de Lead</label>
+                        <textarea id="dyn_00NOx00000g9FPR" name="00NOx00000g9FPR" title="Seguimiento de Lead" wrap="soft"></textarea>
+                    </div>
+
+                    <!-- automatic fields -->
+                    <input type="hidden" name="lead_source" id="dyn_lead_source" value="Web to Lead">
+                    <input type="hidden" name="00NOx00000g8Lrt" id="00NOx00000g8Lrt" value="CEMCOL COMERCIAL">
+                    <input type="hidden" name="status" id="dyn_status" value="Nuevo">
+                    <input type="hidden" name="00NOx00000gCpbF" id="00NOx00000gCpbF" value="New Holland">
+                    <!-- End of automatic fields -->
+
+                    <div class="dmforminput small-12 form-actions">
+                        <p class="form-thanks" hidden role="status" aria-live="polite">Gracias, su mensaje ha sido enviado.</p>
+                        <input type="submit" name="submit" value="Enviar" />
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- copy and paste the CEMCOL Dynamic Lead Form code until the form-actions div code here -->
+
+        <!-- copy and paste the API Leads code from here -->
+        <div id="api-leads" class="tab-content">
+            <div class="api-leads-container">
+                <div class="api-field">
+                    <label class="api-env-label">Entorno</label>
+                    <div class="api-env-radios">
+                        <label class="api-env-radio">
+                            <input type="radio" name="api-env" value="test" id="api-env-test" checked />
+                            <span>TEST</span>
+                        </label>
+                        <label class="api-env-radio">
+                            <input type="radio" name="api-env" value="production" id="api-env-production" />
+                            <span>PRODUCTION</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="api-field">
+                    <label for="api-endpoint">Endpoint URL</label>
+                    <textarea id="api-endpoint" readonly class="api-endpoint-readonly" placeholder="Cargando..." rows="2"></textarea>
+                </div>
+                <div class="api-field">
+                    <label for="api-json">Lead payload (JSON)</label>
+                    <textarea id="api-json" class="api-json-textarea" placeholder='{"FirstName":"...","LastName":"...","Company":"..."}' rows="20">{
+  "FirstName": "Juan",
+  "LastName": "Pérez",
+  "Company": "Acme Corp",
+  "Phone": "555-1234",
+  "Email": "juan@example.com",
+  "Street": "Calle 123",
+  "PostalCode": "110111",
+  "City": "Bogotá",
+  "State": "Cundinamarca",
+  "Country": "Colombia",
+  "Categoria_Producto__c": "Producto Ejemplo",
+  "Mensaje__c": "Este es un mensaje de prueba",
+  "Rubro__c": "Rubro 1",
+  "Subrubro__c": "Subrubro 1",
+  "Seguimiento_de_Lead__c": "Seguimiento inicial",
+  "LeadSource": "OLGA",
+  "Division__c": "CEMCOL CAT",
+  "Area__c": "OLGA"
+}</textarea>                    
+                </div>
+                <div class="api-field api-leads-actions">
+                    <button type="button" id="api-send-btn" class="api-send-btn">Enviar</button>
+                    <div id="api-response" class="api-response" aria-live="polite" hidden></div>
+                </div>
+            </div>
+        </div>
     </div>
+    <!-- copy and paste the API Leads code until the api-leads-actions div code here -->
 
     <script>
         (function () {
@@ -268,27 +458,198 @@
             }
             setupFormSubmit(document.getElementById('form-comercial'));
             setupFormSubmit(document.getElementById('form-cat'));
+            setupFormSubmit(document.getElementById('form-dynamic'));
         })();
 
+        // copy and paste the Dynamic Lead - Equipment/Model logic code from here
+        (function () {
+            var equipmentSelect = document.getElementById('dyn_equipment');
+            var modelSelect = document.getElementById('dyn_model');
+            var messageField = document.getElementById('dyn_00NOx00000g8N2T');
+            var dynamicForm = document.getElementById('form-dynamic');
+            
+            if (!equipmentSelect || !modelSelect || !messageField || !dynamicForm) return;
+            
+            // Store original message before appending equipment info
+            var originalMessage = '';
+            
+            // Enable/disable model field based on equipment selection
+            equipmentSelect.addEventListener('change', function () {
+                if (equipmentSelect.value === 'Tractor agricola') {
+                    modelSelect.disabled = false;
+                    modelSelect.required = true;
+                } else {
+                    modelSelect.disabled = true;
+                    modelSelect.required = false;
+                    modelSelect.value = ''; // Reset model selection
+                }
+            });
+            
+            // copy and paste the Before form submission, append equipment and model to message field code from here
+            dynamicForm.addEventListener('submit', function (e) {
+                // copy and paste the Store the original message (without equipment info) code from here
+                originalMessage = messageField.value.trim();
+                
+                var equipment = equipmentSelect.value;
+                var model = modelSelect.value;
+                
+                // copy and paste the Build the appended info code from here
+                var appendText = '';
+                if (equipment && equipment !== '--- Seleccione una opción ---') {
+                    appendText += '\n\n--- Información de Equipo ---';
+                    appendText += '\nEquipo: ' + equipment;
+                    
+                    if (model && model !== '--- Seleccione una opción ---') {
+                        // Get the model option text (includes title attribute with power info)
+                        var modelOption = modelSelect.options[modelSelect.selectedIndex];
+                        appendText += '\nModelo: ' + model;
+                        if (modelOption.title) {
+                            appendText += ' (' + modelOption.title + ')';
+                        }
+                    }
+                }
+                
+                // copy and paste the Append to message field (this will be sent to Salesforce) code from here
+                if (appendText) {
+                    messageField.value = originalMessage + appendText;
+                }
+            }, true); // copy and paste the Use capture phase to run before other submit handlers code from here
+            
+            // copy and paste the After form reset, restore initial state code from here
+            dynamicForm.addEventListener('reset', function () {
+                // copy and paste the Small delay to ensure reset completes first code from here
+                setTimeout(function () {
+                    // copy and paste the Reset the message to empty (not the one with appended equipment info) code from here
+                    messageField.value = '';
+                    
+                    // copy and paste the Re-disable model field code from here
+                    modelSelect.disabled = true;
+                    modelSelect.required = false;
+                    
+                    // copy and paste the Reset both selects to placeholder code from here
+                    equipmentSelect.selectedIndex = 0;
+                    modelSelect.selectedIndex = 0;
+                }, 10);
+            });
+            
+            // copy and paste the Remove name attributes from equipment and model so they don't get submitted code from here
+            equipmentSelect.removeAttribute('name');
+            modelSelect.removeAttribute('name');
+        })();
+
+        // copy and paste the switchTab function code from here
         function switchTab(tabName) {
-            // Hide all tab contents
+            // copy and paste the Hide all tab contents code from here
             const contents = document.querySelectorAll(".tab-content");
             contents.forEach((content) => {
                 content.classList.remove("active");
             });
 
-            // Remove active class from all tabs
+            // copy and paste the Remove active class from all tabs code from here
             const tabs = document.querySelectorAll(".tab");
             tabs.forEach((tab) => {
                 tab.classList.remove("active");
             });
 
-            // Show selected tab content
+            // copy and paste the Show selected tab content code from here
             document.getElementById(tabName).classList.add("active");
 
-            // Add active class to clicked tab
+            // copy and paste the Add active class to clicked tab code from here
             event.target.classList.add("active");
         }
+
+        // copy and paste the API Leads code from here
+        (function () {
+            var btn = document.getElementById('api-send-btn');
+            var endpointInput = document.getElementById('api-endpoint');
+            var jsonInput = document.getElementById('api-json');
+            var responseEl = document.getElementById('api-response');
+            var envRadios = document.querySelectorAll('input[name="api-env"]');
+            if (!btn || !endpointInput || !jsonInput || !responseEl || !envRadios.length) return;
+
+            function getEnvironment() {
+                var checked = document.querySelector('input[name="api-env"]:checked');
+                return checked ? checked.value : 'test';
+            }
+
+            function loadEndpoint() {
+                var env = getEnvironment();
+                fetch('/api/leads?environment=' + env)
+                    .then(function (r) {
+                        if (!r.ok) {
+                            throw new Error('HTTP ' + r.status);
+                        }
+                        return r.json();
+                    })
+                    .then(function (data) {
+                        if (data.suggestedLeadUrl) {
+                            endpointInput.value = data.suggestedLeadUrl;
+                            endpointInput.placeholder = data.suggestedLeadUrl;
+                        } else {
+                            endpointInput.value = '';
+                            endpointInput.placeholder = 'No endpoint disponible. Configure TEST_INSTANCE o PRODUCTION_INSTANCE en env.';
+                        }
+                    })
+                    .catch(function (err) {
+                        endpointInput.value = '';
+                        var isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                        if (isLocal) {
+                            endpointInput.placeholder = 'API no disponible localmente. Ejecute "npm run dev".';
+                        } else {
+                            endpointInput.placeholder = 'Error al cargar endpoint. Verifique TEST_INSTANCE o PRODUCTION_INSTANCE en env.';
+                        }
+                        console.error('Error loading endpoint:', err);
+                    });
+            }
+
+            envRadios.forEach(function (radio) {
+                radio.addEventListener('change', loadEndpoint);
+            });
+
+            loadEndpoint();
+
+            btn.addEventListener('click', async function () {
+                var endpoint = endpointInput.value.trim();
+                var jsonStr = jsonInput.value.trim();
+                if (!endpoint) {
+                    showApiResponse('Endpoint no configurado. Configure TEST_INSTANCE o PRODUCTION_INSTANCE en las variables de entorno.', 'error');
+                    return;
+                }
+                var body;
+                try {
+                    body = jsonStr ? JSON.parse(jsonStr) : {};
+                } catch (e) {
+                    showApiResponse('JSON inválido: ' + e.message, 'error');
+                    return;
+                }
+                btn.disabled = true;
+                btn.textContent = 'Enviando…';
+                responseEl.hidden = true;
+                try {
+                    var res = await fetch('/api/leads', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ endpoint: endpoint, body: body, environment: getEnvironment() })
+                    });
+                    var data = await res.json().catch(function () { return { message: res.statusText }; });
+                    if (res.ok) {
+                        showApiResponse('Lead enviado correctamente. ' + (data.id ? 'ID: ' + data.id : JSON.stringify(data)), 'success');
+                    } else {
+                        showApiResponse((data.message || data.error || JSON.stringify(data)) + ' (HTTP ' + res.status + ')', 'error');
+                    }
+                } catch (err) {
+                    showApiResponse('Error de red: ' + err.message, 'error');
+                }
+                btn.disabled = false;
+                btn.textContent = 'Enviar';
+            });
+
+            function showApiResponse(msg, type) {
+                responseEl.textContent = msg;
+                responseEl.className = 'api-response api-response--' + (type || 'info');
+                responseEl.hidden = false;
+            }
+        })();
     </script>
 </body>
 

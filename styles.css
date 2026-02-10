@@ -261,3 +261,179 @@ body {
     opacity: 0.7;
     cursor: not-allowed;
 }
+
+/* API Leads tab */
+.api-leads-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+}
+
+.api-field {
+    width: 100%;
+}
+
+.api-field label {
+    display: block;
+    font-size: 16px;
+    font-family: Poppins, "Poppins Fallback", sans-serif;
+    color: #000;
+    font-weight: 300;
+    margin-bottom: 8px;
+}
+
+/* Environment radio buttons */
+.api-env-label {
+    font-weight: 400;
+    margin-bottom: 8px;
+}
+
+.api-env-radios {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.api-env-radio {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 8px 16px;
+    border: 2px solid #dee3ed;
+    border-radius: 6px;
+    background-color: #fff;
+    transition: all 0.2s;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.api-env-radio input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    margin: 0;
+}
+
+.api-env-radio:hover {
+    border-color: #c2c9d6;
+    background-color: #f5f5f5;
+}
+
+.api-env-radio:has(input:checked) {
+    border-color: #0066cc;
+    background-color: #e3f2fd;
+    color: #0066cc;
+}
+
+.api-env-radio input[value="production"]:checked ~ span,
+.api-env-radio:has(input[value="production"]:checked) {
+    border-color: #ff9800;
+    background-color: #fff3e0;
+    color: #ff9800;
+}
+
+.api-endpoint-readonly {
+    width: 100%;
+    font-size: 13px;
+    font-family: 'Consolas', 'Monaco', 'Ubuntu Mono', monospace;
+    line-height: 1.5;
+    padding: 10px 14px;
+    border: 1px solid #dee3ed;
+    border-radius: 4px;
+    background-color: #f5f5f5;
+    color: #555;
+    cursor: default;
+    box-sizing: border-box;
+    resize: none;
+    overflow-wrap: break-word;
+    word-break: break-all;
+}
+
+.api-endpoint-readonly:focus {
+    outline: none;
+    border-color: #c2c9d6;
+}
+
+.api-json-textarea {
+    width: 100%;
+    font-family: 'Consolas', 'Monaco', 'Ubuntu Mono', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 12px 14px;
+    border: 1px solid #dee3ed;
+    border-radius: 4px;
+    background: #fff;
+    color: #000;
+    resize: vertical;
+    min-height: 320px;
+    box-sizing: border-box;
+}
+
+.api-json-textarea:focus {
+    outline: none;
+    border-color: #c2c9d6;
+}
+
+.api-json-hint {
+    margin: 8px 0 0;
+    font-size: 13px;
+    color: #666;
+    font-style: italic;
+}
+
+.api-leads-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.api-send-btn {
+    align-self: flex-start;
+    padding: 12px 32px;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 50px;
+    border: 1px solid transparent;
+    background-color: rgb(147, 147, 147);
+    color: #fff;
+    font-weight: 400;
+    transition: background-color 0.2s;
+}
+
+.api-send-btn:hover:not(:disabled) {
+    background-color: rgb(65, 67, 69);
+}
+
+.api-send-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.api-response {
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+.api-response--success {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #c8e6c9;
+}
+
+.api-response--error {
+    background: #ffebee;
+    color: #c62828;
+    border: 1px solid #ffcdd2;
+}
+
+.api-response--info {
+    background: #e3f2fd;
+    color: #1565c0;
+    border: 1px solid #bbdefb;
+}
