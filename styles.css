@@ -107,6 +107,13 @@ body {
     -webkit-tap-highlight-color: transparent;
 }
 
+/* Required field asterisk */
+.form-container .dmforminput.required label::after {
+    content: ' *';
+    color: #e63946;
+    font-weight: bold;
+}
+
 .form-container .dmforminput input[type="text"],
 .form-container .dmforminput input[type="email"],
 .form-container .dmforminput input[type="tel"],
