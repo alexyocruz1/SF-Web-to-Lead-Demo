@@ -722,7 +722,6 @@
             var subrubros = ['Subrubro 1', 'Subrubro 2', 'Otro'];
 
             var divisions = ['CEMCOL CAT', 'CEMCOL COMERCIAL', 'CEMCOL El Salvador', 'CEMCOL Nicaragua'];
-            var leadSources = ["Whatsapp", "Facebook", "Instagram", "Página Web", "Evento", "Visita a Fábrica", "OLGA", "PP+", "DMT Cat Rental", "Referencia Empleado", "Redes Sociales y Plataformas CIPSA", "Redes Sociales y Plataformas CARMIX", "Web to Lead", "Email"];
             var areas = ['CEMCOL CAT', 'CEMCOL Comercial', 'New Holland', 'OLGA'];
 
             function randomItem(arr) {
@@ -732,7 +731,6 @@
             function generateLead(index) {
                 var location = randomItem(locations);
                 var division = randomItem(divisions);
-                var leadSource = randomItem(leadSources);
                 var area = randomItem(areas);
 
                 return {
@@ -751,7 +749,7 @@
                     "Mensaje__c": "Lead generado automáticamente #" + (index + 1),
                     "Rubro__c": randomItem(rubros),
                     "Subrubro__c": randomItem(subrubros),
-                    "LeadSource": leadSource,
+                    "LeadSource": "OLGA",
                     "Division__c": division,
                     "Area__c": area
                 };
