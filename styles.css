@@ -281,6 +281,94 @@ body {
     width: 100%;
 }
 
+.api-lead-count {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 16px;
+    border: 2px solid #dee3ed;
+    border-radius: 6px;
+    font-family: 'Poppins', sans-serif;
+    transition: border-color 0.2s;
+}
+
+.api-lead-count:focus {
+    outline: none;
+    border-color: #0066cc;
+}
+
+.api-generate-btn {
+    padding: 10px 24px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Poppins', sans-serif;
+    white-space: nowrap;
+}
+
+.api-generate-btn:hover {
+    background: #218838;
+    transform: translateY(-1px);
+}
+
+.api-generate-btn:active {
+    transform: translateY(0);
+}
+
+.api-generate-send-btn {
+    padding: 10px 24px;
+    background: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Poppins', sans-serif;
+    white-space: nowrap;
+}
+
+.api-generate-send-btn:hover {
+    background: #0052a3;
+    transform: translateY(-1px);
+}
+
+.api-generate-send-btn:active {
+    transform: translateY(0);
+}
+
+.api-generate-send-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.api-bulk-response {
+    background: #f8f9fa;
+    border: 1px solid #dee3ed;
+    border-radius: 6px;
+    padding: 16px;
+    font-size: 14px;
+    line-height: 1.6;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.api-bulk-response p {
+    margin: 8px 0;
+}
+
+.api-bulk-response hr {
+    margin: 20px 0;
+    border: none;
+    border-top: 2px solid #dee3ed;
+}
+
 .api-field label {
     display: block;
     font-size: 16px;

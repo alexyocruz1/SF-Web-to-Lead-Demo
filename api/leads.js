@@ -17,7 +17,7 @@ function getTokenUrl(environment) {
   return url;
 }
 
-function getSuggestedLeadUrl(environment) {
+function getSuggestedLeadUrl(environment, mode = 'single') {
   const useProd =
     environment === "production" ||
     process.env.USE_PRODUCTION === "true" ||
@@ -34,7 +34,13 @@ function getSuggestedLeadUrl(environment) {
     throw new Error("SF_API_VERSION must be set");
   }
 
-  return `https://${instance}/services/data/v${apiVersion}/sobjects/Lead`;
+  // Single mode: /sobjects/Lead
+  // Bulk mode: /composite/sobjects (SObject Collections - up to 200 leads)
+  const endpoint = mode === 'bulk' 
+    ? `/services/data/v${apiVersion}/composite/sobjects`
+    : `/services/data/v${apiVersion}/sobjects/Lead`;
+
+  return `https://${instance}${endpoint}`;
 }
 
 async function getSalesforceToken(environment) {
@@ -132,6 +138,7 @@ async function getSalesforceToken(environment) {
 module.exports = async function handler(req, res) {
   if (req.method === "GET") {
     const environment = req.query?.environment || "test";
+    const mode = req.query?.mode || "single";
 
     if (req.query.diagnose === "versions") {
       try {
@@ -151,10 +158,11 @@ module.exports = async function handler(req, res) {
     }
 
     return res.status(200).json({
-      suggestedLeadUrl: getSuggestedLeadUrl(environment),
+      suggestedLeadUrl: getSuggestedLeadUrl(environment, mode),
       tokenUrl: getTokenUrl(environment),
       apiVersion: process.env.SF_API_VERSION,
       environment,
+      mode,
     });
   }
 

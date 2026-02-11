@@ -110,10 +110,6 @@
                             <option value="Subrubro 2">Subrubro 2</option>
                         </select>
                     </div>
-                    <div class="dmforminput small-12">
-                        <label for="00NOx00000g9FPR">Seguimiento de Lead</label>
-                        <textarea id="00NOx00000g9FPR" name="00NOx00000g9FPR" title="Seguimiento de Lead" wrap="soft"></textarea>
-                    </div>
 
                     <!-- automatic fields -->
                     <input type="hidden" name="lead_source" id="lead_source" value="Web to Lead">
@@ -218,10 +214,6 @@
                             <option value="Subrubro 1">Subrubro 1</option>
                             <option value="Subrubro 2">Subrubro 2</option>
                         </select>
-                    </div>
-                    <div class="dmforminput small-12">
-                        <label for="cat_00NOx00000g9FPR">Seguimiento de Lead</label>
-                        <textarea id="cat_00NOx00000g9FPR" name="00NOx00000g9FPR" title="Seguimiento de Lead" wrap="soft"></textarea>
                     </div>
 
                     <!-- automatic fields -->
@@ -354,10 +346,6 @@
                             <option value="Subrubro 2">Subrubro 2</option>
                         </select>
                     </div>
-                    <div class="dmforminput small-12">
-                        <label for="dyn_00NOx00000g9FPR">Seguimiento de Lead</label>
-                        <textarea id="dyn_00NOx00000g9FPR" name="00NOx00000g9FPR" title="Seguimiento de Lead" wrap="soft"></textarea>
-                    </div>
 
                     <!-- automatic fields -->
                     <input type="hidden" name="lead_source" id="dyn_lead_source" value="Web to Lead">
@@ -392,8 +380,36 @@
                     </div>
                 </div>
                 <div class="api-field">
+                    <label class="api-env-label">Modo</label>
+                    <div class="api-env-radios">
+                        <label class="api-env-radio">
+                            <input type="radio" name="api-mode" value="single" id="api-mode-single" checked />
+                            <span>Single</span>
+                        </label>
+                        <label class="api-env-radio">
+                            <input type="radio" name="api-mode" value="bulk" id="api-mode-bulk" />
+                            <span>Bulk</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="api-field">
                     <label for="api-endpoint">Endpoint URL</label>
                     <textarea id="api-endpoint" readonly class="api-endpoint-readonly" placeholder="Cargando..." rows="2"></textarea>
+                </div>
+                <div class="api-field" id="api-generator-section">
+                    <label for="api-lead-count">Generar y enviar leads automáticamente</label>
+                    <div style="display: flex; gap: 12px; align-items: flex-end;">
+                        <div style="flex: 0 0 150px;">
+                            <input type="number" id="api-lead-count" class="api-lead-count" min="1" value="100" placeholder="Cantidad" />
+                            <small style="color: #666; font-size: 12px;">Sin límite (divide en lotes de 200)</small>
+                        </div>
+                        <button type="button" id="api-generate-btn" class="api-generate-btn">Generar Vista Previa</button>
+                        <button type="button" id="api-generate-send-btn" class="api-generate-send-btn">Generar y Enviar</button>
+                    </div>
+                </div>
+                <div class="api-field" id="api-bulk-response-section" style="display: none;">
+                    <label>Resultados del Lote</label>
+                    <div id="api-bulk-response" class="api-bulk-response"></div>
                 </div>
                 <div class="api-field">
                     <label for="api-json">Lead payload (JSON)</label>
@@ -412,13 +428,12 @@
   "Mensaje__c": "Este es un mensaje de prueba",
   "Rubro__c": "Rubro 1",
   "Subrubro__c": "Subrubro 1",
-  "Seguimiento_de_Lead__c": "Seguimiento inicial",
   "LeadSource": "OLGA",
   "Division__c": "CEMCOL CAT",
   "Area__c": "OLGA"
 }</textarea>                    
                 </div>
-                <div class="api-field api-leads-actions">
+                <div class="api-field api-leads-actions" id="api-manual-send-section">
                     <button type="button" id="api-send-btn" class="api-send-btn">Enviar</button>
                     <div id="api-response" class="api-response" aria-live="polite" hidden></div>
                 </div>
@@ -563,16 +578,208 @@
             var jsonInput = document.getElementById('api-json');
             var responseEl = document.getElementById('api-response');
             var envRadios = document.querySelectorAll('input[name="api-env"]');
-            if (!btn || !endpointInput || !jsonInput || !responseEl || !envRadios.length) return;
+            var modeRadios = document.querySelectorAll('input[name="api-mode"]');
+            var generateBtn = document.getElementById('api-generate-btn');
+            var leadCountInput = document.getElementById('api-lead-count');
+            
+            if (!btn || !endpointInput || !jsonInput || !responseEl || !envRadios.length || !modeRadios.length) return;
+
+            var singleExample = {
+                "FirstName": "Juan",
+                "LastName": "Pérez",
+                "Company": "Acme Corp",
+                "Phone": "555-1234",
+                "Email": "juan@example.com",
+                "Street": "Calle 123",
+                "PostalCode": "110111",
+                "City": "Bogotá",
+                "State": "Cundinamarca",
+                "Country": "Colombia",
+                "Categoria_Producto__c": "Producto Ejemplo",
+                "Mensaje__c": "Este es un mensaje de prueba",
+                "Rubro__c": "Rubro 1",
+                "Subrubro__c": "Subrubro 1",
+                "LeadSource": "OLGA",
+                "Division__c": "CEMCOL CAT",
+                "Area__c": "OLGA"
+            };
+
+            var bulkExample = {
+                "allOrNone": true,
+                "records": [
+                    {
+                        "attributes": {"type": "Lead"},
+                        "FirstName": "Juan",
+                        "LastName": "Pérez",
+                        "Company": "Acme Corp",
+                        "Phone": "555-1234",
+                        "Email": "juan@example.com",
+                        "Street": "Calle 123",
+                        "PostalCode": "110111",
+                        "City": "Bogotá",
+                        "State": "Cundinamarca",
+                        "Country": "Colombia",
+                        "Categoria_Producto__c": "Producto Ejemplo",
+                        "Mensaje__c": "Este es un mensaje de prueba",
+                        "Rubro__c": "Rubro 1",
+                        "Subrubro__c": "Subrubro 1",
+                        "LeadSource": "OLGA",
+                        "Division__c": "CEMCOL CAT",
+                        "Area__c": "OLGA"
+                    },
+                    {
+                        "attributes": {"type": "Lead"},
+                        "FirstName": "Maria",
+                        "LastName": "García",
+                        "Company": "Tech Inc",
+                        "Email": "maria@tech.com",
+                        "Phone": "555-5678",
+                        "Street": "Calle 456",
+                        "PostalCode": "110112",
+                        "City": "Bogotá",
+                        "State": "Cundinamarca",
+                        "Country": "Colombia",
+                        "Categoria_Producto__c": "Producto Ejemplo",
+                        "Mensaje__c": "Este es un mensaje de prueba",
+                        "Rubro__c": "Rubro 1",
+                        "Subrubro__c": "Subrubro 1",
+                        "LeadSource": "OLGA",
+                        "Division__c": "CEMCOL CAT",
+                        "Area__c": "OLGA"
+                    },
+                    {
+                        "attributes": {"type": "Lead"},
+                        "FirstName": "Pedro",
+                        "LastName": "Gómez",
+                        "Company": "Tech Inc",
+                        "Email": "pedro@tech.com",
+                        "Phone": "555-5678",
+                        "Street": "Calle 789",
+                        "PostalCode": "110113",
+                        "City": "Medellín",
+                        "State": "Antioquia",
+                        "Country": "Colombia",
+                        "Categoria_Producto__c": "Producto Ejemplo 2",
+                        "Mensaje__c": "Este es un mensaje de prueba 2",
+                        "Rubro__c": "Rubro 2",
+                        "Subrubro__c": "Subrubro 2",
+                        "LeadSource": "OLGA",
+                        "Division__c": "CEMCOL CAT",
+                        "Area__c": "OLGA"
+                    }
+                ]
+            };
 
             function getEnvironment() {
                 var checked = document.querySelector('input[name="api-env"]:checked');
                 return checked ? checked.value : 'test';
             }
 
+            function getMode() {
+                var checked = document.querySelector('input[name="api-mode"]:checked');
+                return checked ? checked.value : 'single';
+            }
+
+            // Random data generators
+            var firstNames = ['Juan', 'María', 'Carlos', 'Ana', 'Luis', 'Laura', 'Pedro', 'Sofia', 'Miguel', 'Carmen', 'Jorge', 'Isabel', 'Ricardo', 'Paula', 'Diego', 'John', 'Emma', 'David', 'Sarah', 'Michael', 'Emily', 'Daniel', 'Jessica'];
+            var lastNames = ['Pérez', 'García', 'López', 'Martínez', 'Rodríguez', 'González', 'Hernández', 'Ramírez', 'Torres', 'Flores', 'Smith', 'Johnson', 'Brown', 'Davis', 'Wilson', 'Miller', 'Moore', 'Taylor'];
+            var companies = ['Acme Corp', 'Tech Solutions SA', 'Innovatech SAS', 'Global Industries', 'Comercial ABC', 'Distribuidora XYZ', 'Servicios Integrales', 'International Trading Co', 'Grupo Empresarial', 'Digital Systems LLC'];
+            
+            // locations of the leads
+            var locations = [
+                { city: 'Bogotá', state: 'Cundinamarca', country: 'Colombia' },
+                { city: 'Medellín', state: 'Antioquia', country: 'Colombia' },
+                { city: 'Cali', state: 'Valle del Cauca', country: 'Colombia' },
+                { city: 'Barranquilla', state: 'Atlántico', country: 'Colombia' },
+                { city: 'New York', state: 'New York', country: 'United States' },
+                { city: 'Los Angeles', state: 'California', country: 'United States' },
+                { city: 'Chicago', state: 'Illinois', country: 'United States' },
+                { city: 'Miami', state: 'Florida', country: 'United States' },
+                { city: 'Houston', state: 'Texas', country: 'United States' },
+                { city: 'Mexico City', state: 'Ciudad de México', country: 'Mexico' },
+                { city: 'Guadalajara', state: 'Jalisco', country: 'Mexico' },
+                { city: 'Monterrey', state: 'Nuevo León', country: 'Mexico' },
+                { city: 'Buenos Aires', state: 'Buenos Aires', country: 'Argentina' },
+                { city: 'São Paulo', state: 'São Paulo', country: 'Brazil' },
+                { city: 'Rio de Janeiro', state: 'Rio de Janeiro', country: 'Brazil' },
+                { city: 'Lima', state: 'Lima', country: 'Peru' },
+                { city: 'Santiago', state: 'Región Metropolitana', country: 'Chile' },
+                { city: 'Quito', state: 'Pichincha', country: 'Ecuador' },
+                { city: 'Caracas', state: 'Distrito Capital', country: 'Venezuela' },
+                { city: 'Madrid', state: 'Comunidad de Madrid', country: 'Spain' },
+                { city: 'Barcelona', state: 'Cataluña', country: 'Spain' },
+                { city: 'London', state: 'England', country: 'United Kingdom' },
+                { city: 'Paris', state: 'Île-de-France', country: 'France' },
+                { city: 'Berlin', state: 'Berlin', country: 'Germany' },
+                { city: 'Rome', state: 'Lazio', country: 'Italy' },
+                { city: 'Tokyo', state: 'Tokyo', country: 'Japan' },
+                { city: 'Sydney', state: 'New South Wales', country: 'Australia' },
+                { city: 'Toronto', state: 'Ontario', country: 'Canada' },
+                { city: 'Dubai', state: 'Dubai', country: 'United Arab Emirates' }
+            ];
+            
+            var rubros = ['Rubro 1', 'Rubro 2', 'Otro'];
+            var subrubros = ['Subrubro 1', 'Subrubro 2', 'Otro'];
+
+            var divisions = ['CEMCOL CAT', 'CEMCOL COMERCIAL', 'CEMCOL El Salvador', 'CEMCOL Nicaragua'];
+            var leadSources = ["Whatsapp", "Facebook", "Instagram", "Página Web", "Evento", "Visita a Fábrica", "OLGA", "PP+", "DMT Cat Rental", "Referencia Empleado", "Redes Sociales y Plataformas CIPSA", "Redes Sociales y Plataformas CARMIX", "Web to Lead", "Email"];
+            var areas = ['CEMCOL CAT', 'CEMCOL Comercial', 'New Holland', 'OLGA'];
+
+            function randomItem(arr) {
+                return arr[Math.floor(Math.random() * arr.length)];
+            }
+
+            function generateLead(index) {
+                var location = randomItem(locations);
+                var division = randomItem(divisions);
+                var leadSource = randomItem(leadSources);
+                var area = randomItem(areas);
+
+                return {
+                    "attributes": {"type": "Lead"},
+                    "FirstName": randomItem(firstNames),
+                    "LastName": randomItem(lastNames),
+                    "Company": randomItem(companies) + ' ' + (index + 1),
+                    "Phone": '555-' + String(Math.floor(Math.random() * 10000)).padStart(4, '0'),
+                    "Email": 'lead' + (index + 1) + '@example.com',
+                    "Street": 'Street ' + (Math.floor(Math.random() * 200) + 1),
+                    "PostalCode": String(Math.floor(Math.random() * 900000) + 100000),
+                    "City": location.city,
+                    "State": location.state,
+                    "Country": location.country,
+                    "Categoria_Producto__c": "Producto Ejemplo",
+                    "Mensaje__c": "Lead generado automáticamente #" + (index + 1),
+                    "Rubro__c": randomItem(rubros),
+                    "Subrubro__c": randomItem(subrubros),
+                    "LeadSource": leadSource,
+                    "Division__c": division,
+                    "Area__c": area
+                };
+            }
+
+            function generateLeads(count) {
+                var mode = getMode();
+                
+                if (mode === 'single') {
+                    // Single mode: just one lead object
+                    return generateLead(0);
+                } else {
+                    // Bulk mode: SObject Collections format
+                    var records = [];
+                    for (var i = 0; i < count; i++) {
+                        records.push(generateLead(i));
+                    }
+                    return {
+                        "allOrNone": true,
+                        "records": records
+                    };
+                }
+            }
+
             function loadEndpoint() {
                 var env = getEnvironment();
-                fetch('/api/leads?environment=' + env)
+                var mode = getMode();
+                fetch('/api/leads?environment=' + env + '&mode=' + mode)
                     .then(function (r) {
                         if (!r.ok) {
                             throw new Error('HTTP ' + r.status);
@@ -600,10 +807,227 @@
                     });
             }
 
+            function updateJsonExample() {
+                var mode = getMode();
+                var example = mode === 'bulk' ? bulkExample : singleExample;
+                jsonInput.value = JSON.stringify(example, null, 2);
+            }
+
+            function updateGeneratorVisibility() {
+                var mode = getMode();
+                var generatorSection = document.getElementById('api-generator-section');
+                var manualSendSection = document.getElementById('api-manual-send-section');
+                
+                if (generatorSection) {
+                    generatorSection.style.display = mode === 'bulk' ? '' : 'none';
+                }
+                
+                if (manualSendSection) {
+                    manualSendSection.style.display = mode === 'bulk' ? 'none' : '';
+                }
+            }
+
+            // Generate leads button 
+            if (generateBtn && leadCountInput) {
+                generateBtn.addEventListener('click', function () {
+                    var count = parseInt(leadCountInput.value) || 1;
+                    if (count < 1) count = 1;
+                    
+                    // For preview, limit to 200
+                    var previewCount = Math.min(count, 200);
+                    
+                    leadCountInput.value = count;
+                    
+                    var leads = generateLeads(previewCount);
+                    jsonInput.value = JSON.stringify(leads, null, 2);
+                    
+                    if (count > 200) {
+                        showApiResponse('✅ Vista previa de los primeros 200 de ' + count + ' leads. Use "Generar y Enviar" para enviar todos.', 'info');
+                    } else {
+                        showApiResponse('✅ Vista previa de ' + count + ' lead(s) generados', 'info');
+                    }
+                    
+                    setTimeout(function() {
+                        responseEl.hidden = true;
+                    }, 4000);
+                });
+            }
+
+            // Generate and Send button (batch processing)
+            var generateSendBtn = document.getElementById('api-generate-send-btn');
+            var bulkResponseSection = document.getElementById('api-bulk-response-section');
+            var bulkResponseDiv = document.getElementById('api-bulk-response');
+
+            if (generateSendBtn && leadCountInput) {
+                generateSendBtn.addEventListener('click', async function () {
+                    var totalCount = parseInt(leadCountInput.value) || 1;
+                    if (totalCount < 1) {
+                        showApiResponse('⚠️ Por favor ingrese un número válido', 'error');
+                        return;
+                    }
+
+                    var endpoint = endpointInput.value.trim();
+                    if (!endpoint) {
+                        showApiResponse('⚠️ Endpoint no configurado', 'error');
+                        return;
+                    }
+
+                    // Disable buttons during processing
+                    generateSendBtn.disabled = true;
+                    generateBtn.disabled = true;
+                    generateSendBtn.textContent = 'Enviando...';
+                    
+                    // Clear previous results and show section
+                    bulkResponseDiv.innerHTML = '';
+                    bulkResponseSection.style.display = 'block';
+
+                    var batchSize = 200;
+                    var totalBatches = Math.ceil(totalCount / batchSize);
+                    var allResults = [];
+                    var totalSuccess = 0;
+                    var totalFailed = 0;
+                    var allLeadIds = [];
+
+                    bulkResponseDiv.innerHTML = '<p><strong>Enviando ' + totalCount + ' leads en ' + totalBatches + ' lote(s)...</strong></p>';
+
+                    for (var batchNum = 0; batchNum < totalBatches; batchNum++) {
+                        var startIdx = batchNum * batchSize;
+                        var endIdx = Math.min(startIdx + batchSize, totalCount);
+                        var batchCount = endIdx - startIdx;
+
+                        // Generate leads for this batch
+                        var records = [];
+                        for (var i = startIdx; i < endIdx; i++) {
+                            records.push(generateLead(i));
+                        }
+
+                        var batchPayload = {
+                            "allOrNone": false,
+                            "records": records
+                        };
+
+                        bulkResponseDiv.innerHTML += '<p><strong>Lote ' + (batchNum + 1) + '/' + totalBatches + ':</strong> Enviando ' + batchCount + ' leads...</p>';
+
+                        try {
+                            var response = await fetch('/api/leads', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    endpoint: endpoint,
+                                    body: batchPayload,
+                                    environment: getEnvironment()
+                                })
+                            });
+
+                            var result = await response.json();
+                            
+                            if (response.ok && result) {
+                                // Count successes/failures in this batch
+                                var batchSuccess = 0;
+                                var batchFailed = 0;
+                                var batchIds = [];
+                                
+                                if (Array.isArray(result)) {
+                                    result.forEach(function(r) {
+                                        if (r.success || r.id) {
+                                            batchSuccess++;
+                                            if (r.id) {
+                                                batchIds.push(r.id);
+                                                allLeadIds.push(r.id);
+                                            }
+                                        } else {
+                                            batchFailed++;
+                                        }
+                                    });
+                                } else if (result.id) {
+                                    batchSuccess = 1;
+                                    batchIds.push(result.id);
+                                    allLeadIds.push(result.id);
+                                } else {
+                                    batchSuccess = batchCount;
+                                }
+                                
+                                totalSuccess += batchSuccess;
+                                totalFailed += batchFailed;
+                                
+                                var batchMsg = '✅ <strong>Lote ' + (batchNum + 1) + ':</strong> ' + batchSuccess + ' éxitos';
+                                if (batchFailed > 0) batchMsg += ', ' + batchFailed + ' fallos';
+                                if (batchIds.length > 0 && batchIds.length <= 5) {
+                                    batchMsg += '<br>&nbsp;&nbsp;&nbsp;&nbsp;IDs: <code>' + batchIds.join(', ') + '</code>';
+                                } else if (batchIds.length > 5) {
+                                    batchMsg += '<br>&nbsp;&nbsp;&nbsp;&nbsp;IDs: <code>' + batchIds.slice(0, 3).join(', ') + '...</code> (y ' + (batchIds.length - 3) + ' más)';
+                                }
+                                bulkResponseDiv.innerHTML += '<p>' + batchMsg + '</p>';
+                                
+                                allResults.push({
+                                    batch: batchNum + 1,
+                                    success: batchSuccess,
+                                    failed: batchFailed,
+                                    ids: batchIds,
+                                    response: result
+                                });
+                            } else {
+                                totalFailed += batchCount;
+                                var errorMsg = result.error || result.message || 'Unknown error';
+                                bulkResponseDiv.innerHTML += '<p><strong>Lote ' + (batchNum + 1) + ':</strong> Error - ' + errorMsg + '</p>';
+                                allResults.push({
+                                    batch: batchNum + 1,
+                                    success: 0,
+                                    failed: batchCount,
+                                    error: errorMsg
+                                });
+                            }
+                        } catch (err) {
+                            totalFailed += batchCount;
+                            bulkResponseDiv.innerHTML += '<p><strong>Lote ' + (batchNum + 1) + ':</strong> Error - ' + err.message + '</p>';
+                            allResults.push({
+                                batch: batchNum + 1,
+                                success: 0,
+                                failed: batchCount,
+                                error: err.message
+                            });
+                        }
+                    }
+
+                    // Show final summary
+                    var summaryHtml = '<hr style="margin: 20px 0; border: 1px solid #adb5bd;" />';
+                    summaryHtml += '<p style="font-weight: 600; font-size: 16px;">Resumen Final:</p>';
+                    summaryHtml += '<p><strong>Total éxitos:</strong> ' + totalSuccess + ' leads</p>';
+                    if (totalFailed > 0) {
+                        summaryHtml += '<p><strong>Total fallos:</strong> ' + totalFailed + ' leads</p>';
+                    }
+                    summaryHtml += '<p><strong>Total lotes:</strong> ' + totalBatches + '</p>';
+                    
+                    if (allLeadIds.length > 0) {
+                        summaryHtml += '<p><strong>IDs creados (' + allLeadIds.length + '):</strong></p>';
+                        summaryHtml += '<textarea readonly style="width: 100%; height: 120px; font-family: monospace; font-size: 12px; padding: 10px; border: 1px solid #dee3ed; border-radius: 4px; resize: vertical; background: #fff;">' + allLeadIds.join('\n') + '</textarea>';
+                    }
+                    
+                    bulkResponseDiv.innerHTML += summaryHtml;
+                    
+                    console.log('Batch results:', allResults);
+                    console.log('All Lead IDs:', allLeadIds);
+
+                    // Re-enable buttons
+                    generateSendBtn.disabled = false;
+                    generateBtn.disabled = false;
+                    generateSendBtn.textContent = 'Generar y Enviar';
+                });
+            }
+
             envRadios.forEach(function (radio) {
                 radio.addEventListener('change', loadEndpoint);
             });
 
+            modeRadios.forEach(function (radio) {
+                radio.addEventListener('change', function() {
+                    loadEndpoint();
+                    updateJsonExample();
+                    updateGeneratorVisibility();
+                });
+            });
+
+            updateGeneratorVisibility();
             loadEndpoint();
 
             btn.addEventListener('click', async function () {
