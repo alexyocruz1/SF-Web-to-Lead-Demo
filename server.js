@@ -16,35 +16,56 @@ app.use(express.json());
 app.use(express.static('.'));
 
 // Import the API handler logic
-const apiHandler = require('./api/leads');
+const leadsHandler = require('./api/leads');
+const picklistsHandler = require('./api/picklists');
 
-// Proxy the API endpoint
-app.all('/api/leads', async (req, res) => {
-  // Convert Express req/res to Vercel-style handler
-  const vercelReq = {
-    method: req.method,
-    body: req.body,
-    query: req.query,
-  };
-  
-  let statusCode = 200;
-  const vercelRes = {
-    status: (code) => {
-      statusCode = code;
-      return vercelRes;
-    },
-    json: (data) => {
-      res.status(statusCode).json(data);
-    },
-  };
+// Helper function to convert Express req/res to Vercel-style handler
+function createVercelAdapter(handler) {
+  return async (req, res) => {
+    const vercelReq = {
+      method: req.method,
+      body: req.body,
+      query: req.query,
+    };
+    
+    let statusCode = 200;
+    let headers = {};
+    
+    const vercelRes = {
+      status: (code) => {
+        statusCode = code;
+        return vercelRes;
+      },
+      setHeader: (key, value) => {
+        headers[key] = value;
+        return vercelRes;
+      },
+      json: (data) => {
+        Object.entries(headers).forEach(([key, value]) => {
+          res.setHeader(key, value);
+        });
+        res.status(statusCode).json(data);
+      },
+      end: () => {
+        Object.entries(headers).forEach(([key, value]) => {
+          res.setHeader(key, value);
+        });
+        res.status(statusCode).end();
+      }
+    };
 
-  try {
-    await apiHandler(vercelReq, vercelRes);
-  } catch (err) {
-    console.error('API error:', err);
-    res.status(500).json({ error: err.message });
-  }
-});
+    try {
+      await handler(vercelReq, vercelRes);
+    } catch (err) {
+      console.error('API error:', err);
+      res.status(500).json({ error: err.message });
+    }
+  };
+}
+
+// Proxy the API endpoints
+app.all('/api/leads', createVercelAdapter(leadsHandler));
+app.all('/api/picklists', createVercelAdapter(picklistsHandler));
 
 // Serve index.html for all routes (SPA-style)
 app.get('*', (req, res) => {
@@ -53,5 +74,7 @@ app.get('*', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
-  console.log(`API endpoint: http://localhost:${PORT}/api/leads`);
+  console.log(`API endpoints:`);
+  console.log(`  - http://localhost:${PORT}/api/leads`);
+  console.log(`  - http://localhost:${PORT}/api/picklists`);
 });
