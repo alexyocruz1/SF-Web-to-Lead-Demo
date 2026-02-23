@@ -379,6 +379,108 @@ Los campos personalizados usan su ID de campo de Salesforce:
 
 ---
 
+## Ejemplos de Payloads
+
+### Ejemplo Mínimo (Campos Requeridos)
+
+Este es el payload mínimo requerido para crear un lead en Salesforce. Incluye todos los campos obligatorios:
+
+```json
+{
+  "FirstName": "Juan",
+  "LastName": "Cruz",
+  "City": "Tegucigalpa",
+  "State": "Francisco Morazan",
+  "Country": "Honduras",
+  "Phone": "+50498811355",
+  "Company": "Acme Corp",
+  "Mensaje__c": "Mensaje de lead",
+  "Rubro__c": "Maquinaria CAT",
+  "Subrubro__c": "Nuevo CAT",
+  "Division__c": "CEMCOL CAT"
+}
+```
+
+---
+
+## Ejemplo de Payload Completo: PSE
+
+```json
+{
+  "account_name": "INVERSIONES AVICOLAS DE HONDURAS S.A.",
+  "assigned_user_id": "0cba0ef8-b995-11e6-b8ab-027a430c0995",
+  "description": "Customer Details\nCustomer has a fleet of 3 units with a coverage of:\n  33% - CVA's that meet the minimum definition\n  0% - EPP's\n  33% - Connected Assets\nThere are 1 expiring contracts with a future 12 month opp. of 1,484 USD for maintenance parts (MP) and 0 USD for repair parts (RP)\nCustomer Product Support Segment is WWM\n\nEquipment Details (sorted by MP opportunity) are\nMPW02336 (236D) – Expires on 2021-07-20 (PM) – Opp. MP 1,484 USD / RP 0 USD - SMU 1197h / mthly utiliz 140h",
+  "email1": "rdperez@inavih.com",
+  "first_name": "847225",
+  "last_name": "INVERSIONES AVICOLAS DE HONDURAS S.A DE C V",
+  "lead_source": "PSE de Ventas",
+  "opportunity_amount": "1484.0",
+  "phone_mobile": "9852-4428",
+  "primary_address_street": "EL ZAPOTE, SAN FRANCISCO DE YOJOA,CORTES",
+  "pse_amount_c": "1484.000000",
+  "pse_big_rock_c": "1",
+  "pse_dcn_c": "847225",
+  "pse_id_c": "26FEB14D-463E-4277-BCF5-50510CED4948",
+  "pse_model_c": "",
+  "pse_sales_rep_c": "YURY FAVIANA RAMOS HERNANDEZ",
+  "pse_sales_rep_id_c": "030866",
+  "pse_smu_c": null,
+  "pse_smu_units_c": "H",
+  "pse_sn_c": "",
+  "rubro_c": "Repuestos Caterpillar",
+  "status_description": "Customer Details\nCustomer has a fleet of 3 units with a coverage of:\n  33% - CVA's that meet the minimum definition\n  0% - EPP's\n  33% - Connected Assets\nThere are 1 expiring contracts with a future 12 month opp. of 1,484 USD for maintenance parts (MP) and 0 USD for repair parts (RP)\nCustomer Product Support Segment is WWM\n\nEquipment Details (sorted by MP opportunity) are\nMPW02336 (236D) – Expires on 2021-07-20 (PM) – Opp. MP 1,484 USD / RP 0 USD - SMU 1197h / mthly utiliz 140h"
+}
+```
+
+### Mapeo de Campos PSE a Salesforce
+
+Esta tabla documenta cómo se mapean los campos del sistema PSE a los campos de Salesforce Lead.
+
+| Campo JSON | Campo Salesforce | Tipo de Dato | Notas |
+|------------|------------------|--------------|-------|
+| `account_name` | Company | Texto | Longitud maxima de 255 |
+| `assigned_user_id` | OwnerId | Id | Id de usuario existente dentro de salesforce |
+| `description` | PSE_Descripcion__c | Texto | Longitud maxima de 255 |
+| `email1` | Email | Email (formato de correo) | - |
+| `first_name` | FirstName | Texto | Longitud maxima de 40 |
+| `last_name` | LastName | Texto | Longitud maxima de 80 |
+| `lead_source` | PSE_Origen__c | Texto | Longitud maxima de 80 |
+| `opportunity_amount` | PSE_Monto_de_Oportunidad__c | Texto | Longitud maxima de 255 |
+| `phone_mobile` | MobilePhone | Phone (Numeros, +, ()) | - |
+| `primary_address_street` | Address | Address (texto) | - |
+| `pse_amount_c` | PSE_Monto__c | Texto | Longitud maxima de 255 |
+| `pse_big_rock_c` | PSE_Big_Rock__c | Texto | Longitud maxima de 255 |
+| `pse_dcn_c` | PSE_DCN__c | Texto | Longitud maxima de 255 |
+| `pse_id_c` | PSE_ID__c | Texto | Longitud maxima de 255 |
+| `pse_model_c` | PSE_Modelo_Maquinaria__c | Texto | Longitud maxima de 255 |
+| `pse_sales_rep_c` | PSE_Asesor__c | Texto | Longitud maxima de 255 |
+| `pse_sales_rep_id_c` | PSE_Numero_de_Asesor__c | Texto | Longitud maxima de 255 |
+| `pse_smu_c` | PSE_SMU__c | Texto | Longitud maxima de 255 |
+| `pse_smu_units_c` | PSE_Unidades_de_SMU__c | Texto | Longitud maxima de 255 |
+| `pse_sn_c` | PSE_SN__c | Texto | Longitud maxima de 255 |
+| `rubro_c` | Rubro__c | Valor de lista de seleccion | debe ser un valor dentro de la lista descrita abajo |
+| `status_description` | PSE_Descripcion_de_Estado__c | Texto | Longitud maxima de 255 |
+
+### Valores de Picklists
+
+#### Rubro__c (Rubro)
+
+- Maquinaria CAT
+- Maquinaria SEM
+- Repuestos Camion International
+- Repuestos Camion Volkswagen
+- Mano de Obra Comercial
+- Lubricantes
+- Llantas
+- Repuestos Automotrices
+- Repuestos New Holland
+- Mangueras
+- STIHL
+- Trapp
+- Otro
+
+---
+
 ## Instrucciones de Configuración
 
 ### Instalación
