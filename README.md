@@ -58,7 +58,7 @@ Ejemplo completo con todos los campos estándar y personalizados de Salesforce d
 <form action="https://test.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=00DOx00000Mrgin" method="POST">
 
 <input type=hidden name="oid" value="00DOx00000Mrgin">
-<input type=hidden name="retURL" value="http://ads.com">
+<input type=hidden name="retURL" value="http://examplereturnpage.com">
 
 <!--  ----------------------------------------------------------------------  -->
 <!--  NOTE: These fields are optional debugging elements. Please uncomment    -->
@@ -109,15 +109,15 @@ Ejemplo completo con todos los campos estándar y personalizados de Salesforce d
 <label for="lead_source">Lead Source</label><select  id="lead_source" name="lead_source"><option value="">--None--</option><option value="Whatsapp">Whatsapp</option>
 <option value="Facebook">Facebook</option>
 <option value="Instagram">Instagram</option>
-<option value="PaginaWeb">Página Web</option>
+<option value="PaginaWeb">PaginaWeb</option>
 <option value="Evento">Evento</option>
-<option value="VisitaFabrica">Visita a Fábrica</option>
+<option value="VisitaFabrica">VisitaFabrica</option>
 <option value="OLGA">OLGA</option>
-<option value="PP">PP+</option>
-<option value="DMTCatRental">DMT Cat Rental</option>
-<option value="ReferenciaEmpleado">Referencia Empleado</option>
-<option value="CIPSA">Redes Sociales y Plataformas CIPSA</option>
-<option value="CARMIX">Redes Sociales y Plataformas CARMIX</option>
+<option value="PP">PP</option>
+<option value="DMTCatRental">DMTCatRental</option>
+<option value="ReferenciaEmpleado">ReferenciaEmpleado</option>
+<option value="CIPSA">CIPSA</option>
+<option value="CARMIX">CARMIX</option>
 <option value="Web to Lead">Web to Lead</option>
 <option value="Email">Email</option>
 </select><br>
@@ -179,12 +179,6 @@ Ejemplo completo con todos los campos estándar y personalizados de Salesforce d
 <label for="faxOptOut">Fax Opt Out</label><input  id="faxOptOut" name="faxOptOut" type="checkbox" value="1" /><br>
 
 <label for="doNotCall">Do Not Call</label><input  id="doNotCall" name="doNotCall" type="checkbox" value="1" /><br>
-
-División:<select  id="00NOx00000g8Lrt" name="00NOx00000g8Lrt" title="División"><option value="">--None--</option><option value="CEMCOL CAT">CEMCOL CAT</option>
-<option value="CEMCOL El Salvador">CEMCOL El Salvador</option>
-<option value="CEMCOL Nicaragua">CEMCOL Nicaragua</option>
-<option value="CEMCOL COMERCIAL">CEMCOL COMERCIAL</option>
-</select><br>
 
 CAT Lead ID:<select  id="00NOx00000g8M9d" name="00NOx00000g8M9d" title="CAT Lead ID"><option value="">--None--</option><option value="PSE ID OLGA">PSE ID OLGA</option>
 <option value="PP+">PP+</option>
@@ -324,6 +318,22 @@ Area:<select  id="00NOx00000gCpbF" name="00NOx00000gCpbF" title="Area"><option v
 <option value="New Holland">New Holland</option>
 <option value="OLGA">OLGA</option>
 </select><br>
+
+División:<select  id="00NOx00000gFoCP" name="00NOx00000gFoCP" title="División"><option value="">--None--</option><option value="CEMCOL CAT">CEMCOL CAT</option>
+<option value="CEMCOL El Salvador">CEMCOL El Salvador</option>
+<option value="CEMCOL Nicaragua">CEMCOL Nicaragua</option>
+<option value="CEMCOL COMERCIAL">CEMCOL COMERCIAL</option>
+</select><br>
+
+PSE Monto:<input  id="00NOx00000gIH2D" maxlength="255" name="00NOx00000gIH2D" size="20" type="text" /><br>
+
+PSE Big Rock:<input  id="00NOx00000gIH3p" maxlength="255" name="00NOx00000gIH3p" size="20" type="text" /><br>
+
+PSE DCN:<input  id="00NOx00000gIH73" maxlength="255" name="00NOx00000gIH73" size="20" type="text" /><br>
+
+PSE SN:<input  id="00NOx00000gIHAH" maxlength="255" name="00NOx00000gIHAH" size="20" type="text" /><br>
+
+PSE Descripción de Estado:<input  id="00NOx00000gIHDV" maxlength="255" name="00NOx00000gIHDV" size="20" type="text" /><br>
 
 <input type="submit" name="submit">
 
@@ -482,6 +492,40 @@ Esta tabla documenta cómo se mapean los campos del sistema PSE a los campos de 
 ---
 
 ## Instrucciones de Configuración
+
+### Generar Certificado y Clave Privada para JWT Bearer Flow
+
+#### Opción 1: OpenSSL Manual (Bash/Terminal)
+
+```bash
+# Paso 1: Generar clave privada (2048 bits)
+openssl genrsa -out salesforce-private-key.pem 2048
+
+# Paso 2: Generar certificado autofirmado válido por 1 año (365 días)
+openssl req -new -x509 -key salesforce-private-key.pem -out salesforce-cert.pem -days 365
+
+# Durante la generación del certificado te pedirá información:
+# Country Name: HN (Honduras) o cualquier país
+# State: Francisco Morazan (o cualquier estado o departamento)
+# Locality: Tegucigalpa (o cualquier ciudad)
+# Organization: CEMCOL (o cualquier empresa)
+# Organizational Unit: IT (o cualquier departamento)
+# Common Name: api.cemcol.com (o cualquier dominio o nombre)
+# Email: email@cemcol.com (o cualquier email)
+```
+
+#### Opción 2: PowerShell (Windows)
+
+```powershell
+# Instalar OpenSSL via Chocolatey
+choco install openssl
+
+# O descargar desde: https://slproweb.com/products/Win32OpenSSL.html
+
+# Luego usar los mismos comandos que en Opción 1
+openssl genrsa -out salesforce-private-key.pem 2048
+openssl req -new -x509 -key salesforce-private-key.pem -out salesforce-cert.pem -days 365
+```
 
 ### Instalación
 
