@@ -80,67 +80,6 @@ async function getPicklistValues(accessToken, instanceUrl, apiVersion, objectApi
     return await response.json();
 }
 
-// Parse UI API picklist response
-function parseUIApiPicklistResponse(rubroData, subrubroData) {
-    
-    // Extract controlling values (Rubro values)
-    const controllingValues = rubroData.values.map(v => ({
-        label: v.label,
-        value: v.value
-    }));
-    
-    // Parse dependencies from Subrubro values
-    const dependencies = {};
-    
-    if (subrubroData.controllerValues && Object.keys(subrubroData.controllerValues).length > 0) {
-        
-        // Build reverse lookup: index -> controlling value
-        const indexToControllerValue = {};
-        Object.entries(subrubroData.controllerValues).forEach(([value, index]) => {
-            indexToControllerValue[index] = value;
-        });
-        
-        // Parse each dependent value (Subrubro values)
-        subrubroData.values.forEach(depValue => {
-            if (depValue.validFor && depValue.validFor.length > 0) {
-                // validFor contains indices that map to controlling values (Rubro values)
-                depValue.validFor.forEach(controllerIndex => {
-                    const controllerValue = indexToControllerValue[controllerIndex];
-                    
-                    if (controllerValue) {
-                        if (!dependencies[controllerValue]) {
-                            dependencies[controllerValue] = [];
-                        }
-                        
-                        dependencies[controllerValue].push({
-                            label: depValue.label,
-                            value: depValue.value
-                        });
-                    }
-                });
-            } else {
-                console.log('Subrubro value with no validFor:', depValue.label);
-            }
-        });
-        
-    } else {
-        // No dependencies configured - all subrubro values available for all rubro values
-        const allDependentValues = subrubroData.values.map(v => ({
-            label: v.label,
-            value: v.value
-        }));
-        
-        controllingValues.forEach(cv => {
-            dependencies[cv.value] = allDependentValues;
-        });
-    }
-    
-    return {
-        controllingValues,
-        dependencies
-    };
-}
-
 module.exports = async (req, res) => {
     // Set CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -161,17 +100,23 @@ module.exports = async (req, res) => {
         
         // Get Salesforce access token
         const tokenResponse = await getSalesforceToken(environment);
-        
         const { access_token, instance_url } = tokenResponse;
-        
-        // Fetch picklist values using UI API
-        const rubroData = await getPicklistValues(access_token, instance_url, apiVersion, 'Lead', 'Rubro__c');
-        const subrubroData = await getPicklistValues(access_token, instance_url, apiVersion, 'Lead', 'Subrubro__c');
-        
-        // Parse the UI API response
-        const result = parseUIApiPicklistResponse(rubroData, subrubroData);
-        
-        return res.status(200).json(result);
+
+        // Fetch Tipo_de_Negocio__c picklist values (desde Lead)
+        const tipoNegocioData = await getPicklistValues(
+            access_token,
+            instance_url,
+            apiVersion,
+            'Lead',
+            'Tipo_de_Negocio__c'
+        );
+
+        const values = (tipoNegocioData.values || []).map(v => ({
+            label: v.label,
+            value: v.value
+        }));
+
+        return res.status(200).json({ values });
         
     } catch (error) {
         console.error('Picklist fetch error:', error);
