@@ -19,6 +19,7 @@ app.use(express.static('.'));
 const leadsHandler = require('./api/leads');
 const picklistsHandler = require('./api/picklists');
 const classificationsHandler = require('./api/classifications');
+const usersHandler = require('./api/users');
 
 // Helper function to convert Express req/res to Vercel-style handler
 function createVercelAdapter(handler) {
@@ -68,6 +69,7 @@ function createVercelAdapter(handler) {
 app.all('/api/leads', createVercelAdapter(leadsHandler));
 app.all('/api/picklists', createVercelAdapter(picklistsHandler));
 app.all('/api/classifications', createVercelAdapter(classificationsHandler));
+app.all('/api/users', createVercelAdapter(usersHandler));
 
 // Serve index.html for all routes (SPA-style)
 app.get('*', (req, res) => {
@@ -80,4 +82,5 @@ app.listen(PORT, () => {
   console.log(`  - http://localhost:${PORT}/api/leads`);
   console.log(`  - http://localhost:${PORT}/api/picklists`);
   console.log(`  - http://localhost:${PORT}/api/classifications`);
+  console.log(`  - http://localhost:${PORT}/api/users`);
 });

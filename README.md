@@ -681,6 +681,44 @@ GET /api/picklists?environment=test
 }
 ```
 
+### GET `/api/classifications`
+Obtener clasificaciones (Rubros, Subrubros y Divisiones) desde Salesforce para poblar selects en el Web-to-Lead.
+
+**Petición:**
+```
+GET /api/classifications?environment=test
+```
+
+**Respuesta (ejemplo):**
+```json
+{
+  "rubros": [{ "id": "a06...", "name": "Dog", "tipoDeNegocio": "Equipos" }],
+  "subrubros": [{ "id": "a05...", "name": "Puppy", "rubroId": "a06..." }],
+  "divisiones": [{ "id": "a04...", "name": "CEMCOL COMERCIAL" }]
+}
+```
+
+### GET `/api/users`
+Listar usuarios activos (objeto `User`) desde Salesforce.
+
+En el demo, esto se muestra en el nuevo tab **User** (selector TEST/PRODUCTION, endpoint y tabla con Id/Name).
+
+**Petición:**
+```
+GET /api/users?environment=test
+```
+
+**Respuesta (ejemplo):**
+```json
+{
+  "endpoint": "https://YOUR_INSTANCE/services/data/v65.0/query",
+  "users": [
+    { "id": "005...", "name": "Ada Lovelace" },
+    { "id": "005...", "name": "Alan Turing" }
+  ]
+}
+```
+
 ---
 
 ## Desarrollo
@@ -691,7 +729,9 @@ GET /api/picklists?environment=test
 SF-Web-to-Lead-Demo/
 ├── api/
 │   ├── leads.js          # API de creación de leads
-│   └── picklists.js      # API de obtención de picklists
+│   ├── picklists.js      # API de obtención de picklists
+│   ├── classifications.js# API de Rubros/Subrubros/Divisiones
+│   └── users.js          # API de usuarios (User)
 ├── index.html            # Página principal del demo
 ├── gracias.html          # Página de agradecimiento
 ├── styles.css            # Estilos

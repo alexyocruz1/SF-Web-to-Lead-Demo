@@ -20,6 +20,7 @@
             <button class="tab" onclick="switchTab('cat')">CEMCOL CAT</button>
             <button class="tab" onclick="switchTab('dynamic')">LEADS NEW HOLLAND</button>
             <button class="tab" onclick="switchTab('api-leads')">Leads OLGA</button>
+            <button class="tab" onclick="switchTab('users')">User</button>
         </div>
 
         <!-- copy and paste the CEMCOL Comercial Web-to-Lead form code here -->
@@ -451,16 +452,63 @@
   "Categoria_Producto__c": "Producto Ejemplo",
   "Mensaje__c": "Este es un mensaje de prueba",
   "Tipo_de_Negocio__c": "Equipos",
-  "Rubro_Relacion__c": "a06Ox00000VCXhWIAX",
-  "Subrubro_Relacion__c": "a05Ox00000dL3SfIAK",
+  "Rubro_Relacion__c": "a06Ox00000VClHRIA1",
+  "Subrubro_Relacion__c": "a05Ox00000dL2mlIAC",
   "LeadSource": "OLGA",
-  "Division_Nuevo__c": "a04Ox00000BOEjRIAX",
-  "Area__c": "OLGA"
+  "Division_Nuevo__c": "a04Ox00000BOEmfIAH",
+  "Area__c": "OLGA",
+  "OwnerId": "005Ox00000cAN8sIAG"
 }</textarea>                    
                 </div>
                 <div class="api-field api-leads-actions" id="api-manual-send-section">
                     <button type="button" id="api-send-btn" class="api-send-btn">Enviar</button>
                     <div id="api-response" class="api-response" aria-live="polite" hidden></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="users" class="tab-content">
+            <div class="api-leads-container">
+                <div class="api-field">
+                    <label class="api-env-label">Entorno</label>
+                    <div class="api-env-radios">
+                        <label class="api-env-radio">
+                            <input type="radio" name="users-env" value="test" id="users-env-test" checked />
+                            <span>TEST</span>
+                        </label>
+                        <label class="api-env-radio">
+                            <input type="radio" name="users-env" value="production" id="users-env-production" />
+                            <span>PRODUCTION</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="api-field">
+                    <label for="users-endpoint">User object endpoint</label>
+                    <textarea id="users-endpoint" readonly class="api-endpoint-readonly" placeholder="Cargando..." rows="2"></textarea>
+                </div>
+
+                <div class="api-field">
+                    <button type="button" id="users-refresh-btn" class="api-send-btn">Refrescar</button>
+                    <div id="users-error" class="api-response api-response--error" aria-live="polite" hidden></div>
+                </div>
+
+                <div class="api-field">
+                    <div style="overflow-x: auto;">
+                        <table id="users-table" style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: left; padding: 10px 12px; border-bottom: 1px solid #eee;">Id</th>
+                                    <th style="text-align: left; padding: 10px 12px; border-bottom: 1px solid #eee;">Name</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-tbody">
+                                <tr>
+                                    <td colspan="2" style="padding: 10px 12px; color: #666;">Cargando…</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -797,11 +845,12 @@
                 "Categoria_Producto__c": "Producto Ejemplo",
                 "Mensaje__c": "Este es un mensaje de prueba",
                 "Tipo_de_Negocio__c": "Equipos",
-                "Rubro_Relacion__c": "a01XXXXXXXXXXXXXXX",
-                "Subrubro_Relacion__c": "a02YYYYYYYYYYYYY",
+                "Rubro_Relacion__c": "a06Ox00000VClHRIA1",
+                "Subrubro_Relacion__c": "a05Ox00000dL2mlIAC",
                 "LeadSource": "OLGA",
-                "Division_Nuevo__c": "a04Ox00000BOEjRIAX",
-                "Area__c": "OLGA"
+                "Division_Nuevo__c": "a04Ox00000BOEmfIAH",
+                "Area__c": "OLGA",
+                "OwnerId": "005Ox00000cAN8sIAG"
             };
 
             var bulkExample = {
@@ -1274,6 +1323,114 @@
                 responseEl.className = 'api-response api-response--' + (type || 'info');
                 responseEl.hidden = false;
             }
+        })();
+
+        // Users tab (Salesforce User list)
+        (function () {
+            var endpointInput = document.getElementById('users-endpoint');
+            var refreshBtn = document.getElementById('users-refresh-btn');
+            var tbody = document.getElementById('users-tbody');
+            var errorEl = document.getElementById('users-error');
+            var envRadios = document.querySelectorAll('input[name="users-env"]');
+
+            if (!endpointInput || !refreshBtn || !tbody || !errorEl || !envRadios.length) return;
+
+            function getEnvironment() {
+                var checked = document.querySelector('input[name="users-env"]:checked');
+                return checked ? checked.value : 'test';
+            }
+
+            function showError(msg) {
+                errorEl.textContent = msg;
+                errorEl.hidden = !msg;
+            }
+
+            function setLoading() {
+                tbody.innerHTML = '<tr><td colspan="2" style="padding: 10px 12px; color: #666;">Cargando…</td></tr>';
+            }
+
+            function renderUsers(users) {
+                if (!users || !users.length) {
+                    tbody.innerHTML = '<tr><td colspan="2" style="padding: 10px 12px; color: #666;">Sin resultados.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = users
+                    .map(function (u) {
+                        return (
+                            '<tr>' +
+                            '<td style="padding: 10px 12px; border-bottom: 1px solid #f2f2f2; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \\"Liberation Mono\\", \\"Courier New\\", monospace;">' +
+                            String(u.id || '') +
+                            '</td>' +
+                            '<td style="padding: 10px 12px; border-bottom: 1px solid #f2f2f2;">' +
+                            String(u.name || '') +
+                            '</td>' +
+                            '</tr>'
+                        );
+                    })
+                    .join('');
+            }
+
+            async function loadUsers() {
+                showError('');
+                setLoading();
+                endpointInput.value = 'Cargando...';
+                refreshBtn.disabled = true;
+                refreshBtn.textContent = 'Cargando…';
+
+                try {
+                    var env = getEnvironment();
+                    var res = await fetch('/api/users?environment=' + env);
+                    var data = await res.json().catch(function () { return null; });
+                    if (!res.ok) {
+                        throw new Error((data && (data.message || data.error)) || ('HTTP ' + res.status));
+                    }
+
+                    var soql =
+                        (data && data.soql) ||
+                        'SELECT Id, Name FROM User WHERE IsActive = true ORDER BY Name LIMIT 200';
+                    var baseQueryEndpoint = (data && data.endpoint) || null;
+                    var encodedQueryUrl =
+                        (data && data.queryUrl) ||
+                        (baseQueryEndpoint ? baseQueryEndpoint + '?q=' + encodeURIComponent(soql) : null);
+
+                    if (!baseQueryEndpoint && !encodedQueryUrl) {
+                        endpointInput.value =
+                            'Endpoint no configurado (configure TEST_INSTANCE/PRODUCTION_INSTANCE y SF_API_VERSION)\n' +
+                            location.origin +
+                            '/api/users?environment=' +
+                            env;
+                    } else {
+                        endpointInput.value =
+                            'Salesforce query endpoint:\n' +
+                            (baseQueryEndpoint || '(no disponible)') +
+                            '\n\nSOQL (legible):\n' +
+                            soql +
+                            '\n\nFull URL (encoded):\n' +
+                            (encodedQueryUrl || '(no disponible)') +
+                            '\n\nLocal endpoint:\n' +
+                            location.origin +
+                            '/api/users?environment=' +
+                            env;
+                    }
+
+                    renderUsers((data && data.users) || []);
+                } catch (err) {
+                    endpointInput.value = '';
+                    renderUsers([]);
+                    showError('No se pudo cargar usuarios: ' + err.message);
+                }
+
+                refreshBtn.disabled = false;
+                refreshBtn.textContent = 'Refrescar';
+            }
+
+            envRadios.forEach(function (r) {
+                r.addEventListener('change', loadUsers);
+            });
+            refreshBtn.addEventListener('click', loadUsers);
+
+            loadUsers();
         })();
     </script>
 </body>
