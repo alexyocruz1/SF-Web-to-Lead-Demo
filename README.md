@@ -453,7 +453,7 @@ Esta tabla documenta cómo se mapean los campos del sistema PSE a los campos de 
 | Campo JSON | Campo Salesforce | Tipo de Dato | Notas |
 |------------|------------------|--------------|-------|
 | `account_name` | Company | Texto | Longitud maxima de 255 |
-| `assigned_user_id` | OwnerId | Id | Id de usuario existente dentro de salesforce |
+| `assigned_user_id` | External_Owner__c | Id | Id de usuario existente dentro de salesforce |
 | `description` | PSE_Descripcion__c | Texto | Longitud maxima de 255 |
 | `email1` | Email | Email (formato de correo) | - |
 | `first_name` | FirstName | Texto | Longitud maxima de 40 |
