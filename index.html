@@ -20,6 +20,7 @@
             <button class="tab" onclick="switchTab('cat')">CEMCOL CAT</button>
             <button class="tab" onclick="switchTab('dynamic')">LEADS NEW HOLLAND</button>
             <button class="tab" onclick="switchTab('api-leads')">Leads OLGA</button>
+            <button class="tab" onclick="switchTab('api-leads-get')">Consultar Leads</button>
             <button class="tab" onclick="switchTab('users')">User</button>
         </div>
 
@@ -463,6 +464,88 @@
                 <div class="api-field api-leads-actions" id="api-manual-send-section">
                     <button type="button" id="api-send-btn" class="api-send-btn">Enviar</button>
                     <div id="api-response" class="api-response" aria-live="polite" hidden></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="api-leads-get" class="tab-content">
+            <div class="api-leads-container">
+                <div class="api-field">
+                    <label class="api-env-label">Entorno</label>
+                    <div class="api-env-radios">
+                        <label class="api-env-radio">
+                            <input type="radio" name="api-read-env" value="test" id="api-read-env-test" checked />
+                            <span>TEST</span>
+                        </label>
+                        <label class="api-env-radio">
+                            <input type="radio" name="api-read-env" value="production" id="api-read-env-production" />
+                            <span>PRODUCTION</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="api-field">
+                    <label class="api-env-label">Modo de consulta</label>
+                    <div class="api-env-radios">
+                        <label class="api-env-radio">
+                            <input type="radio" name="api-read-mode" value="byId" id="api-read-mode-byid" />
+                            <span>Por Id</span>
+                        </label>
+                        <label class="api-env-radio">
+                            <input type="radio" name="api-read-mode" value="query" id="api-read-mode-query" checked />
+                            <span>SOQL</span>
+                        </label>
+                        <label class="api-env-radio">
+                            <input type="radio" name="api-read-mode" value="byIds" id="api-read-mode-byids" />
+                            <span>Lista de Ids</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="api-field">
+                    <label for="api-read-endpoint">Endpoint URL (sugerido)</label>
+                    <textarea id="api-read-endpoint" readonly class="api-endpoint-readonly" placeholder="Cargando..." rows="3"></textarea>
+                </div>
+                <div class="api-field" id="api-read-byid-section" style="display: none;">
+                    <label for="api-read-lead-id">Lead Id</label>
+                    <input type="text" id="api-read-lead-id" class="api-lead-count" placeholder="00Qxxxxxxxxxxxxxxx" style="width: 100%; max-width: 420px;" />
+                </div>
+                <div class="api-field" id="api-read-query-section">
+                    <label for="api-read-soql">SOQL</label>
+                    <textarea id="api-read-soql" class="api-json-textarea" rows="8">SELECT Id, Name, Company, Email, Status, LeadSource, CreatedDate
+FROM Lead
+ORDER BY CreatedDate DESC
+LIMIT 20</textarea>
+                </div>
+                <div class="api-field" id="api-read-byids-section" style="display: none;">
+                    <label for="api-read-lead-ids">Lead Ids (uno por línea)</label>
+                    <textarea id="api-read-lead-ids" class="api-json-textarea" rows="8" placeholder="00Qxxxxxxxxxxxxxxx&#10;00Qyyyyyyyyyyyyyyy"></textarea>
+                </div>
+                <div class="api-field api-leads-actions">
+                    <button type="button" id="api-read-btn" class="api-send-btn">Consultar</button>
+                    <div id="api-read-message" class="api-response" aria-live="polite" hidden></div>
+                </div>
+                <div class="api-field">
+                    <label for="api-read-response">Respuesta JSON</label>
+                    <textarea id="api-read-response" readonly class="api-json-textarea" rows="14" placeholder="La respuesta aparecerá aquí..."></textarea>
+                </div>
+                <div class="api-field">
+                    <label>Resumen</label>
+                    <div style="overflow-x: auto;">
+                        <table id="api-read-table" style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: left; padding: 10px 12px; border-bottom: 1px solid #eee;">Id</th>
+                                    <th style="text-align: left; padding: 10px 12px; border-bottom: 1px solid #eee;">Name</th>
+                                    <th style="text-align: left; padding: 10px 12px; border-bottom: 1px solid #eee;">Company</th>
+                                    <th style="text-align: left; padding: 10px 12px; border-bottom: 1px solid #eee;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="api-read-tbody">
+                                <tr>
+                                    <td colspan="4" style="padding: 10px 12px; color: #666;">Sin resultados.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1327,6 +1410,169 @@
                 responseEl.className = 'api-response api-response--' + (type || 'info');
                 responseEl.hidden = false;
             }
+        })();
+
+        // Consultar Leads (GET via /api/leads-read)
+        (function () {
+            var endpointInput = document.getElementById('api-read-endpoint');
+            var consultBtn = document.getElementById('api-read-btn');
+            var responseEl = document.getElementById('api-read-response');
+            var messageEl = document.getElementById('api-read-message');
+            var tbody = document.getElementById('api-read-tbody');
+            var envRadios = document.querySelectorAll('input[name="api-read-env"]');
+            var modeRadios = document.querySelectorAll('input[name="api-read-mode"]');
+            var byIdSection = document.getElementById('api-read-byid-section');
+            var querySection = document.getElementById('api-read-query-section');
+            var byIdsSection = document.getElementById('api-read-byids-section');
+            var leadIdInput = document.getElementById('api-read-lead-id');
+            var soqlInput = document.getElementById('api-read-soql');
+            var leadIdsInput = document.getElementById('api-read-lead-ids');
+
+            if (!endpointInput || !consultBtn || !responseEl || !messageEl || !tbody || !envRadios.length || !modeRadios.length) return;
+
+            function getEnvironment() {
+                var checked = document.querySelector('input[name="api-read-env"]:checked');
+                return checked ? checked.value : 'test';
+            }
+
+            function getMode() {
+                var checked = document.querySelector('input[name="api-read-mode"]:checked');
+                return checked ? checked.value : 'query';
+            }
+
+            function showMessage(msg, type) {
+                messageEl.textContent = msg;
+                messageEl.className = 'api-response api-response--' + (type || 'info');
+                messageEl.hidden = !msg;
+            }
+
+            function updateModeSections() {
+                var mode = getMode();
+                if (byIdSection) byIdSection.style.display = mode === 'byId' ? '' : 'none';
+                if (querySection) querySection.style.display = mode === 'query' ? '' : 'none';
+                if (byIdsSection) byIdsSection.style.display = mode === 'byIds' ? '' : 'none';
+            }
+
+            function renderSummary(data, mode) {
+                var records = [];
+                if (!data) {
+                    records = [];
+                } else if (mode === 'byId') {
+                    records = [data];
+                } else if (Array.isArray(data.records)) {
+                    records = data.records;
+                }
+
+                if (!records.length) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="padding: 10px 12px; color: #666;">Sin resultados.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = records
+                    .map(function (r) {
+                        return (
+                            '<tr>' +
+                            '<td style="padding: 10px 12px; border-bottom: 1px solid #f2f2f2; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;">' +
+                            String(r.Id || '') +
+                            '</td>' +
+                            '<td style="padding: 10px 12px; border-bottom: 1px solid #f2f2f2;">' +
+                            String(r.Name || '') +
+                            '</td>' +
+                            '<td style="padding: 10px 12px; border-bottom: 1px solid #f2f2f2;">' +
+                            String(r.Company || '') +
+                            '</td>' +
+                            '<td style="padding: 10px 12px; border-bottom: 1px solid #f2f2f2;">' +
+                            String(r.Status || '') +
+                            '</td>' +
+                            '</tr>'
+                        );
+                    })
+                    .join('');
+            }
+
+            function loadSuggestedEndpoint() {
+                var env = getEnvironment();
+                var mode = getMode();
+                var leadId = leadIdInput ? leadIdInput.value.trim() : '';
+                var url = '/api/leads-read?environment=' + env + '&mode=' + mode;
+                if (leadId) url += '&leadId=' + encodeURIComponent(leadId);
+                endpointInput.value = 'Cargando...';
+                fetch(url)
+                    .then(function (r) {
+                        if (!r.ok) throw new Error('HTTP ' + r.status);
+                        return r.json();
+                    })
+                    .then(function (data) {
+                        endpointInput.value = data.suggestedEndpoint || 'Endpoint no disponible';
+                    })
+                    .catch(function () {
+                        endpointInput.value = '';
+                        endpointInput.placeholder = 'Error al cargar endpoint sugerido';
+                    });
+            }
+
+            function buildPayload() {
+                var mode = getMode();
+                var payload = { environment: getEnvironment(), mode: mode };
+                if (mode === 'byId') {
+                    payload.leadId = leadIdInput ? leadIdInput.value.trim() : '';
+                } else if (mode === 'query') {
+                    payload.soql = soqlInput ? soqlInput.value.trim() : '';
+                } else if (mode === 'byIds') {
+                    var raw = leadIdsInput ? leadIdsInput.value : '';
+                    payload.leadIds = raw
+                        .split(/\r?\n/)
+                        .map(function (line) { return line.trim(); })
+                        .filter(Boolean);
+                }
+                return payload;
+            }
+
+            consultBtn.addEventListener('click', async function () {
+                showMessage('');
+                consultBtn.disabled = true;
+                consultBtn.textContent = 'Consultando…';
+                responseEl.value = '';
+                try {
+                    var payload = buildPayload();
+                    var res = await fetch('/api/leads-read', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload),
+                    });
+                    var json = await res.json().catch(function () { return { error: res.statusText }; });
+                    responseEl.value = JSON.stringify(json, null, 2);
+                    if (!res.ok) {
+                        showMessage((json.error || JSON.stringify(json)) + ' (HTTP ' + res.status + ')', 'error');
+                        renderSummary(null, payload.mode);
+                        return;
+                    }
+                    showMessage('Consulta exitosa.', 'success');
+                    renderSummary(json.data, payload.mode);
+                    if (json.requestUrl) endpointInput.value = json.requestUrl;
+                } catch (err) {
+                    showMessage('Error de red: ' + err.message, 'error');
+                    renderSummary(null, getMode());
+                }
+                consultBtn.disabled = false;
+                consultBtn.textContent = 'Consultar';
+            });
+
+            envRadios.forEach(function (radio) {
+                radio.addEventListener('change', loadSuggestedEndpoint);
+            });
+            modeRadios.forEach(function (radio) {
+                radio.addEventListener('change', function () {
+                    updateModeSections();
+                    loadSuggestedEndpoint();
+                });
+            });
+            if (leadIdInput) {
+                leadIdInput.addEventListener('change', loadSuggestedEndpoint);
+            }
+
+            updateModeSections();
+            loadSuggestedEndpoint();
         })();
 
         // Users tab (Salesforce User list)
