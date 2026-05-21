@@ -396,7 +396,7 @@ Los campos personalizados usan su ID de campo de Salesforce:
 
 Este es el payload mínimo requerido para crear un lead en Salesforce. Incluye todos los campos obligatorios.
 
-> 🔁 **[NUEVO] Importante:** A partir del 2026-03-10 los campos `Rubro_Relacion__c`, `Subrubro_Relacion__c` y `Division_Nuevo__c` ya **no usan etiquetas de picklist**, sino que apuntan a **registros de tablas (objetos)** dentro de Salesforce.  
+> 🔁 **[NUEVO] Importante:** A partir del 2026-03-10 los campos `Rubro_Relacion__c`, `Subrubro_Relacion__c`, `Division_Nuevo__c` y `Sucursal_Relacion__c` ya **no usan etiquetas de picklist**, sino que apuntan a **registros de tablas (objetos)** dentro de Salesforce.  
 > En el payload se debe enviar **el Id del registro** (por ejemplo `a01XXXXXXXXXXXXXXX`), no el nombre legible.
 
 ```json
@@ -411,7 +411,8 @@ Este es el payload mínimo requerido para crear un lead en Salesforce. Incluye t
   "Mensaje__c": "Mensaje de lead",
   "Rubro_Relacion__c": "a01XXXXXXXXXXXXXXX",
   "Subrubro_Relacion__c": "a02YYYYYYYYYYYYY",
-  "Division_Nuevo__c": "a04Ox00000BOEjRIAX"
+  "Division_Nuevo__c": "a04Ox00000BOEjRIAX",
+  "Sucursal_Relacion__c": "a07Ox0000Ey8lFJIQY"
 }
 ```
 
@@ -682,7 +683,7 @@ GET /api/picklists?environment=test
 ```
 
 ### GET `/api/classifications`
-Obtener clasificaciones (Rubros, Subrubros y Divisiones) desde Salesforce para poblar selects en el Web-to-Lead.
+Obtener clasificaciones (Rubros, Subrubros, Divisiones y Sucursales) desde Salesforce para poblar selects en el Web-to-Lead.
 
 **Petición:**
 ```
@@ -694,9 +695,12 @@ GET /api/classifications?environment=test
 {
   "rubros": [{ "id": "a06...", "name": "Dog", "tipoDeNegocio": "Equipos" }],
   "subrubros": [{ "id": "a05...", "name": "Puppy", "rubroId": "a06..." }],
-  "divisiones": [{ "id": "a04...", "name": "CEMCOL COMERCIAL" }]
+  "divisiones": [{ "id": "a04...", "name": "CEMCOL COMERCIAL" }],
+  "sucursales": [{ "id": "a07...", "name": "Sucursal Centro", "codigo": "001", "divisionId": "a04..." }]
 }
 ```
+
+**Sucursal:** cada registro de `Sucursal__c` tiene lookup `Division__c`. En el formulario, el select de Sucursal se filtra según la División elegida.
 
 ### GET `/api/users`
 Listar usuarios activos (objeto `User`) desde Salesforce.

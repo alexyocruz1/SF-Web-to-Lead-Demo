@@ -131,6 +131,14 @@ module.exports = async (req, res) => {
       'SELECT Id, Name FROM Division__c'
     );
 
+    // Sucursales con lookup a Division__c
+    const sucursalRecords = await querySalesforce(
+      access_token,
+      instance_url,
+      apiVersion,
+      'SELECT Id, Name, Codigo_Sucursal__c, Division__c FROM Sucursal__c'
+    );
+
     const rubros = rubroRecords.map(r => ({
       id: r.Id,
       name: r.Name,
@@ -148,10 +156,18 @@ module.exports = async (req, res) => {
       name: d.Name,
     }));
 
+    const sucursales = sucursalRecords.map(s => ({
+      id: s.Id,
+      name: s.Name,
+      codigo: s.Codigo_Sucursal__c || null,
+      divisionId: s.Division__c || null,
+    }));
+
     return res.status(200).json({
       rubros,
       subrubros,
       divisiones,
+      sucursales,
     });
   } catch (error) {
     console.error('Classifications fetch error:', error);

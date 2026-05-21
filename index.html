@@ -120,6 +120,12 @@
                             <option value="">--Ninguno--</option>
                         </select>
                     </div>
+                    <div class="dmforminput required small-12 medium-4 large-4">
+                        <label for="com_sucursal">Sucursal</label>
+                        <select id="com_sucursal" name="Sucursal_Relacion_Texto__c" title="Sucursal" required>
+                            <option value="">--Ninguno--</option>
+                        </select>
+                    </div>
 
                     <!-- automatic fields -->
                     <input type="hidden" name="lead_source" id="lead_source" value="Web to Lead">
@@ -230,6 +236,12 @@
                     <div class="dmforminput required small-12 medium-4 large-4">
                         <label for="cat_division">División</label>
                         <select id="cat_division" name="Division_Relacion_Texto__c" title="División" required>
+                            <option value="">--Ninguno--</option>
+                        </select>
+                    </div>
+                    <div class="dmforminput required small-12 medium-4 large-4">
+                        <label for="cat_sucursal">Sucursal</label>
+                        <select id="cat_sucursal" name="Sucursal_Relacion_Texto__c" title="Sucursal" required>
                             <option value="">--Ninguno--</option>
                         </select>
                     </div>
@@ -372,6 +384,12 @@
                             <option value="">--Ninguno--</option>
                         </select>
                     </div>
+                    <div class="dmforminput required small-12 medium-4 large-4">
+                        <label for="dyn_sucursal">Sucursal</label>
+                        <select id="dyn_sucursal" name="Sucursal_Relacion_Texto__c" title="Sucursal" required>
+                            <option value="">--Ninguno--</option>
+                        </select>
+                    </div>
 
                     <!-- automatic fields -->
                     <input type="hidden" name="lead_source" id="dyn_lead_source" value="Web to Lead">
@@ -437,6 +455,42 @@
                     <label>Resultados del Lote</label>
                     <div id="api-bulk-response" class="api-bulk-response"></div>
                 </div>
+                <div class="api-field" id="api-classification-section">
+                    <label>Clasificación (OLGA)</label>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px;">
+                        <div>
+                            <label for="api_tipo_negocio" style="display:block; margin-bottom:4px; font-size:13px;">Tipo de Negocio</label>
+                            <select id="api_tipo_negocio" title="Tipo de Negocio">
+                                <option value="">--Ninguno--</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="api_rubro" style="display:block; margin-bottom:4px; font-size:13px;">Rubro</label>
+                            <select id="api_rubro" title="Rubro">
+                                <option value="">--Ninguno--</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="api_subrubro" style="display:block; margin-bottom:4px; font-size:13px;">Subrubro</label>
+                            <select id="api_subrubro" title="Subrubro">
+                                <option value="">--Ninguno--</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="api_division" style="display:block; margin-bottom:4px; font-size:13px;">División</label>
+                            <select id="api_division" title="División">
+                                <option value="">--Ninguno--</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="api_sucursal" style="display:block; margin-bottom:4px; font-size:13px;">Sucursal</label>
+                            <select id="api_sucursal" title="Sucursal">
+                                <option value="">--Ninguno--</option>
+                            </select>
+                        </div>
+                    </div>
+                    <small style="color:#666; font-size:12px;">Sucursal depende de la División seleccionada. Al generar leads se usan estos valores.</small>
+                </div>
                 <div class="api-field">
                     <label for="api-json">Lead payload (JSON)</label>
                     <textarea id="api-json" class="api-json-textarea" placeholder='{"FirstName":"...","LastName":"...","Company":"..."}' rows="20">{
@@ -457,6 +511,7 @@
   "Subrubro_Relacion__c": "a05Ox00000dL2mlIAC",
   "LeadSource": "OLGA",
   "Division_Nuevo__c": "a04Ox00000BOEmfIAH",
+  "Sucursal_Relacion__c": "a07Ox0000Ey8lFJIQY",
   "Area__c": "OLGA",
   "External_Owner__c": "005Ox00000cAN8sIAG"
 }</textarea>                    
@@ -643,18 +698,28 @@ LIMIT 20</textarea>
                     rubro: document.getElementById('00NOx00000g8LaB'),
                     subrubro: document.getElementById('00NOx00000g8NdZ'),
                     division: document.getElementById('com_division'),
+                    sucursal: document.getElementById('com_sucursal'),
                 },
                 {
                     tipo: document.getElementById('cat_tipo_negocio'),
                     rubro: document.getElementById('cat_00NOx00000g8LaB'),
                     subrubro: document.getElementById('cat_00NOx00000g8NdZ'),
                     division: document.getElementById('cat_division'),
+                    sucursal: document.getElementById('cat_sucursal'),
                 },
                 {
                     tipo: document.getElementById('dyn_tipo_negocio'),
                     rubro: document.getElementById('dyn_00NOx00000g8LaB'),
                     subrubro: document.getElementById('dyn_00NOx00000g8NdZ'),
                     division: document.getElementById('dyn_division'),
+                    sucursal: document.getElementById('dyn_sucursal'),
+                },
+                {
+                    tipo: document.getElementById('api_tipo_negocio'),
+                    rubro: document.getElementById('api_rubro'),
+                    subrubro: document.getElementById('api_subrubro'),
+                    division: document.getElementById('api_division'),
+                    sucursal: document.getElementById('api_sucursal'),
                 },
             ];
 
@@ -673,12 +738,44 @@ LIMIT 20</textarea>
                 return await res.json();
             }
 
+            function syncSelectIdHint(select) {
+                if (!select) return;
+                var hint = select._idHintEl;
+                if (!hint) return;
+                var value = select.value;
+                if (!value) {
+                    hint.textContent = '';
+                    hint.hidden = true;
+                    return;
+                }
+                hint.hidden = false;
+                hint.textContent = (select._idHintIsValue ? 'Valor: ' : 'Id: ') + value;
+            }
+
+            function attachSelectIdHint(select, isPicklistValue) {
+                if (!select || select._idHintAttached) return;
+                select._idHintAttached = true;
+                select._idHintIsValue = !!isPicklistValue;
+                var hint = document.createElement('code');
+                hint.className = 'select-id-hint';
+                hint.hidden = true;
+                hint.setAttribute('aria-live', 'polite');
+                hint.title = 'Selecciona el texto para copiar';
+                select.insertAdjacentElement('afterend', hint);
+                select._idHintEl = hint;
+                select.addEventListener('change', function () {
+                    syncSelectIdHint(select);
+                });
+                syncSelectIdHint(select);
+            }
+
             function clearSelectExceptFirst(select) {
                 if (!select) return;
                 while (select.options.length > 1) {
                     select.remove(1);
                 }
                 select.value = '';
+                syncSelectIdHint(select);
             }
 
             function populateTipoNegocio(select) {
@@ -739,6 +836,22 @@ LIMIT 20</textarea>
                 });
             }
 
+            function populateSucursales(select, divisionId) {
+                if (!select || !classificationData || !Array.isArray(classificationData.sucursales)) return;
+                clearSelectExceptFirst(select);
+                if (!divisionId) return;
+                classificationData.sucursales
+                    .filter(function (s) {
+                        return s.divisionId === divisionId;
+                    })
+                    .forEach(function (s) {
+                        var option = document.createElement('option');
+                        option.value = s.id;
+                        option.textContent = s.codigo ? s.name + ' (' + s.codigo + ')' : s.name;
+                        select.appendChild(option);
+                    });
+            }
+
             async function init() {
                 try {
                     classificationData = await fetchClassifications();
@@ -746,11 +859,21 @@ LIMIT 20</textarea>
                     forms.forEach(function (f) {
                         if (!f.tipo || !f.rubro || !f.subrubro) return;
 
+                        attachSelectIdHint(f.tipo, true);
+                        attachSelectIdHint(f.rubro, false);
+                        attachSelectIdHint(f.subrubro, false);
+                        if (f.division) attachSelectIdHint(f.division, false);
+                        if (f.sucursal) attachSelectIdHint(f.sucursal, false);
+
                         // Inicial: solo Tipo de Negocio. Rubro/Subrubro deshabilitados hasta elegir Tipo.
                         populateTipoNegocio(f.tipo);
                         if (f.division) populateDivision(f.division);
                         clearSelectExceptFirst(f.rubro);
                         clearSelectExceptFirst(f.subrubro);
+                        if (f.sucursal) {
+                            clearSelectExceptFirst(f.sucursal);
+                            f.sucursal.disabled = true;
+                        }
                         f.rubro.disabled = true;
                         f.subrubro.disabled = true;
 
@@ -761,13 +884,25 @@ LIMIT 20</textarea>
                             clearSelectExceptFirst(f.subrubro);
                             f.rubro.disabled = !tipoValue;
                             f.subrubro.disabled = true;
+                            syncSelectIdHint(f.rubro);
+                            syncSelectIdHint(f.subrubro);
                         });
 
                         f.rubro.addEventListener('change', function () {
                             var rubroId = f.rubro.value;
                             populateSubrubros(f.subrubro, rubroId);
                             f.subrubro.disabled = !rubroId;
+                            syncSelectIdHint(f.subrubro);
                         });
+
+                        if (f.division && f.sucursal) {
+                            f.division.addEventListener('change', function () {
+                                var divisionId = f.division.value;
+                                populateSucursales(f.sucursal, divisionId);
+                                f.sucursal.disabled = !divisionId;
+                                syncSelectIdHint(f.sucursal);
+                            });
+                        }
                     });
 
                     // Helpers para el generador de leads
@@ -798,8 +933,31 @@ LIMIT 20</textarea>
                         var idx = Math.floor(Math.random() * classificationData.divisiones.length);
                         return classificationData.divisiones[idx].id;
                     };
+
+                    window.getRandomSucursal = function (divisionId) {
+                        if (!classificationData || !classificationData.sucursales || !classificationData.sucursales.length) {
+                            return null;
+                        }
+                        var options = classificationData.sucursales.filter(function (s) {
+                            return !divisionId || s.divisionId === divisionId;
+                        });
+                        if (!options.length) return null;
+                        var idx = Math.floor(Math.random() * options.length);
+                        return options[idx].id;
+                    };
+
+                    window.getApiClassificationValues = function () {
+                        var apiForm = forms[forms.length - 1];
+                        return {
+                            tipo: apiForm.tipo ? apiForm.tipo.value : 'Equipos',
+                            rubro: apiForm.rubro ? apiForm.rubro.value : (window.getRandomRubro ? window.getRandomRubro() : null),
+                            subrubro: apiForm.subrubro ? apiForm.subrubro.value : null,
+                            division: apiForm.division ? apiForm.division.value : (window.getRandomDivision ? window.getRandomDivision() : null),
+                            sucursal: apiForm.sucursal ? apiForm.sucursal.value : null,
+                        };
+                    };
                 } catch (e) {
-                    console.error('Error inicializando Tipo de Negocio / Rubro / Subrubro:', e);
+                    console.error('Error inicializando Tipo de Negocio / Rubro / Subrubro / Sucursal:', e);
                 }
             }
 
@@ -932,6 +1090,7 @@ LIMIT 20</textarea>
                 "Subrubro_Relacion__c": "a05Ox00000dL2mlIAC",
                 "LeadSource": "OLGA",
                 "Division_Nuevo__c": "a04Ox00000BOEmfIAH",
+                "Sucursal_Relacion__c": "a07Ox0000Ey8lFJIQY",
                 "Area__c": "OLGA",
                 "External_Owner__c": "005Ox00000cAN8sIAG"
             };
@@ -958,6 +1117,7 @@ LIMIT 20</textarea>
                         "Subrubro_Relacion__c": "a02YYYYYYYYYYYYY",
                         "LeadSource": "OLGA",
                         "Division_Nuevo__c": "a04Ox00000BOEjRIAX",
+                        "Sucursal_Relacion__c": "a07Ox0000Ey8lFJIQY",
                         "External_Owner__c": "005Ox00000cAN8sIAG",
                         "Area__c": "OLGA"
                     },
@@ -980,6 +1140,7 @@ LIMIT 20</textarea>
                         "Subrubro_Relacion__c": "a02YYYYYYYYYYYYY",
                         "LeadSource": "OLGA",
                         "Division_Nuevo__c": "a04Ox00000BOEjRIAX",
+                        "Sucursal_Relacion__c": "a07Ox0000Ey8lFJIQY",
                         "External_Owner__c": "005Ox00000cAN8sIAG",
                         "Area__c": "OLGA"
                     },
@@ -1002,6 +1163,7 @@ LIMIT 20</textarea>
                         "Subrubro_Relacion__c": "a02YYYYYYYYYYYYY",
                         "LeadSource": "OLGA",
                         "Division_Nuevo__c": "a04Ox00000BOEjRIAX",
+                        "Sucursal_Relacion__c": "a07Ox0000Ey8lFJIQY",
                         "External_Owner__c": "005Ox00000cAN8sIAG",
                         "Area__c": "OLGA"
                     }
@@ -1065,14 +1227,14 @@ LIMIT 20</textarea>
 
             function generateLead(index) {
                 var location = randomItem(locations);
-                var division = window.getRandomDivision ? window.getRandomDivision() : null;
                 var area = randomItem(areas);
-                
-                // Get dynamic Rubro/Subrubro from Salesforce picklists
-                var rubro = window.getRandomRubro ? window.getRandomRubro() : 'Rubro 1';
-                var subrubro = window.getRandomSubrubro ? window.getRandomSubrubro(rubro) : 'Subrubro 1';
+                var apiClass = window.getApiClassificationValues ? window.getApiClassificationValues() : {};
+                var division = apiClass.division || (window.getRandomDivision ? window.getRandomDivision() : null);
+                var rubro = apiClass.rubro || (window.getRandomRubro ? window.getRandomRubro() : null);
+                var subrubro = apiClass.subrubro || (window.getRandomSubrubro ? window.getRandomSubrubro(rubro) : null);
+                var sucursal = apiClass.sucursal || (window.getRandomSucursal ? window.getRandomSucursal(division) : null);
 
-                return {
+                var lead = {
                     "attributes": {"type": "Lead"},
                     "FirstName": randomItem(firstNames),
                     "LastName": randomItem(lastNames),
@@ -1086,7 +1248,7 @@ LIMIT 20</textarea>
                     "Country": location.country,
                     "Categoria_Producto__c": "Producto Ejemplo",
                     "Mensaje__c": "Lead generado automáticamente #" + (index + 1),
-                    "Tipo_de_Negocio__c": "Equipos",
+                    "Tipo_de_Negocio__c": apiClass.tipo || "Equipos",
                     "Rubro_Relacion__c": rubro,
                     "Subrubro_Relacion__c": subrubro,
                     "LeadSource": "OLGA",
@@ -1094,6 +1256,10 @@ LIMIT 20</textarea>
                     "External_Owner__c": "005Ox00000cAN8sIAG",
                     "Area__c": area
                 };
+                if (sucursal) {
+                    lead.Sucursal_Relacion__c = sucursal;
+                }
+                return lead;
             }
 
             function generateLeads(count) {

@@ -269,6 +269,26 @@ body {
     cursor: not-allowed;
 }
 
+.select-id-hint {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    line-height: 1.35;
+    color: #5c6b7a;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    user-select: all;
+    word-break: break-all;
+    cursor: text;
+}
+
+.select-id-hint[hidden] {
+    display: none;
+}
+
+#api-classification-section .select-id-hint {
+    margin-top: 6px;
+}
+
 /* API Leads tab */
 .api-leads-container {
     display: flex;
