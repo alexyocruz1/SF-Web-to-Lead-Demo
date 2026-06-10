@@ -22,6 +22,7 @@
             <button class="tab" onclick="switchTab('api-leads')">Leads OLGA</button>
             <button class="tab" onclick="switchTab('api-leads-get')">Consultar Leads</button>
             <button class="tab" onclick="switchTab('users')">User</button>
+            <button class="tab" onclick="switchTab('rubro')">Rubro</button>
         </div>
 
         <!-- copy and paste the CEMCOL Comercial Web-to-Lead form code here -->
@@ -602,6 +603,121 @@ LIMIT 20</textarea>
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div id="rubro" class="tab-content">
+            <div class="rubro-builder">
+                <div class="rubro-hero">
+                    <p class="rubro-eyebrow">Rubro sender</p>
+                    <h1>Rubro__c</h1>
+                    <p class="rubro-lead">
+                        Envio y actualizacion de Rubros a salesforce.
+                    </p>
+                </div>
+
+                <div class="api-field">
+                    <label class="api-env-label">Entorno</label>
+                    <div class="api-env-radios">
+                        <label class="api-env-radio">
+                            <input type="radio" name="rubros-env" value="test" id="rubros-env-test" checked />
+                            <span>TEST</span>
+                        </label>
+                    </div>
+                </div>
+
+                <section class="rubro-panel">
+                    <h2>Crear Rubro</h2>
+                    <p class="rubro-note">
+                        Para <code>Division__c</code> puedes usar el <strong>Salesforce Id</strong> o el
+                        <strong>External_ID__c</strong> de la División.
+                    </p>
+                    <div class="api-field">
+                        <label for="rubros-create-endpoint">Endpoint</label>
+                        <textarea id="rubros-create-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="rubros-create-json">Payload</label>
+                        <textarea id="rubros-create-json" class="api-json-textarea" rows="12">{
+  "Name": "Maquinaria CAT",
+  "Codigo_Rubro__c": "CAT",
+  "Division__c": "a04XXXXXXXXXXXXXXX",
+  "Tipo_de_Negocio__c": "Equipos",
+  "External_ID__c": "RUBRO-001"
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="rubros-create-btn" class="api-send-btn">Enviar creación</button>
+                        <div id="rubros-create-response" class="api-response" aria-live="polite" hidden></div>
+                    </div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Actualizar Rubro</h2>
+                    <p class="rubro-note">
+                        Puedes actualizar por <code>External_ID__c</code> o por el
+                        <strong>Salesforce Id</strong> del Rubro.
+                    </p>
+                    <p class="rubro-note">
+                        Para <code>Division__c</code> puedes usar el <strong>Salesforce Id</strong> o el
+                        <strong>External_ID__c</strong> de la División.
+                    </p>
+                    <div class="api-field">
+                        <label for="rubros-update-external-id">External ID</label>
+                        <input type="text" id="rubros-update-external-id" class="api-lead-count" value="RUBRO-001" style="width: 100%; max-width: 420px;" />
+                    </div>
+                    <div class="api-field">
+                        <label for="rubros-update-mode">Método de actualización</label>
+                        <select id="rubros-update-mode" class="api-lead-count" style="width: 100%; max-width: 420px;">
+                            <option value="externalId" selected>External_ID__c</option>
+                            <option value="salesforceId">Salesforce Id</option>
+                        </select>
+                    </div>
+                    <div class="api-field">
+                        <label for="rubros-update-endpoint">Endpoint</label>
+                        <textarea id="rubros-update-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="rubros-update-json">Payload</label>
+                        <textarea id="rubros-update-json" class="api-json-textarea" rows="12">{
+  "Name": "Maquinaria CAT - Actualizado",
+  "Codigo_Rubro__c": "CAT",
+  "Division__c": "a04XXXXXXXXXXXXXXX",
+  "Tipo_de_Negocio__c": "Equipos"
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="rubros-update-btn" class="api-send-btn">Enviar actualización</button>
+                        <div id="rubros-update-response" class="api-response" aria-live="polite" hidden></div>
+                    </div>
+                    <p class="rubro-note">
+                        La actualización usa <code>External_ID__c</code> como clave en el endpoint.
+                    </p>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Campos de referencia</h2>
+                    <div class="rubro-table-wrap">
+                        <table class="rubro-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre del campo</th>
+                                    <th>API name</th>
+                                    <th>Tipo</th>
+                                    <th>Requerido</th>
+                                    <th>Descripción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Codigo Rubro</td><td><code>Codigo_Rubro__c</code></td><td>Text(3)</td><td>No</td><td>Código corto del rubro.</td></tr>
+                                <tr><td>División</td><td><code>Division__c</code></td><td>Lookup(División)</td><td>No</td><td>Relación con la división.</td></tr>
+                                <tr><td>External ID</td><td><code>External_ID__c</code></td><td>Text(255) Unique</td><td>No</td><td>Clave para crear/actualizar sin duplicar.</td></tr>
+                                <tr><td>Nombre de Rubro</td><td><code>Name</code></td><td>Text(80)</td><td>Sí</td><td>Nombre visible del rubro.</td></tr>
+                                <tr><td>Tipo de Negocio</td><td><code>Tipo_de_Negocio__c</code></td><td>Picklist</td><td>Sí</td><td>Clasificación del negocio. Valores: Equipos, Repuestos y Consumibles, Rental y Servicios.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
             </div>
         </div>
 
@@ -1739,6 +1855,149 @@ LIMIT 20</textarea>
 
             updateModeSections();
             loadSuggestedEndpoint();
+        })();
+
+        // Rubro tab (create/update via /api/rubros)
+        (function () {
+            var envRadios = document.querySelectorAll('input[name="rubros-env"]');
+            var createEndpoint = document.getElementById('rubros-create-endpoint');
+            var updateEndpoint = document.getElementById('rubros-update-endpoint');
+            var updateExternalId = document.getElementById('rubros-update-external-id');
+            var updateMode = document.getElementById('rubros-update-mode');
+            var createEndpointHint = document.getElementById('rubros-create-endpoint-hint');
+            var updateEndpointHint = document.getElementById('rubros-update-endpoint-hint');
+            var createJson = document.getElementById('rubros-create-json');
+            var updateJson = document.getElementById('rubros-update-json');
+            var createBtn = document.getElementById('rubros-create-btn');
+            var updateBtn = document.getElementById('rubros-update-btn');
+            var createResponse = document.getElementById('rubros-create-response');
+            var updateResponse = document.getElementById('rubros-update-response');
+            var updateEndpointTemplate = null;
+
+            if (!envRadios.length || !createEndpoint || !updateEndpoint || !updateExternalId || !updateMode || !createJson || !updateJson || !createBtn || !updateBtn) return;
+
+            function getEnvironment() {
+                var checked = document.querySelector('input[name="rubros-env"]:checked');
+                return checked ? checked.value : 'test';
+            }
+
+            function showResponse(el, msg, type) {
+                el.textContent = msg;
+                el.className = 'api-response api-response--' + (type || 'info');
+                el.hidden = !msg;
+            }
+
+            async function loadEndpoints() {
+                createEndpoint.value = 'Cargando...';
+                updateEndpoint.value = 'Cargando...';
+                try {
+                    var res = await fetch('/api/rubros?environment=' + getEnvironment());
+                    var data = await res.json().catch(function () { return null; });
+                    if (!res.ok) throw new Error((data && (data.message || data.error)) || ('HTTP ' + res.status));
+                    createEndpoint.value =
+                        (data && data.endpoints && (data.endpoints.directCreate || data.endpoints.create)) ||
+                        (data && data.endpoints && data.endpoints.localEndpoint) ||
+                        '/api/rubros';
+                    updateEndpointTemplate =
+                        (data && data.endpoints && data.endpoints.directUpdate) ||
+                        (data && data.endpoints && data.endpoints.update) ||
+                        null;
+                    updateEndpoint.value = buildUpdateEndpoint();
+                    if (createEndpointHint) createEndpointHint.textContent = createEndpoint.value;
+                    if (updateEndpointHint) updateEndpointHint.textContent = updateEndpoint.value;
+                    createEndpoint.placeholder = '';
+                    updateEndpoint.placeholder = '';
+                } catch (err) {
+                    createEndpoint.value = '/api/rubros';
+                    updateEndpoint.value = buildUpdateEndpoint();
+                    if (createEndpointHint) createEndpointHint.textContent = '/api/rubros';
+                    if (updateEndpointHint) updateEndpointHint.textContent = updateEndpoint.value;
+                    createEndpoint.placeholder = '';
+                    updateEndpoint.placeholder = '';
+                }
+            }
+
+            function buildUpdateEndpoint() {
+                var externalId = updateExternalId.value.trim() || 'RUBRO-001';
+                var mode = updateMode.value;
+                if (mode === 'salesforceId') {
+                    return 'https://cemcol--devventas.sandbox.my.salesforce.com/services/data/v65.0/sobjects/Rubro__c/' + encodeURIComponent(externalId);
+                }
+                var directUpdate = updateEndpointTemplate;
+                if (directUpdate) {
+                    return directUpdate.replace('{External_ID__c}', encodeURIComponent(externalId));
+                }
+                return 'https://cemcol--devventas.sandbox.my.salesforce.com/services/data/v65.0/sobjects/Rubro__c/External_ID__c/' + encodeURIComponent(externalId);
+            }
+
+            async function sendRubros(btn, responseEl, endpointValue, payloadText, method) {
+                var endpoint = endpointValue.trim();
+                if (!endpoint) {
+                    showResponse(responseEl, 'Endpoint no configurado.', 'error');
+                    return;
+                }
+
+                var body;
+                try {
+                    body = JSON.parse(payloadText.value.trim() || '{}');
+                } catch (e) {
+                    showResponse(responseEl, 'JSON inválido: ' + e.message, 'error');
+                    return;
+                }
+
+                btn.disabled = true;
+                var originalLabel = btn.textContent;
+                btn.textContent = 'Enviando…';
+                showResponse(responseEl, '', 'info');
+
+                try {
+                    var res = await fetch('/api/rubros', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            endpoint: endpoint,
+                            body: body,
+                            environment: getEnvironment(),
+                            method: method,
+                        }),
+                    });
+                    var data = await res.json().catch(function () { return { message: res.statusText }; });
+                    if (res.ok) {
+                        showResponse(responseEl, 'Operación exitosa. ' + (data.id || data.success ? JSON.stringify(data) : JSON.stringify(data)), 'success');
+                    } else {
+                        showResponse(responseEl, (data.message || data.error || JSON.stringify(data)) + ' (HTTP ' + res.status + ')', 'error');
+                    }
+                } catch (err) {
+                    showResponse(responseEl, 'Error de red: ' + err.message, 'error');
+                }
+
+                btn.disabled = false;
+                btn.textContent = originalLabel;
+            }
+
+            envRadios.forEach(function (radio) {
+                radio.addEventListener('change', loadEndpoints);
+            });
+
+            updateExternalId.addEventListener('input', function () {
+                updateEndpoint.value = buildUpdateEndpoint();
+                if (updateEndpointHint) updateEndpointHint.textContent = updateEndpoint.value;
+            });
+
+            updateMode.addEventListener('change', function () {
+                updateEndpoint.value = buildUpdateEndpoint();
+                if (updateEndpointHint) updateEndpointHint.textContent = updateEndpoint.value;
+            });
+
+            createBtn.addEventListener('click', function () {
+                sendRubros(createBtn, createResponse, createEndpoint.value, createJson, 'POST');
+            });
+
+            updateBtn.addEventListener('click', function () {
+                sendRubros(updateBtn, updateResponse, updateEndpoint.value, updateJson, 'PATCH');
+            });
+
+            loadEndpoints();
         })();
 
         // Users tab (Salesforce User list)
