@@ -34,7 +34,7 @@ async function getSalesforceToken(environment) {
     iss: clientKey,
     sub: username,
     aud: tokenUrl.includes('test.salesforce.com') ? 'https://test.salesforce.com' : 'https://login.salesforce.com',
-    exp: Math.floor(Date.now() / 1000) + 60 * 5,
+    exp: Math.floor(Date.now() / 1000) + 60 * 5, // 5 minutes
   };
 
   let assertion;
