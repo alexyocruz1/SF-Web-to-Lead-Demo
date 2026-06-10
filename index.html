@@ -26,6 +26,7 @@
             <button class="tab" onclick="switchTab('subrubro')">Subrubro</button>
             <button class="tab" onclick="switchTab('division')">Division</button>
             <button class="tab" onclick="switchTab('sucursal')">Sucursal</button>
+            <button class="tab" onclick="switchTab('product')">Product</button>
         </div>
 
         <!-- copy and paste the CEMCOL Comercial Web-to-Lead form code here -->
@@ -1074,6 +1075,115 @@ LIMIT 20</textarea>
                                 <tr><td>External ID</td><td><code>External_ID__c</code></td><td>Text(255) Unique</td><td>No</td><td>Clave para crear/actualizar sin duplicar.</td></tr>
                                 <tr><td>Nombre de Sucursal</td><td><code>Name</code></td><td>Text(80)</td><td>Sí</td><td>Nombre visible de la sucursal.</td></tr>
                                 <tr><td>Owner</td><td><code>OwnerId</code></td><td>Lookup(User,Group)</td><td>No</td><td>Propietario del registro.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div id="product" class="tab-content">
+            <div class="rubro-builder">
+                <div class="rubro-hero">
+                    <p class="rubro-eyebrow">Product sender</p>
+                    <h1>Product2</h1>
+                    <p class="rubro-lead">Envío y actualización de Products a Salesforce.</p>
+                </div>
+
+                <div class="api-field">
+                    <label class="api-env-label">Entorno</label>
+                    <div class="api-env-radios">
+                        <label class="api-env-radio">
+                            <input type="radio" name="products-env" value="test" id="products-env-test" checked />
+                            <span>TEST</span>
+                        </label>
+                    </div>
+                </div>
+
+                <section class="rubro-panel">
+                    <h2>Crear Product</h2>
+                    <p class="rubro-note">
+                        Para <code>Rubro_Relacion__c</code> y <code>Subrubro_Relacion__c</code> puedes usar el
+                        <strong>Salesforce Id</strong> o el <strong>External_ID__c</strong> de cada registro.
+                    </p>
+                    <div class="api-field">
+                        <label for="products-create-endpoint">Endpoint</label>
+                        <textarea id="products-create-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="products-create-json">Payload</label>
+                        <textarea id="products-create-json" class="api-json-textarea" rows="16">{
+  "Name": "Producto Ejemplo",
+  "ProductCode": "PRD-001",
+  "Tipo_de_Negocio__c": "Equipos",
+  "Rubro_Relacion__c": "a06XXXXXXXXXXXXXXX",
+  "Subrubro_Relacion__c": "a05XXXXXXXXXXXXXXX",
+  "External_ID__c": "PROD-001"
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="products-create-btn" class="api-send-btn">Enviar creación</button>
+                        <div id="products-create-response" class="api-response" aria-live="polite" hidden></div>
+                    </div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Actualizar Product</h2>
+                    <p class="rubro-note">Puedes actualizar por <code>External_ID__c</code> o por el <strong>Salesforce Id</strong> del Product.</p>
+                    <div class="api-field">
+                        <label for="products-update-external-id">External ID</label>
+                        <input type="text" id="products-update-external-id" class="api-lead-count" value="PROD-001" style="width: 100%; max-width: 420px;" />
+                    </div>
+                    <div class="api-field">
+                        <label for="products-update-mode">Método de actualización</label>
+                        <select id="products-update-mode" class="api-lead-count" style="width: 100%; max-width: 420px;">
+                            <option value="externalId" selected>External_ID__c</option>
+                            <option value="salesforceId">Salesforce Id</option>
+                        </select>
+                    </div>
+                    <div class="api-field">
+                        <label for="products-update-endpoint">Endpoint</label>
+                        <textarea id="products-update-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="products-update-json">Payload</label>
+                        <textarea id="products-update-json" class="api-json-textarea" rows="16">{
+  "Name": "Producto Ejemplo - Actualizado",
+  "ProductCode": "PRD-001",
+  "Tipo_de_Negocio__c": "Equipos",
+  "Rubro_Relacion__c": "a06XXXXXXXXXXXXXXX",
+  "Subrubro_Relacion__c": "a05XXXXXXXXXXXXXXX"
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="products-update-btn" class="api-send-btn">Enviar actualización</button>
+                        <div id="products-update-response" class="api-response" aria-live="polite" hidden></div>
+                    </div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Campos de referencia</h2>
+                    <div class="rubro-table-wrap">
+                        <table class="rubro-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre del campo</th>
+                                    <th>API name</th>
+                                    <th>Tipo</th>
+                                    <th>Requerido</th>
+                                    <th>Descripción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>AC</td><td><code>AC__c</code></td><td>Text(255)</td><td>No</td><td>Campo libre AC.</td></tr>
+                                <tr><td>Active</td><td><code>IsActive</code></td><td>Checkbox</td><td>No</td><td>Indica si el producto está activo.</td></tr>
+                                <tr><td>AEX</td><td><code>AEX__c</code></td><td>Text(255)</td><td>No</td><td>Campo libre AEX.</td></tr>
+                                <tr><td>External ID</td><td><code>External_ID__c</code></td><td>Text(255) Unique</td><td>Sí</td><td>Clave para crear/actualizar sin duplicar.</td></tr>
+                                <tr><td>Product Code</td><td><code>ProductCode</code></td><td>Text(255)</td><td>Sí</td><td>Código de producto.</td></tr>
+                                <tr><td>Product Name</td><td><code>Name</code></td><td>Text(255)</td><td>Sí</td><td>Nombre del producto.</td></tr>
+                                <tr><td>Product Family</td><td><code>Family</code></td><td>Picklist</td><td>No</td><td>Familia del producto.</td></tr>
+                                <tr><td>Rubro</td><td><code>Rubro_Relacion__c</code></td><td>Lookup(Rubro)</td><td>Sí</td><td>Puede usar Salesforce Id o External_ID__c del Rubro.</td></tr>
+                                <tr><td>Subrubro</td><td><code>Subrubro_Relacion__c</code></td><td>Lookup(Subrubro)</td><td>Sí</td><td>Puede usar Salesforce Id o External_ID__c del Subrubro.</td></tr>
+                                <tr><td>Tipo de Negocio</td><td><code>Tipo_de_Negocio__c</code></td><td>Picklist</td><td>Sí</td><td>Valores: Equipos, Repuestos y Consumibles, Rental y Servicios.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -2681,6 +2791,130 @@ LIMIT 20</textarea>
             });
             updateBtn.addEventListener('click', function () {
                 sendSucursales(updateBtn, updateResponse, updateEndpoint.value, updateJson, 'PATCH');
+            });
+
+            loadEndpoints();
+        })();
+
+        // Product tab (create/update via /api/products)
+        (function () {
+            var envRadios = document.querySelectorAll('input[name="products-env"]');
+            var createEndpoint = document.getElementById('products-create-endpoint');
+            var updateEndpoint = document.getElementById('products-update-endpoint');
+            var updateExternalId = document.getElementById('products-update-external-id');
+            var updateMode = document.getElementById('products-update-mode');
+            var createJson = document.getElementById('products-create-json');
+            var updateJson = document.getElementById('products-update-json');
+            var createBtn = document.getElementById('products-create-btn');
+            var updateBtn = document.getElementById('products-update-btn');
+            var createResponse = document.getElementById('products-create-response');
+            var updateResponse = document.getElementById('products-update-response');
+            var updateTemplate = null;
+
+            if (!envRadios.length || !createEndpoint || !updateEndpoint || !updateExternalId || !updateMode || !createJson || !updateJson || !createBtn || !updateBtn) return;
+
+            function getEnvironment() {
+                var checked = document.querySelector('input[name="products-env"]:checked');
+                return checked ? checked.value : 'test';
+            }
+
+            function showResponse(el, msg, type) {
+                el.textContent = msg;
+                el.className = 'api-response api-response--' + (type || 'info');
+                el.hidden = !msg;
+            }
+
+            function buildUpdateEndpoint() {
+                var key = updateExternalId.value.trim() || 'PROD-001';
+                if (updateMode.value === 'salesforceId') {
+                    return 'https://cemcol--devventas.sandbox.my.salesforce.com/services/data/v65.0/sobjects/Product2/' + encodeURIComponent(key);
+                }
+                if (updateTemplate) {
+                    return updateTemplate.replace('{External_ID__c}', encodeURIComponent(key));
+                }
+                return 'https://cemcol--devventas.sandbox.my.salesforce.com/services/data/v65.0/sobjects/Product2/External_ID__c/' + encodeURIComponent(key);
+            }
+
+            async function loadEndpoints() {
+                createEndpoint.value = 'Cargando...';
+                updateEndpoint.value = 'Cargando...';
+                try {
+                    var res = await fetch('/api/products?environment=' + getEnvironment());
+                    var data = await res.json().catch(function () { return null; });
+                    if (!res.ok) throw new Error((data && (data.message || data.error)) || ('HTTP ' + res.status));
+                    createEndpoint.value =
+                        (data && data.endpoints && data.endpoints.create) ||
+                        (data && data.endpoints && data.endpoints.localEndpoint) ||
+                        '/api/products';
+                    updateTemplate =
+                        (data && data.endpoints && data.endpoints.updateExternalId) ||
+                        null;
+                    updateEndpoint.value = buildUpdateEndpoint();
+                } catch (err) {
+                    createEndpoint.value = '/api/products';
+                    updateEndpoint.value = buildUpdateEndpoint();
+                }
+            }
+
+            async function sendProducts(btn, responseEl, endpointValue, payloadText, method) {
+                var endpoint = endpointValue.trim();
+                if (!endpoint) {
+                    showResponse(responseEl, 'Endpoint no configurado.', 'error');
+                    return;
+                }
+
+                var body;
+                try {
+                    body = JSON.parse(payloadText.value.trim() || '{}');
+                } catch (e) {
+                    showResponse(responseEl, 'JSON inválido: ' + e.message, 'error');
+                    return;
+                }
+
+                btn.disabled = true;
+                var originalLabel = btn.textContent;
+                btn.textContent = 'Enviando…';
+                showResponse(responseEl, '', 'info');
+
+                try {
+                    var res = await fetch('/api/products', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            endpoint: endpoint,
+                            body: body,
+                            environment: getEnvironment(),
+                            method: method,
+                        }),
+                    });
+                    var data = await res.json().catch(function () { return { message: res.statusText }; });
+                    if (res.ok) {
+                        showResponse(responseEl, 'Operación exitosa. ' + JSON.stringify(data), 'success');
+                    } else {
+                        showResponse(responseEl, (data.message || data.error || JSON.stringify(data)) + ' (HTTP ' + res.status + ')', 'error');
+                    }
+                } catch (err) {
+                    showResponse(responseEl, 'Error de red: ' + err.message, 'error');
+                }
+
+                btn.disabled = false;
+                btn.textContent = originalLabel;
+            }
+
+            envRadios.forEach(function (radio) {
+                radio.addEventListener('change', loadEndpoints);
+            });
+            updateExternalId.addEventListener('input', function () {
+                updateEndpoint.value = buildUpdateEndpoint();
+            });
+            updateMode.addEventListener('change', function () {
+                updateEndpoint.value = buildUpdateEndpoint();
+            });
+            createBtn.addEventListener('click', function () {
+                sendProducts(createBtn, createResponse, createEndpoint.value, createJson, 'POST');
+            });
+            updateBtn.addEventListener('click', function () {
+                sendProducts(updateBtn, updateResponse, updateEndpoint.value, updateJson, 'PATCH');
             });
 
             loadEndpoints();
