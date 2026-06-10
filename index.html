@@ -24,6 +24,7 @@
             <button class="tab" onclick="switchTab('users')">User</button>
             <button class="tab" onclick="switchTab('rubro')">Rubro</button>
             <button class="tab" onclick="switchTab('subrubro')">Subrubro</button>
+            <button class="tab" onclick="switchTab('division')">Division</button>
         </div>
 
         <!-- copy and paste the CEMCOL Comercial Web-to-Lead form code here -->
@@ -866,6 +867,108 @@ LIMIT 20</textarea>
                                 <tr><td>Rubro</td><td><code>Rubro__c</code></td><td>Lookup(Rubro)</td><td>Sí</td><td>Rubro padre; puede referenciar Id o External_ID__c del Rubro.</td></tr>
                                 <tr><td>External ID</td><td><code>External_ID__c</code></td><td>Text(255) Unique</td><td>No</td><td>Clave para crear/actualizar sin duplicar.</td></tr>
                                 <tr><td>Subrubro Id</td><td><code>Subrubro_Id__c</code></td><td>Formula (Text)</td><td>No</td><td>Identificador calculado del subrubro.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div id="division" class="tab-content">
+            <div class="rubro-builder">
+                <div class="rubro-hero">
+                    <p class="rubro-eyebrow">Division sender</p>
+                    <h1>Division__c</h1>
+                    <p class="rubro-lead">Envío y actualización de Divisiones a Salesforce.</p>
+                </div>
+
+                <div class="api-field">
+                    <label class="api-env-label">Entorno</label>
+                    <div class="api-env-radios">
+                        <label class="api-env-radio">
+                            <input type="radio" name="divisions-env" value="test" id="divisions-env-test" checked />
+                            <span>TEST</span>
+                        </label>
+                    </div>
+                </div>
+
+                <section class="rubro-panel">
+                    <h2>Crear División</h2>
+                    <div class="api-field">
+                        <label for="divisions-create-endpoint">Endpoint</label>
+                        <textarea id="divisions-create-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="divisions-create-json">Payload</label>
+                        <textarea id="divisions-create-json" class="api-json-textarea" rows="12">{
+  "Name": "CEMCOL CAT",
+  "Codigo_Division__c": "CAT",
+  "Pais__c": "Honduras",
+  "Razon_Social__c": "CEMCOL CAT",
+  "External_ID__c": "DIV-001"
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="divisions-create-btn" class="api-send-btn">Enviar creación</button>
+                        <div id="divisions-create-response" class="api-response" aria-live="polite" hidden></div>
+                    </div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Actualizar División</h2>
+                    <p class="rubro-note">Puedes actualizar por <code>External_ID__c</code> o por el <strong>Salesforce Id</strong> de la División.</p>
+                    <div class="api-field">
+                        <label for="divisions-update-external-id">External ID</label>
+                        <input type="text" id="divisions-update-external-id" class="api-lead-count" value="DIV-001" style="width: 100%; max-width: 420px;" />
+                    </div>
+                    <div class="api-field">
+                        <label for="divisions-update-mode">Método de actualización</label>
+                        <select id="divisions-update-mode" class="api-lead-count" style="width: 100%; max-width: 420px;">
+                            <option value="externalId" selected>External_ID__c</option>
+                            <option value="salesforceId">Salesforce Id</option>
+                        </select>
+                    </div>
+                    <div class="api-field">
+                        <label for="divisions-update-endpoint">Endpoint</label>
+                        <textarea id="divisions-update-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="divisions-update-json">Payload</label>
+                        <textarea id="divisions-update-json" class="api-json-textarea" rows="12">{
+  "Name": "CEMCOL CAT - Actualizado",
+  "Codigo_Division__c": "CAT",
+  "Pais__c": "Honduras",
+  "Razon_Social__c": "CEMCOL CAT"
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="divisions-update-btn" class="api-send-btn">Enviar actualización</button>
+                        <div id="divisions-update-response" class="api-response" aria-live="polite" hidden></div>
+                    </div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Campos de referencia</h2>
+                    <div class="rubro-table-wrap">
+                        <table class="rubro-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre del campo</th>
+                                    <th>API name</th>
+                                    <th>Tipo</th>
+                                    <th>Requerido</th>
+                                    <th>Descripción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Created By</td><td><code>CreatedById</code></td><td>Lookup(User)</td><td>No</td><td>Usuario que creó el registro.</td></tr>
+                                <tr><td>Currency</td><td><code>CurrencyIsoCode</code></td><td>Picklist</td><td>No</td><td>Moneda del registro.</td></tr>
+                                <tr><td>Código de División</td><td><code>Codigo_Division__c</code></td><td>Text(50)</td><td>No</td><td>Código corto de la división.</td></tr>
+                                <tr><td>División Name</td><td><code>Name</code></td><td>Text(80)</td><td>Sí</td><td>Nombre visible de la división.</td></tr>
+                                <tr><td>Last Modified By</td><td><code>LastModifiedById</code></td><td>Lookup(User)</td><td>No</td><td>Usuario de la última modificación.</td></tr>
+                                <tr><td>Owner</td><td><code>OwnerId</code></td><td>Lookup(User,Group)</td><td>No</td><td>Propietario del registro.</td></tr>
+                                <tr><td>País</td><td><code>Pais__c</code></td><td>Picklist</td><td>No</td><td>Valores: Honduras, El Salvador, Nicaragua.</td></tr>
+                                <tr><td>Razón Social</td><td><code>Razon_Social__c</code></td><td>Text(100)</td><td>No</td><td>Razón social de la división.</td></tr>
+                                <tr><td>External ID</td><td><code>External_ID__c</code></td><td>Text(255) Unique</td><td>No</td><td>Clave para crear/actualizar sin duplicar.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -2225,6 +2328,130 @@ LIMIT 20</textarea>
             });
             updateBtn.addEventListener('click', function () {
                 sendSubrubros(updateBtn, updateResponse, updateEndpoint.value, updateJson, 'PATCH');
+            });
+
+            loadEndpoints();
+        })();
+
+        // Division tab (create/update via /api/divisions)
+        (function () {
+            var envRadios = document.querySelectorAll('input[name="divisions-env"]');
+            var createEndpoint = document.getElementById('divisions-create-endpoint');
+            var updateEndpoint = document.getElementById('divisions-update-endpoint');
+            var updateExternalId = document.getElementById('divisions-update-external-id');
+            var updateMode = document.getElementById('divisions-update-mode');
+            var createJson = document.getElementById('divisions-create-json');
+            var updateJson = document.getElementById('divisions-update-json');
+            var createBtn = document.getElementById('divisions-create-btn');
+            var updateBtn = document.getElementById('divisions-update-btn');
+            var createResponse = document.getElementById('divisions-create-response');
+            var updateResponse = document.getElementById('divisions-update-response');
+            var updateTemplate = null;
+
+            if (!envRadios.length || !createEndpoint || !updateEndpoint || !updateExternalId || !updateMode || !createJson || !updateJson || !createBtn || !updateBtn) return;
+
+            function getEnvironment() {
+                var checked = document.querySelector('input[name="divisions-env"]:checked');
+                return checked ? checked.value : 'test';
+            }
+
+            function showResponse(el, msg, type) {
+                el.textContent = msg;
+                el.className = 'api-response api-response--' + (type || 'info');
+                el.hidden = !msg;
+            }
+
+            function buildUpdateEndpoint() {
+                var key = updateExternalId.value.trim() || 'DIV-001';
+                if (updateMode.value === 'salesforceId') {
+                    return 'https://cemcol--devventas.sandbox.my.salesforce.com/services/data/v65.0/sobjects/Division__c/' + encodeURIComponent(key);
+                }
+                if (updateTemplate) {
+                    return updateTemplate.replace('{External_ID__c}', encodeURIComponent(key));
+                }
+                return 'https://cemcol--devventas.sandbox.my.salesforce.com/services/data/v65.0/sobjects/Division__c/External_ID__c/' + encodeURIComponent(key);
+            }
+
+            async function loadEndpoints() {
+                createEndpoint.value = 'Cargando...';
+                updateEndpoint.value = 'Cargando...';
+                try {
+                    var res = await fetch('/api/divisions?environment=' + getEnvironment());
+                    var data = await res.json().catch(function () { return null; });
+                    if (!res.ok) throw new Error((data && (data.message || data.error)) || ('HTTP ' + res.status));
+                    createEndpoint.value =
+                        (data && data.endpoints && data.endpoints.create) ||
+                        (data && data.endpoints && data.endpoints.localEndpoint) ||
+                        '/api/divisions';
+                    updateTemplate =
+                        (data && data.endpoints && data.endpoints.updateExternalId) ||
+                        null;
+                    updateEndpoint.value = buildUpdateEndpoint();
+                } catch (err) {
+                    createEndpoint.value = '/api/divisions';
+                    updateEndpoint.value = buildUpdateEndpoint();
+                }
+            }
+
+            async function sendDivisions(btn, responseEl, endpointValue, payloadText, method) {
+                var endpoint = endpointValue.trim();
+                if (!endpoint) {
+                    showResponse(responseEl, 'Endpoint no configurado.', 'error');
+                    return;
+                }
+
+                var body;
+                try {
+                    body = JSON.parse(payloadText.value.trim() || '{}');
+                } catch (e) {
+                    showResponse(responseEl, 'JSON inválido: ' + e.message, 'error');
+                    return;
+                }
+
+                btn.disabled = true;
+                var originalLabel = btn.textContent;
+                btn.textContent = 'Enviando…';
+                showResponse(responseEl, '', 'info');
+
+                try {
+                    var res = await fetch('/api/divisions', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            endpoint: endpoint,
+                            body: body,
+                            environment: getEnvironment(),
+                            method: method,
+                        }),
+                    });
+                    var data = await res.json().catch(function () { return { message: res.statusText }; });
+                    if (res.ok) {
+                        showResponse(responseEl, 'Operación exitosa. ' + JSON.stringify(data), 'success');
+                    } else {
+                        showResponse(responseEl, (data.message || data.error || JSON.stringify(data)) + ' (HTTP ' + res.status + ')', 'error');
+                    }
+                } catch (err) {
+                    showResponse(responseEl, 'Error de red: ' + err.message, 'error');
+                }
+
+                btn.disabled = false;
+                btn.textContent = originalLabel;
+            }
+
+            envRadios.forEach(function (radio) {
+                radio.addEventListener('change', loadEndpoints);
+            });
+            updateExternalId.addEventListener('input', function () {
+                updateEndpoint.value = buildUpdateEndpoint();
+            });
+            updateMode.addEventListener('change', function () {
+                updateEndpoint.value = buildUpdateEndpoint();
+            });
+            createBtn.addEventListener('click', function () {
+                sendDivisions(createBtn, createResponse, createEndpoint.value, createJson, 'POST');
+            });
+            updateBtn.addEventListener('click', function () {
+                sendDivisions(updateBtn, updateResponse, updateEndpoint.value, updateJson, 'PATCH');
             });
 
             loadEndpoints();

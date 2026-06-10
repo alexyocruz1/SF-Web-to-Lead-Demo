@@ -23,6 +23,7 @@ const usersHandler = require('./api/users');
 const leadsReadHandler = require('./api/leads-read');
 const rubrosHandler = require('./api/rubros');
 const subrubrosHandler = require('./api/subrubros');
+const divisionsHandler = require('./api/divisions');
 
 // Helper function to convert Express req/res to Vercel-style handler
 function createVercelAdapter(handler) {
@@ -76,6 +77,7 @@ app.all('/api/users', createVercelAdapter(usersHandler));
 app.all('/api/leads-read', createVercelAdapter(leadsReadHandler));
 app.all('/api/rubros', createVercelAdapter(rubrosHandler));
 app.all('/api/subrubros', createVercelAdapter(subrubrosHandler));
+app.all('/api/divisions', createVercelAdapter(divisionsHandler));
 
 // Serve index.html for all routes (SPA-style)
 app.get('*', (req, res) => {
@@ -92,4 +94,5 @@ app.listen(PORT, () => {
   console.log(`  - http://localhost:${PORT}/api/leads-read`);
   console.log(`  - http://localhost:${PORT}/api/rubros`);
   console.log(`  - http://localhost:${PORT}/api/subrubros`);
+  console.log(`  - http://localhost:${PORT}/api/divisions`);
 });
