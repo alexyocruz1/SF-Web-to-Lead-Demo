@@ -1758,7 +1758,7 @@ LIMIT 20</textarea>
                 <div class="rubro-hero">
                     <p class="rubro-eyebrow">Two-object flow</p>
                     <h1>Cartera</h1>
-                    <p class="rubro-lead">Aquí trabajamos con Cartera_Asignada__c y Cartera_Cliente__c. Primero se crea o actualiza en Salesforce, y al final mostramos el JSON que enviará el sistema externo.</p>
+                    <p class="rubro-lead">Cartera_Asignada__c y Cartera_Cliente__c. Primero se crea o actualiza en Salesforce, y al final se muestra el JSON que enviará el sistema externo.</p>
                 </div>
 
                 <section class="rubro-panel">
@@ -1948,12 +1948,12 @@ LIMIT 20</textarea>
                 <div class="rubro-hero">
                     <p class="rubro-eyebrow">Send-only object</p>
                     <h1>Opportunity</h1>
-                    <p class="rubro-lead">Este tab cubre Opportunity y OpportunityLineItem juntos. Abajo tienes un JSON de ejemplo y las tablas de ambos objetos.</p>
+                    <p class="rubro-lead">Este tab cubre Opportunity y OpportunityLineItem juntos. Abajo se muestra un JSON de ejemplo y las tablas de ambos objetos.</p>
                 </div>
                 <section class="rubro-panel">
                     <h2>Ejemplo JSON</h2>
                     <p class="rubro-note">Una oportunidad puede tener varios line items, así que el ejemplo usa un arreglo <code>OpportunityLineItems</code>.</p>
-                    <p class="rubro-note">Varios lookups pueden enviarse como Salesforce Id o como <code>External_ID__c</code> usando la relación <code>__r</code>, según el objeto.</p>
+                    <p class="rubro-note">En Salesforce Id mode, usa los campos <code>__c</code> o Id directos. En External ID mode, usa la relación del lookup con <code>External_ID__c</code> según el objeto.</p>
                     <div class="api-field">
                         <label for="opportunity-lookup-mode">Modo de referencia</label>
                         <select id="opportunity-lookup-mode" class="api-lead-count" style="width: 100%; max-width: 420px;">
@@ -1981,16 +1981,16 @@ LIMIT 20</textarea>
     "Lead_telefono__c": "55555555",
     "Lead_email__c": "correo@ejemplo.com",
     "Tipo_de_Negocio__c": "Repuestos y Consumibles",
-    "Division_Relacion__c": {
+    "Division_Relacion__r": {
       "External_ID__c": "DIV-001"
     },
-    "Rubro_Relacion__c": {
+    "Rubro_Relacion__r": {
       "External_ID__c": "RUBRO-001"
     },
-    "Subrubro_Relacion__c": {
+    "Subrubro_Relacion__r": {
       "External_ID__c": "SUBRUBRO-001"
     },
-    "Sucursal_Relacion__c": {
+    "Sucursal_Relacion__r": {
       "External_ID__c": "SUC-001"
     },
     "Pricebook2Id": "01sOx000008sSPJIA2",
@@ -2005,10 +2005,10 @@ LIMIT 20</textarea>
   },
   "OpportunityLineItems": [
     {
-      "Product2Id": {
+      "Product2": {
         "External_ID__c": "PROD-001"
       },
-      "Inventario__c": {
+      "Inventario__r": {
         "External_ID__c": "INV-001"
       },
       "Quantity": 1,
@@ -2021,10 +2021,10 @@ LIMIT 20</textarea>
       "En_Backorder__c": false
     },
     {
-      "Product2Id": {
+      "Product2": {
         "External_ID__c": "PROD-002"
       },
-      "Inventario__c": {
+      "Inventario__r": {
         "External_ID__c": "INV-002"
       },
       "Quantity": 2,
@@ -4599,26 +4599,26 @@ LIMIT 20</textarea>
 
             function buildJson(useSalesforceId) {
                 function wrapLookup(key) {
-                    if (useSalesforceId) return key === 'AccountId' ? '001XXXXXXXXXXXXXXX' : key === 'Pricebook2Id' ? '01sXXXXXXXXXXXXXXX' : key === 'OwnerId' || key === 'Opportunity_Owner_Custom__c' ? '005XXXXXXXXXXXXXXX' : 'a00XXXXXXXXXXXXXXX';
-                    return { External_ID__c: template.opportunity[key] };
-                }
-                var opportunity = JSON.parse(JSON.stringify(template.opportunity));
-                if (useSalesforceId) {
-                    opportunity.AccountId = '001XXXXXXXXXXXXXXX';
+                if (useSalesforceId) return key === 'AccountId' ? '001XXXXXXXXXXXXXXX' : key === 'Pricebook2Id' ? '01sXXXXXXXXXXXXXXX' : key === 'OwnerId' || key === 'Opportunity_Owner_Custom__c' ? '005XXXXXXXXXXXXXXX' : 'a00XXXXXXXXXXXXXXX';
+                return { External_ID__c: template.opportunity[key] };
+            }
+            var opportunity = JSON.parse(JSON.stringify(template.opportunity));
+            if (useSalesforceId) {
+                opportunity.AccountId = '001XXXXXXXXXXXXXXX';
                     opportunity.Division_Relacion__c = 'a04XXXXXXXXXXXXXXX';
                     opportunity.Rubro_Relacion__c = 'a06XXXXXXXXXXXXXXX';
                     opportunity.Subrubro_Relacion__c = 'a05XXXXXXXXXXXXXXX';
                     opportunity.Sucursal_Relacion__c = 'a07XXXXXXXXXXXXXXX';
                 } else {
                     opportunity.AccountId = { External_ID__c: 'ACC-001' };
-                    opportunity.Division_Relacion__c = { External_ID__c: 'DIV-001' };
-                    opportunity.Rubro_Relacion__c = { External_ID__c: 'RUBRO-001' };
-                    opportunity.Subrubro_Relacion__c = { External_ID__c: 'SUBRUBRO-001' };
-                    opportunity.Sucursal_Relacion__c = { External_ID__c: 'SUC-001' };
+                    opportunity.Division_Relacion__r = { External_ID__c: 'DIV-001' };
+                    opportunity.Rubro_Relacion__r = { External_ID__c: 'RUBRO-001' };
+                    opportunity.Subrubro_Relacion__r = { External_ID__c: 'SUBRUBRO-001' };
+                    opportunity.Sucursal_Relacion__r = { External_ID__c: 'SUC-001' };
                 }
                 var items = template.opportunityLineItems.map(function (item) {
                     var copy = JSON.parse(JSON.stringify(item));
-                    copy.Product2Id = useSalesforceId ? '01tXXXXXXXXXXXXXXX' : { External_ID__c: item.Product2Id };
+                    copy.Product2Id = useSalesforceId ? '01tXXXXXXXXXXXXXXX' : { External_ID__c: item.Product2 };
                     copy.Inventario__c = useSalesforceId ? 'a08XXXXXXXXXXXXXXX' : { External_ID__c: item.Inventario__c };
                     return copy;
                 });
