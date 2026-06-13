@@ -26,6 +26,14 @@ const subrubrosHandler = require('./api/subrubros');
 const divisionsHandler = require('./api/divisions');
 const sucursalesHandler = require('./api/sucursales');
 const productsHandler = require('./api/products');
+const pricebooksHandler = require('./api/pricebooks');
+const pricebookEntriesHandler = require('./api/pricebookentries');
+const inventariosHandler = require('./api/inventarios');
+const facturasHandler = require('./api/facturas');
+const opportunitiesHandler = require('./api/opportunities');
+const opportunityLineItemsHandler = require('./api/opportunitylineitems');
+const carterasAsignadasHandler = require('./api/carteras-asignadas');
+const carterasClientesHandler = require('./api/carteras-clientes');
 
 // Helper function to convert Express req/res to Vercel-style handler
 function createVercelAdapter(handler) {
@@ -82,6 +90,14 @@ app.all('/api/subrubros', createVercelAdapter(subrubrosHandler));
 app.all('/api/divisions', createVercelAdapter(divisionsHandler));
 app.all('/api/sucursales', createVercelAdapter(sucursalesHandler));
 app.all('/api/products', createVercelAdapter(productsHandler));
+app.all('/api/pricebooks', createVercelAdapter(pricebooksHandler));
+app.all('/api/pricebookentries', createVercelAdapter(pricebookEntriesHandler));
+app.all('/api/inventarios', createVercelAdapter(inventariosHandler));
+app.all('/api/facturas', createVercelAdapter(facturasHandler));
+app.all('/api/opportunities', createVercelAdapter(opportunitiesHandler));
+app.all('/api/opportunitylineitems', createVercelAdapter(opportunityLineItemsHandler));
+app.all('/api/carteras-asignadas', createVercelAdapter(carterasAsignadasHandler));
+app.all('/api/carteras-clientes', createVercelAdapter(carterasClientesHandler));
 
 // Serve index.html for all routes (SPA-style)
 app.get('*', (req, res) => {
@@ -101,4 +117,12 @@ app.listen(PORT, () => {
   console.log(`  - http://localhost:${PORT}/api/divisions`);
   console.log(`  - http://localhost:${PORT}/api/sucursales`);
   console.log(`  - http://localhost:${PORT}/api/products`);
+  console.log(`  - http://localhost:${PORT}/api/pricebooks`);
+  console.log(`  - http://localhost:${PORT}/api/pricebookentries`);
+  console.log(`  - http://localhost:${PORT}/api/inventarios`);
+  console.log(`  - http://localhost:${PORT}/api/facturas`);
+  console.log(`  - http://localhost:${PORT}/api/opportunities`);
+  console.log(`  - http://localhost:${PORT}/api/opportunitylineitems`);
+  console.log(`  - http://localhost:${PORT}/api/carteras-asignadas`);
+  console.log(`  - http://localhost:${PORT}/api/carteras-clientes`);
 });

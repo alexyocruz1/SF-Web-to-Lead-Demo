@@ -688,3 +688,15 @@ body {
     color: #1565c0;
     border: 1px solid #bbdefb;
 }
+
+.cartera-response.api-response--success {
+    background: #e6fffb;
+    color: #0f766e;
+    border: 1px solid #99f6e4;
+}
+
+.cartera-response.api-response--error {
+    background: #fff1f2;
+    color: #be123c;
+    border: 1px solid #fda4af;
+}

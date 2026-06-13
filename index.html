@@ -27,6 +27,12 @@
             <button class="tab" onclick="switchTab('division')">Division</button>
             <button class="tab" onclick="switchTab('sucursal')">Sucursal</button>
             <button class="tab" onclick="switchTab('product')">Product</button>
+            <button class="tab" onclick="switchTab('pricebook')">Pricebook</button>
+            <button class="tab" onclick="switchTab('pricebook-entry')">Pricebook Entry</button>
+            <button class="tab" onclick="switchTab('inventario')">Inventario</button>
+            <button class="tab" onclick="switchTab('factura')">Factura</button>
+            <button class="tab" onclick="switchTab('cartera')">Cartera</button>
+            <button class="tab" onclick="switchTab('opportunity')">Opportunity</button>
         </div>
 
         <!-- copy and paste the CEMCOL Comercial Web-to-Lead form code here -->
@@ -1171,8 +1177,12 @@ LIMIT 20</textarea>
   "Name": "Producto Ejemplo",
   "ProductCode": "PRD-001",
   "Tipo_de_Negocio__c": "Equipos",
-  "Rubro_Relacion__c": "a06XXXXXXXXXXXXXXX",
-  "Subrubro_Relacion__c": "a05XXXXXXXXXXXXXXX",
+  "Rubro_Relacion__c": {
+    "External_ID__c": "RUBRO-001"
+  },
+  "Subrubro_Relacion__c": {
+    "External_ID__c": "SUBRUBRO-001"
+  },
   "External_ID__c": "PROD-001"
 }</textarea>
                     </div>
@@ -1214,8 +1224,12 @@ LIMIT 20</textarea>
   "Name": "Producto Ejemplo - Actualizado",
   "ProductCode": "PRD-001",
   "Tipo_de_Negocio__c": "Equipos",
-  "Rubro_Relacion__c": "a06XXXXXXXXXXXXXXX",
-  "Subrubro_Relacion__c": "a05XXXXXXXXXXXXXXX"
+  "Rubro_Relacion__c": {
+    "External_ID__c": "RUBRO-001"
+  },
+  "Subrubro_Relacion__c": {
+    "External_ID__c": "SUBRUBRO-001"
+  }
 }</textarea>
                     </div>
                     <div class="api-field api-leads-actions">
@@ -1241,13 +1255,831 @@ LIMIT 20</textarea>
                                 <tr><td>AC</td><td><code>AC__c</code></td><td>Text(255)</td><td>No</td><td>Campo libre AC.</td></tr>
                                 <tr><td>Active</td><td><code>IsActive</code></td><td>Checkbox</td><td>No</td><td>Indica si el producto está activo.</td></tr>
                                 <tr><td>AEX</td><td><code>AEX__c</code></td><td>Text(255)</td><td>No</td><td>Campo libre AEX.</td></tr>
+                                <tr><td>Descripcion Larga</td><td><code>Descripcion_Larga__c</code></td><td>Rich Text Area(32768)</td><td>No</td><td>Descripción extendida del producto.</td></tr>
+                                <tr><td>Image Url</td><td><code>Image_Url__c</code></td><td>URL(255)</td><td>No</td><td>URL de la imagen principal.</td></tr>
+                                <tr><td>Marca</td><td><code>Marca__c</code></td><td>Text(255)</td><td>No</td><td>Marca comercial del producto.</td></tr>
+                                <tr><td>Origen Creacion</td><td><code>Origen_Creacion__c</code></td><td>Picklist</td><td>No</td><td>Valores: Salesforce, Integracion, Carga de Datos.</td></tr>
                                 <tr><td>External ID</td><td><code>External_ID__c</code></td><td>Text(255) Unique</td><td>Sí</td><td>Clave para crear/actualizar sin duplicar.</td></tr>
+                                <tr><td>Fecha de Inclusión</td><td><code>Fecha_de_Inclusion__c</code></td><td>Date/Time</td><td>No</td><td>Fecha y hora de inclusión del producto.</td></tr>
                                 <tr><td>Product Code</td><td><code>ProductCode</code></td><td>Text(255)</td><td>Sí</td><td>Código de producto.</td></tr>
                                 <tr><td>Product Name</td><td><code>Name</code></td><td>Text(255)</td><td>Sí</td><td>Nombre del producto.</td></tr>
-                                <tr><td>Product Family</td><td><code>Family</code></td><td>Picklist</td><td>No</td><td>Familia del producto.</td></tr>
+                                <tr><td>Product Family</td><td><code>Family</code></td><td>Picklist</td><td>No</td><td>Valores: Otros, Servicio, Equipo, Repuesto.</td></tr>
+                                <tr><td>Quantity Unit Of Measure</td><td><code>QuantityUnitOfMeasure</code></td><td>Picklist</td><td>No</td><td>Valor: Each.</td></tr>
                                 <tr><td>Rubro</td><td><code>Rubro_Relacion__c</code></td><td>Lookup(Rubro)</td><td>Sí</td><td>Puede usar Salesforce Id o External_ID__c del Rubro.</td></tr>
                                 <tr><td>Subrubro</td><td><code>Subrubro_Relacion__c</code></td><td>Lookup(Subrubro)</td><td>Sí</td><td>Puede usar Salesforce Id o External_ID__c del Subrubro.</td></tr>
                                 <tr><td>Tipo de Negocio</td><td><code>Tipo_de_Negocio__c</code></td><td>Picklist</td><td>Sí</td><td>Valores: Equipos, Repuestos y Consumibles, Rental y Servicios.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div id="pricebook" class="tab-content">
+            <div class="rubro-builder">
+                <div class="rubro-hero">
+                    <p class="rubro-eyebrow">Pricebook sender</p>
+                    <h1>Pricebook2</h1>
+                    <p class="rubro-lead">Crear pricebooks custom. El Standard Pricebook ya existe en Salesforce y no se crea aquí.</p>
+                </div>
+
+                <div class="api-field">
+                    <label class="api-env-label">Entorno</label>
+                    <div class="api-env-radios">
+                        <label class="api-env-radio">
+                            <input type="radio" name="pricebooks-env" value="test" id="pricebooks-env-test" checked />
+                            <span>TEST</span>
+                        </label>
+                    </div>
+                </div>
+
+                <section class="rubro-panel">
+                    <h2>Crear Pricebook</h2>
+                    <p class="rubro-note">
+                        Usa este tab solo para <strong>pricebooks custom</strong>. El Standard Pricebook ya existe en Salesforce.
+                    </p>
+                    <div class="api-field">
+                        <label for="pricebooks-create-endpoint">Endpoint</label>
+                        <textarea id="pricebooks-create-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="pricebooks-create-json">Payload</label>
+                        <textarea id="pricebooks-create-json" class="api-json-textarea" rows="10">{
+  "Name": "Pricebook Demo",
+  "Description": "Pricebook de ejemplo",
+  "IsActive": true,
+  "External_ID__c": "PB-001"
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="pricebooks-create-btn" class="api-send-btn">Enviar creación</button>
+                        <div id="pricebooks-create-response" class="api-response" aria-live="polite" hidden></div>
+                    </div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Actualizar Pricebook</h2>
+                    <div class="api-field">
+                        <label for="pricebooks-update-external-id">External ID</label>
+                        <input type="text" id="pricebooks-update-external-id" class="api-lead-count" value="PB-001" style="width: 100%; max-width: 420px;" />
+                    </div>
+                    <div class="api-field">
+                        <label for="pricebooks-update-mode">Método de actualización</label>
+                        <select id="pricebooks-update-mode" class="api-lead-count" style="width: 100%; max-width: 420px;">
+                            <option value="externalId" selected>External_ID__c</option>
+                            <option value="salesforceId">Salesforce Id</option>
+                        </select>
+                    </div>
+                    <div class="api-field">
+                        <label for="pricebooks-update-endpoint">Endpoint actualización</label>
+                        <textarea id="pricebooks-update-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="pricebooks-update-json">Payload actualización</label>
+                        <textarea id="pricebooks-update-json" class="api-json-textarea" rows="10">{
+  "Name": "Pricebook Demo Actualizado",
+  "Description": "Pricebook actualizado",
+  "IsActive": true,
+  "External_ID__c": "PB-001"
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="pricebooks-update-btn" class="api-send-btn">Enviar actualización</button>
+                        <div id="pricebooks-update-response" class="api-response" aria-live="polite" hidden></div>
+                    </div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Campos de referencia</h2>
+                    <div class="rubro-table-wrap">
+                        <table class="rubro-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre del campo</th>
+                                    <th>API name</th>
+                                    <th>Tipo</th>
+                                    <th>Requerido</th>
+                                    <th>Descripción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Price Book Name</td><td><code>Name</code></td><td>Text(255)</td><td>Sí</td><td>Nombre del pricebook.</td></tr>
+                                <tr><td>Active</td><td><code>IsActive</code></td><td>Checkbox</td><td>Sí</td><td>Indica si el pricebook está activo.</td></tr>
+                                <tr><td>Description</td><td><code>Description</code></td><td>Text(255)</td><td>No</td><td>Descripción opcional.</td></tr>
+                                <tr><td>Is Standard Price Book</td><td><code>IsStandard</code></td><td>Checkbox</td><td>No</td><td>Marca el pricebook como estándar.</td></tr>
+                                <tr><td>External ID</td><td><code>External_ID__c</code></td><td>Text(255) Unique</td><td>Sí</td><td>Clave para crear y actualizar.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div id="pricebook-entry" class="tab-content">
+            <div class="rubro-builder">
+                <div class="rubro-hero">
+                    <p class="rubro-eyebrow">Pricebook Entry sender</p>
+                    <h1>PricebookEntry</h1>
+                    <p class="rubro-lead">Flujo recomendado: Product → Standard Pricebook Entry → Custom Pricebook → Custom Pricebook Entry → Inventario.</p>
+                </div>
+
+                <div class="api-field">
+                    <label class="api-env-label">Entorno</label>
+                    <div class="api-env-radios">
+                        <label class="api-env-radio">
+                            <input type="radio" name="pricebookentries-env" value="test" id="pricebookentries-env-test" checked />
+                            <span>TEST</span>
+                        </label>
+                    </div>
+                </div>
+
+                <section class="rubro-panel">
+                    <h2>Pricebooks disponibles</h2>
+                    <p class="rubro-note">Selecciona un pricebook custom existente o crea uno nuevo en el tab anterior. El Standard Pricebook ya existe en Salesforce.</p>
+                    <div class="api-field">
+                        <label for="pricebookentries-pricebook-mode">Modo de referencia</label>
+                        <select id="pricebookentries-pricebook-mode" class="api-lead-count" style="width: 100%; max-width: 420px;">
+                            <option value="externalId" selected>External_ID__c</option>
+                            <option value="salesforceId">Salesforce Id</option>
+                        </select>
+                        <div class="api-json-hint">En External ID mode, Pricebook2 y Product2 usan un objeto con <code>External_ID__c</code>. En Salesforce Id mode, usan el Id directo. Para Standard Pricebook, <code>UseStandardPrice</code> se pone en <code>true</code>.</div>
+                    </div>
+                    <div class="api-field">
+                        <label for="pricebookentries-pricebook-select">Pricebook</label>
+                        <select id="pricebookentries-pricebook-select" class="api-lead-count" style="width: 100%; max-width: 520px;">
+                            <option value="">Cargando...</option>
+                        </select>
+                        <div class="api-json-hint">Aquí se muestran los pricebooks custom ya creados en Salesforce.</div>
+                    </div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Crear Pricebook Entry</h2>
+                    <p class="rubro-note">
+                        Primero crea el Product, luego su PricebookEntry para el Standard Pricebook, y después el entry para el pricebook custom seleccionado.
+                    </p>
+                    <div class="api-field">
+                        <label for="pricebookentries-create-endpoint">Endpoint</label>
+                        <textarea id="pricebookentries-create-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="pricebookentries-create-json">Payload</label>
+                        <textarea id="pricebookentries-create-json" class="api-json-textarea" rows="14">{
+  "UnitPrice": 100,
+  "IsActive": true,
+  "UseStandardPrice": false,
+  "External_ID__c": "PBE-001",
+  "Pricebook2Id": "01sXXXXXXXXXXXXXXX",
+  "Product2Id": "01tXXXXXXXXXXXXXXX"
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="pricebookentries-create-btn" class="api-send-btn">Enviar creación</button>
+                        <div id="pricebookentries-create-response" class="api-response" aria-live="polite" hidden></div>
+                    </div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Actualizar Pricebook Entry</h2>
+                    <div class="api-field">
+                        <label for="pricebookentries-update-external-id">External ID</label>
+                        <input type="text" id="pricebookentries-update-external-id" class="api-lead-count" value="PBE-001" style="width: 100%; max-width: 420px;" />
+                    </div>
+                    <div class="api-field">
+                        <label for="pricebookentries-update-mode">Método de actualización</label>
+                        <select id="pricebookentries-update-mode" class="api-lead-count" style="width: 100%; max-width: 420px;">
+                            <option value="externalId" selected>External_ID__c</option>
+                            <option value="salesforceId">Salesforce Id</option>
+                        </select>
+                    </div>
+                    <div class="api-field">
+                        <label for="pricebookentries-update-endpoint">Endpoint</label>
+                        <textarea id="pricebookentries-update-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="pricebookentries-update-json">Payload</label>
+                        <textarea id="pricebookentries-update-json" class="api-json-textarea" rows="14">{
+  "UnitPrice": 120,
+  "IsActive": true,
+  "UseStandardPrice": false,
+  "Pricebook2Id": "01sXXXXXXXXXXXXXXX",
+  "Product2Id": "01tXXXXXXXXXXXXXXX"
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="pricebookentries-update-btn" class="api-send-btn">Enviar actualización</button>
+                        <div id="pricebookentries-update-response" class="api-response" aria-live="polite" hidden></div>
+                    </div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Campos de referencia</h2>
+                    <div class="rubro-table-wrap">
+                        <table class="rubro-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre del campo</th>
+                                    <th>API name</th>
+                                    <th>Tipo</th>
+                                    <th>Requerido</th>
+                                    <th>Descripción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>External ID</td><td><code>External_ID__c</code></td><td>Text(255) Unique</td><td>Sí</td><td>Clave para crear/actualizar sin duplicar.</td></tr>
+                                <tr><td>Price Book</td><td><code>Pricebook2Id</code></td><td>Lookup(Price Book)</td><td>Sí</td><td>Pricebook al que pertenece.</td></tr>
+                                <tr><td>Product</td><td><code>Product2Id</code></td><td>Lookup(Product)</td><td>Sí</td><td>Producto vinculado.</td></tr>
+                                <tr><td>List Price</td><td><code>UnitPrice</code></td><td>Currency(16,2)</td><td>No</td><td>Precio de lista.</td></tr>
+                                <tr><td>Active</td><td><code>IsActive</code></td><td>Checkbox</td><td>No</td><td>Indica si el entry está activo.</td></tr>
+                                <tr><td>Use Standard Price</td><td><code>UseStandardPrice</code></td><td>Checkbox</td><td>No</td><td>Usa el precio estándar.</td></tr>
+                                <tr><td>Product Code</td><td><code>ProductCode</code></td><td>Text(255)</td><td>No</td><td>Código de producto de referencia.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div id="inventario" class="tab-content">
+            <div class="rubro-builder">
+                <div class="rubro-hero">
+                    <p class="rubro-eyebrow">Stock sender</p>
+                    <h1>Inventario__c</h1>
+                    <p class="rubro-lead">Último paso del flujo: primero Product, luego Standard Pricebook Entry, después Custom Pricebook y Pricebook Entry, y por último Inventario.</p>
+                </div>
+
+                <div class="api-field">
+                    <label class="api-env-label">Entorno</label>
+                    <div class="api-env-radios">
+                        <label class="api-env-radio">
+                            <input type="radio" name="inventario-env" value="test" id="inventario-env-test" checked />
+                            <span>TEST</span>
+                        </label>
+                    </div>
+                </div>
+
+                <section class="rubro-panel">
+                    <h2>Crear Inventario</h2>
+                    <p class="rubro-note">Para <strong>Producto__c</strong> puedes usar el Salesforce Id o el External_ID__c del producto. El nombre es auto number, así que Salesforce lo genera solo.</p>
+                    <div class="api-field">
+                        <label for="inventario-lookup-mode">Modo de referencia</label>
+                        <select id="inventario-lookup-mode" class="api-lead-count" style="width: 100%; max-width: 420px;">
+                            <option value="externalId" selected>External_ID__c</option>
+                            <option value="salesforceId">Salesforce Id</option>
+                        </select>
+                        <div class="api-json-hint">El valor del lookup cambia en el JSON según este modo.</div>
+                    </div>
+                    <div class="api-field">
+                        <label for="inventario-create-endpoint">Endpoint</label>
+                        <textarea id="inventario-create-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="inventario-create-json">Payload</label>
+                        <textarea id="inventario-create-json" class="api-json-textarea" rows="14">{
+  "Cantidad_Disponible__c": 10,
+  "Cantidad_Reservada__c": 2,
+  "Punto_de_Reorden__c": 5,
+  "Tipo_de_Reserva__c": "Venta",
+  "Ubicacion__c": "Bodega principal",
+  "External_ID__c": "INV-001",
+  "Producto__r": {
+    "External_ID__c": "PROD-001"
+  }
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="inventario-create-btn" class="api-send-btn">Enviar creación</button>
+                        <div id="inventario-create-response" class="api-response" aria-live="polite" hidden></div>
+                    </div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Actualizar Inventario</h2>
+                    <div class="api-field">
+                        <label for="inventario-update-external-id">External ID</label>
+                        <input type="text" id="inventario-update-external-id" class="api-lead-count" value="INV-001" style="width: 100%; max-width: 420px;" />
+                    </div>
+                    <div class="api-field">
+                        <label for="inventario-lookup-update-mode">Modo de referencia</label>
+                        <select id="inventario-lookup-update-mode" class="api-lead-count" style="width: 100%; max-width: 420px;">
+                            <option value="externalId" selected>External_ID__c</option>
+                            <option value="salesforceId">Salesforce Id</option>
+                        </select>
+                        <div class="api-json-hint">El valor del lookup cambia en el JSON según este modo.</div>
+                    </div>
+                    <div class="api-field">
+                        <label for="inventario-update-mode">Método de actualización</label>
+                        <select id="inventario-update-mode" class="api-lead-count" style="width: 100%; max-width: 420px;">
+                            <option value="externalId" selected>External_ID__c</option>
+                            <option value="salesforceId">Salesforce Id</option>
+                        </select>
+                    </div>
+                    <div class="api-field">
+                        <label for="inventario-update-endpoint">Endpoint</label>
+                        <textarea id="inventario-update-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="inventario-update-json">Payload</label>
+                        <textarea id="inventario-update-json" class="api-json-textarea" rows="14">{
+  "Cantidad_Disponible__c": 12,
+  "Cantidad_Reservada__c": 3,
+  "Punto_de_Reorden__c": 5,
+  "Tipo_de_Reserva__c": "Venta",
+  "Ubicacion__c": "Bodega principal",
+  "Producto__r": {
+    "External_ID__c": "PROD-001"
+  }
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="inventario-update-btn" class="api-send-btn">Enviar actualización</button>
+                        <div id="inventario-update-response" class="api-response" aria-live="polite" hidden></div>
+                    </div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Campos de referencia</h2>
+                    <div class="rubro-table-wrap">
+                        <table class="rubro-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre del campo</th>
+                                    <th>API name</th>
+                                    <th>Tipo</th>
+                                    <th>Requerido</th>
+                                    <th>Descripción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>External ID</td><td><code>External_ID__c</code></td><td>Text(255) Unique</td><td>No</td><td>Clave para identificar el inventario al actualizar.</td></tr>
+                                <tr><td>Cantidad Disponible</td><td><code>Cantidad_Disponible__c</code></td><td>Number(16,2)</td><td>Sí</td><td>Stock disponible en almacén.</td></tr>
+                                <tr><td>Cantidad Reservada</td><td><code>Cantidad_Reservada__c</code></td><td>Number(16,2)</td><td>Sí</td><td>Stock comprometido o reservado.</td></tr>
+                                <tr><td>Producto</td><td><code>Producto__c</code></td><td>Lookup(Product)</td><td>Sí</td><td>Producto al que pertenece el inventario; admite Salesforce Id o External_ID__c vía <code>Producto__r</code>.</td></tr>
+                                <tr><td>Punto de Reorden</td><td><code>Punto_de_Reorden__c</code></td><td>Number(16,2)</td><td>No</td><td>Umbral de alerta para reabastecer.</td></tr>
+                                <tr><td>Tipo de Reserva</td><td><code>Tipo_de_Reserva__c</code></td><td>Picklist</td><td>No</td><td>Valores: Ninguna, Cotización, Oportunidad, Reserva, Venta, Liberación.</td></tr>
+                                <tr><td>Ubicación</td><td><code>Ubicacion__c</code></td><td>Text(255)</td><td>No</td><td>Ubicación física del inventario.</td></tr>
+                                <tr><td>Nombre</td><td><code>Name</code></td><td>Auto Number</td><td>No</td><td>Lo genera Salesforce automáticamente.</td></tr>
+                                <tr><td>Alerta Stock Bajo</td><td><code>Alerta_Stock_Bajo__c</code></td><td>Formula (Checkbox)</td><td>No</td><td>Calculado por Salesforce.</td></tr>
+                                <tr><td>Cantidad Total</td><td><code>Cantidad_Total__c</code></td><td>Formula (Number)</td><td>No</td><td>Calculado por Salesforce.</td></tr>
+                                <tr><td>País</td><td><code>Pais__c</code></td><td>Formula (Text)</td><td>No</td><td>Calculado por Salesforce.</td></tr>
+                                <tr><td>Última Actualización</td><td><code>Ultima_Actualizacion__c</code></td><td>Date/Time</td><td>No</td><td>Fecha de última actualización.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div id="factura" class="tab-content">
+            <div class="rubro-builder">
+                <div class="rubro-hero">
+                    <p class="rubro-eyebrow">Invoice sender</p>
+                    <h1>Factura__c</h1>
+                    <p class="rubro-lead">Factura usa el número de factura como External ID. Account puede ir por Salesforce Id o External_ID__c; Oportunidad se envía como Salesforce Id.</p>
+                </div>
+
+                <div class="api-field">
+                    <label class="api-env-label">Entorno</label>
+                    <div class="api-env-radios">
+                        <label class="api-env-radio">
+                            <input type="radio" name="factura-env" value="test" id="factura-env-test" checked />
+                            <span>TEST</span>
+                        </label>
+                    </div>
+                </div>
+
+                <section class="rubro-panel">
+                    <h2>Crear Factura</h2>
+                    <p class="rubro-note">Para <strong>Account__c</strong> puedes usar Salesforce Id o External_ID__c. Para <strong>Oportunidad__c</strong> usa Salesforce Id. <strong>Numero_de_Factura__c</strong> y <strong>External_ID__c</strong> pueden identificar la factura.</p>
+                    <div class="api-field">
+                        <label for="factura-lookup-mode">Modo de referencia</label>
+                        <select id="factura-lookup-mode" class="api-lead-count" style="width: 100%; max-width: 420px;">
+                            <option value="externalId" selected>External_ID__c</option>
+                            <option value="salesforceId">Salesforce Id</option>
+                        </select>
+                        <div class="api-json-hint">Solo cambia el lookup de Account en el JSON.</div>
+                    </div>
+                    <div class="api-field">
+                        <label for="factura-create-endpoint">Endpoint</label>
+                        <textarea id="factura-create-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="factura-create-json">Payload</label>
+                        <textarea id="factura-create-json" class="api-json-textarea" rows="16">{
+  "Name": "Factura 001",
+  "Numero_de_Factura__c": "FAC-001",
+  "External_ID__c": "F001",
+  "Estado__c": "Pendiente",
+  "Estado_de_Pago__c": "No Pagado",
+  "Fecha_de_Factura__c": "2026-06-12",
+  "Fecha_de_Vencimiento__c": "2026-07-12",
+  "Monto_Total__c": 1500,
+  "Subtotal__c": 1350,
+  "Impuesto__c": 150,
+  "Account__c": "001XXXXXXXXXXXXXXX",
+  "Oportunidad__c": "006XXXXXXXXXXXXXXX"
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="factura-create-btn" class="api-send-btn">Enviar creación</button>
+                        <div id="factura-create-response" class="api-response" aria-live="polite" hidden></div>
+                    </div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Actualizar Factura</h2>
+                    <div class="api-field">
+                        <label for="factura-update-external-id">Numero de Factura</label>
+                        <input type="text" id="factura-update-external-id" class="api-lead-count" value="FAC-001" style="width: 100%; max-width: 420px;" />
+                    </div>
+                    <div class="api-field">
+                        <label for="factura-update-mode">Método de actualización</label>
+                        <select id="factura-update-mode" class="api-lead-count" style="width: 100%; max-width: 420px;">
+                            <option value="numeroFactura" selected>Numero_de_Factura__c</option>
+                            <option value="externalId">External_ID__c</option>
+                            <option value="salesforceId">Salesforce Id</option>
+                        </select>
+                    </div>
+                    <div class="api-field">
+                        <label for="factura-update-endpoint">Endpoint</label>
+                        <textarea id="factura-update-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="factura-update-json">Payload</label>
+                        <textarea id="factura-update-json" class="api-json-textarea" rows="16">{
+  "Estado__c": "Pagada",
+  "Estado_de_Pago__c": "Pagado",
+  "External_ID__c": "F001",
+  "Monto_Total__c": 1500,
+  "Subtotal__c": 1350,
+  "Impuesto__c": 150,
+  "Account__c": "001XXXXXXXXXXXXXXX",
+  "Oportunidad__c": "006XXXXXXXXXXXXXXX"
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="factura-update-btn" class="api-send-btn">Enviar actualización</button>
+                        <div id="factura-update-response" class="api-response" aria-live="polite" hidden></div>
+                    </div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Campos de referencia</h2>
+                    <div class="rubro-table-wrap">
+                        <table class="rubro-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre del campo</th>
+                                    <th>API name</th>
+                                    <th>Tipo</th>
+                                    <th>Requerido</th>
+                                    <th>Descripción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Numero de Factura</td><td><code>Numero_de_Factura__c</code></td><td>Text(255) External ID</td><td>Sí</td><td>Clave principal para crear y actualizar.</td></tr>
+                                <tr><td>External ID</td><td><code>External_ID__c</code></td><td>Text(255) Unique</td><td>No</td><td>Identificador alterno de la factura.</td></tr>
+                                <tr><td>Account</td><td><code>Account__c</code></td><td>Lookup(Account)</td><td>Sí</td><td>Cuenta relacionada; admite Salesforce Id o <code>External_ID__c</code>.</td></tr>
+                                <tr><td>Oportunidad</td><td><code>Oportunidad__c</code></td><td>Master-Detail(Oportunidad)</td><td>Sí</td><td>Oportunidad asociada. Se envía como Salesforce Id.</td></tr>
+                                <tr><td>Estado</td><td><code>Estado__c</code></td><td>Picklist</td><td>No</td><td>Opciones: Pendiente, Pagada, Vencida, Cancelada, Parcialmente Pagada.</td></tr>
+                                <tr><td>Estado de Pago</td><td><code>Estado_de_Pago__c</code></td><td>Picklist</td><td>No</td><td>Opciones: No Pagado, Pago Parcial, Pagado.</td></tr>
+                                <tr><td>Factura Name</td><td><code>Name</code></td><td>Text(80)</td><td>Sí</td><td>Nombre visible de la factura.</td></tr>
+                                <tr><td>Fecha de Factura</td><td><code>Fecha_de_Factura__c</code></td><td>Date</td><td>No</td><td>Fecha de emisión.</td></tr>
+                                <tr><td>Fecha de Vencimiento</td><td><code>Fecha_de_Vencimiento__c</code></td><td>Date</td><td>No</td><td>Fecha límite de pago.</td></tr>
+                                <tr><td>Monto Total</td><td><code>Monto_Total__c</code></td><td>Currency(16,2)</td><td>No</td><td>Total de la factura.</td></tr>
+                                <tr><td>Subtotal</td><td><code>Subtotal__c</code></td><td>Currency(16,2)</td><td>No</td><td>Subtotal antes de impuesto.</td></tr>
+                                <tr><td>Impuesto</td><td><code>Impuesto__c</code></td><td>Currency(16,2)</td><td>No</td><td>Impuesto aplicado.</td></tr>
+                                <tr><td>ERP Sync Date</td><td><code>ERP_Sync_Date__c</code></td><td>Date/Time</td><td>No</td><td>Fecha de sincronización con ERP.</td></tr>
+                                <tr><td>Notas</td><td><code>Notas__c</code></td><td>Long Text Area(32768)</td><td>No</td><td>Comentarios de la factura.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div id="cartera" class="tab-content">
+            <div class="rubro-builder">
+                <div class="rubro-hero">
+                    <p class="rubro-eyebrow">Two-object flow</p>
+                    <h1>Cartera</h1>
+                    <p class="rubro-lead">Aquí trabajamos con Cartera_Asignada__c y Cartera_Cliente__c. Primero se crea o actualiza en Salesforce, y al final mostramos el JSON que enviará el sistema externo.</p>
+                </div>
+
+                <section class="rubro-panel">
+                    <h2>Cartera Asignada</h2>
+                    <p class="rubro-note">Cartera Asignada también se crea y actualiza en Salesforce usando External ID.</p>
+                    <div class="api-field">
+                        <label for="cartera-asignada-lookup-mode">Modo de referencia</label>
+                        <select id="cartera-asignada-lookup-mode" class="api-lead-count" style="width: 100%; max-width: 420px;">
+                            <option value="externalId" selected>External_ID__c</option>
+                            <option value="salesforceId">Salesforce Id</option>
+                        </select>
+                        <div class="api-json-hint">El lookup de User cambia en el JSON según este modo.</div>
+                    </div>
+                    <div class="api-field">
+                        <label for="cartera-asignada-endpoint">Endpoint</label>
+                        <textarea id="cartera-asignada-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="cartera-asignada-json">Payload</label>
+                        <textarea id="cartera-asignada-json" class="api-json-textarea" rows="14">{
+  "External_ID__c": "CAR-001",
+  "User__c": "005XXXXXXXXXXXXXXX",
+  "Anio__c": 2026,
+  "Estado__c": "Activa",
+  "Frecuencia_de_Visita__c": "Mensual"
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="cartera-asignada-create-btn" class="api-send-btn">Enviar creación</button>
+                    </div>
+                    <div id="cartera-asignada-response" class="api-response cartera-response" aria-live="polite" hidden></div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Actualizar Cartera Asignada</h2>
+                    <div class="api-field">
+                        <label for="cartera-asignada-update-external-id">External ID</label>
+                        <input type="text" id="cartera-asignada-update-external-id" class="api-lead-count" value="CAR-001" style="width: 100%; max-width: 420px;" />
+                    </div>
+                    <div class="api-field">
+                        <label for="cartera-asignada-update-mode">Método de actualización</label>
+                        <select id="cartera-asignada-update-mode" class="api-lead-count" style="width: 100%; max-width: 420px;">
+                            <option value="externalId" selected>External_ID__c</option>
+                            <option value="salesforceId">Salesforce Id</option>
+                        </select>
+                    </div>
+                    <div class="api-field">
+                        <label for="cartera-asignada-update-endpoint">Endpoint</label>
+                        <textarea id="cartera-asignada-update-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="cartera-asignada-update-json">Payload</label>
+                        <textarea id="cartera-asignada-update-json" class="api-json-textarea" rows="14">{
+  "External_ID__c": "CAR-001",
+  "User__c": "005XXXXXXXXXXXXXXX",
+  "Anio__c": 2026,
+  "Estado__c": "Cerrada",
+  "Frecuencia_de_Visita__c": "Mensual"
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="cartera-asignada-update-btn" class="api-send-btn">Enviar actualización</button>
+                    </div>
+                    <div id="cartera-asignada-update-response" class="api-response cartera-response" aria-live="polite" hidden></div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Cartera Cliente</h2>
+                    <p class="rubro-note">Cartera Cliente depende de Account y de la Cartera Asignada relacionada.</p>
+                    <div class="api-field">
+                        <label for="cartera-cliente-lookup-mode">Modo de referencia</label>
+                        <select id="cartera-cliente-lookup-mode" class="api-lead-count" style="width: 100%; max-width: 420px;">
+                            <option value="externalId" selected>External_ID__c</option>
+                            <option value="salesforceId">Salesforce Id</option>
+                        </select>
+                        <div class="api-json-hint">Account y Cartera Asignada cambian en el JSON según este modo.</div>
+                    </div>
+                    <div class="api-field">
+                        <label for="cartera-cliente-endpoint">Endpoint</label>
+                        <textarea id="cartera-cliente-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="cartera-cliente-json">Payload</label>
+                        <textarea id="cartera-cliente-json" class="api-json-textarea" rows="14">{
+  "Account__c": "001XXXXXXXXXXXXXXX",
+  "Cartera_Asignada__c": "CAR-001",
+  "External_ID__c": "CAC-001",
+  "Frecuencia_de_Visita__c": 1,
+  "Prioridad__c": "Alta",
+  "Activo__c": true
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="cartera-cliente-create-btn" class="api-send-btn">Enviar creación</button>
+                    </div>
+                    <div id="cartera-cliente-response" class="api-response cartera-response" aria-live="polite" hidden></div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Actualizar Cartera Cliente</h2>
+                    <div class="api-field">
+                        <label for="cartera-cliente-update-external-id">External ID</label>
+                        <input type="text" id="cartera-cliente-update-external-id" class="api-lead-count" value="CAC-001" style="width: 100%; max-width: 420px;" />
+                    </div>
+                    <div class="api-field">
+                        <label for="cartera-cliente-update-mode">Método de actualización</label>
+                        <select id="cartera-cliente-update-mode" class="api-lead-count" style="width: 100%; max-width: 420px;">
+                            <option value="externalId" selected>External_ID__c</option>
+                            <option value="salesforceId">Salesforce Id</option>
+                        </select>
+                    </div>
+                    <div class="api-field">
+                        <label for="cartera-cliente-update-endpoint">Endpoint</label>
+                        <textarea id="cartera-cliente-update-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="cartera-cliente-update-json">Payload</label>
+                        <textarea id="cartera-cliente-update-json" class="api-json-textarea" rows="14">{
+  "Account__c": "001XXXXXXXXXXXXXXX",
+  "Cartera_Asignada__c": "CAR-001",
+  "External_ID__c": "CAC-001",
+  "Frecuencia_de_Visita__c": 1,
+  "Prioridad__c": "Media",
+  "Activo__c": true
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="cartera-cliente-update-btn" class="api-send-btn">Enviar actualización</button>
+                    </div>
+                    <div id="cartera-cliente-update-response" class="api-response cartera-response" aria-live="polite" hidden></div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>JSON para sistema externo</h2>
+                    <div class="api-field">
+                        <label for="cartera-json">Payload</label>
+                        <textarea id="cartera-json" class="api-json-textarea" rows="10">{
+  "Cartera_Asignada__c": {
+    "External_ID__c": "CAR-001",
+    "User__c": "005XXXXXXXXXXXXXXX",
+    "Anio__c": 2026,
+    "Estado__c": "Activa",
+    "ActividadesCompletadas": 10
+  }
+}</textarea>
+                    </div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Campos de Cartera Asignada</h2>
+                    <div class="rubro-table-wrap">
+                        <table class="rubro-table">
+                            <thead><tr><th>Nombre</th><th>API name</th><th>Tipo</th><th>Requerido</th><th>Descripción</th></tr></thead>
+                            <tbody>
+                                <tr><td>Año</td><td><code>Anio__c</code></td><td>Number(4,0)</td><td>No</td><td>Año de la cartera.</td></tr>
+                                <tr><td>Estado</td><td><code>Estado__c</code></td><td>Picklist</td><td>No</td><td>Valores: Borrador, Activa, Cerrada, Cancelada.</td></tr>
+                                <tr><td>External ID</td><td><code>External_ID__c</code></td><td>Text(255) Unique</td><td>Sí</td><td>Clave para crear y actualizar.</td></tr>
+                                <tr><td>Frecuencia de Visita</td><td><code>Frecuencia_de_Visita__c</code></td><td>Picklist</td><td>No</td><td>Semanal, Quincenal, Mensual, Trimestral, Semestral.</td></tr>
+                                <tr><td>User</td><td><code>User__c</code></td><td>Lookup(User)</td><td>Sí</td><td>Usuario responsable.</td></tr>
+                                <tr><td>Nombre</td><td><code>Name</code></td><td>Auto Number</td><td>No</td><td>Generado automáticamente por Salesforce.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Campos de Cartera Cliente</h2>
+                    <div class="rubro-table-wrap">
+                        <table class="rubro-table">
+                            <thead><tr><th>Nombre</th><th>API name</th><th>Tipo</th><th>Requerido</th><th>Descripción</th></tr></thead>
+                            <tbody>
+                                <tr><td>Account</td><td><code>Account__c</code></td><td>Lookup(Account)</td><td>Sí</td><td>Cuenta asociada.</td></tr>
+                                <tr><td>Cartera Asignada</td><td><code>Cartera_Asignada__c</code></td><td>Master-Detail(Cartera Asignada)</td><td>Sí</td><td>Relación con la cartera asignada.</td></tr>
+                                <tr><td>External ID</td><td><code>External_ID__c</code></td><td>Text(255) Unique</td><td>Sí</td><td>Clave para crear y actualizar.</td></tr>
+                                <tr><td>Frecuencia de Visita</td><td><code>Frecuencia_de_Visita__c</code></td><td>Number(18,0)</td><td>No</td><td>Número de visitas esperadas.</td></tr>
+                                <tr><td>Prioridad</td><td><code>Prioridad__c</code></td><td>Picklist</td><td>No</td><td>Alta, Media, Baja.</td></tr>
+                                <tr><td>Activo</td><td><code>Activo__c</code></td><td>Checkbox</td><td>No</td><td>Estado activo del registro.</td></tr>
+                                <tr><td>Nombre</td><td><code>Name</code></td><td>Auto Number</td><td>No</td><td>Generado automáticamente por Salesforce.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div id="opportunity" class="tab-content">
+            <div class="rubro-builder">
+                <div class="rubro-hero">
+                    <p class="rubro-eyebrow">Send-only object</p>
+                    <h1>Opportunity</h1>
+                    <p class="rubro-lead">Este tab cubre Opportunity y OpportunityLineItem juntos. Abajo tienes un JSON de ejemplo y las tablas de ambos objetos.</p>
+                </div>
+                <section class="rubro-panel">
+                    <h2>Ejemplo JSON</h2>
+                    <p class="rubro-note">Una oportunidad puede tener varios line items, así que el ejemplo usa un arreglo <code>OpportunityLineItems</code>.</p>
+                    <p class="rubro-note">Varios lookups pueden enviarse como Salesforce Id o como <code>External_ID__c</code> usando la relación <code>__r</code>, según el objeto.</p>
+                    <div class="api-field">
+                        <label for="opportunity-lookup-mode">Modo de referencia</label>
+                        <select id="opportunity-lookup-mode" class="api-lead-count" style="width: 100%; max-width: 420px;">
+                            <option value="externalId" selected>External_ID__c</option>
+                            <option value="salesforceId">Salesforce Id</option>
+                        </select>
+                        <div class="api-json-hint">El JSON cambia para los lookups que soportan referencia por External ID.</div>
+                    </div>
+                    <div class="api-field">
+                        <label for="opportunity-json">Payload</label>
+                        <textarea id="opportunity-json" class="api-json-textarea" rows="34">{
+  "Opportunity": {
+    "Name": "COM00000134",
+    "CloseDate": "2026-05-31",
+    "StageName": "Facturación",
+    "RecordTypeId": "012XXXXXXXXXXXXXXX",
+    "Type": "Nuevo",
+    "LeadSource": "Web",
+    "Probability": 90,
+    "Amount": 62.86,
+    "TotalOpportunityQuantity": 1,
+    "CurrencyIsoCode": "USD",
+    "Lead_empresa__c": "Empresa Ejemplo",
+    "Lead_nombre__c": "Nombre Ejemplo",
+    "Lead_telefono__c": "55555555",
+    "Lead_email__c": "correo@ejemplo.com",
+    "Tipo_de_Negocio__c": "Repuestos y Consumibles",
+    "Division_Relacion__c": {
+      "External_ID__c": "DIV-001"
+    },
+    "Rubro_Relacion__c": {
+      "External_ID__c": "RUBRO-001"
+    },
+    "Subrubro_Relacion__c": {
+      "External_ID__c": "SUBRUBRO-001"
+    },
+    "Sucursal_Relacion__c": {
+      "External_ID__c": "SUC-001"
+    },
+    "Pricebook2Id": "01sOx000008sSPJIA2",
+    "AccountId": {
+      "External_ID__c": "ACC-001"
+    },
+    "OwnerId": "005Ox00000c7m0jIAA",
+    "Opportunity_Owner_Custom__c": "005Ox00000c7m0jIAA",
+    "Budget_Confirmed__c": false,
+    "Discovery_Completed__c": false,
+    "ROI_Analysis_Completed__c": false
+  },
+  "OpportunityLineItems": [
+    {
+      "Product2Id": {
+        "External_ID__c": "PROD-001"
+      },
+      "Inventario__c": {
+        "External_ID__c": "INV-001"
+      },
+      "Quantity": 1,
+      "UnitPrice": 73.95,
+      "ListPrice": 73.95,
+      "Discount": 15,
+      "ServiceDate": "2026-05-28",
+      "Cantidad_Reservada__c": 1,
+      "Stock_Verificado__c": true,
+      "En_Backorder__c": false
+    },
+    {
+      "Product2Id": {
+        "External_ID__c": "PROD-002"
+      },
+      "Inventario__c": {
+        "External_ID__c": "INV-002"
+      },
+      "Quantity": 2,
+      "UnitPrice": 125.50,
+      "ListPrice": 125.50,
+      "Discount": 10,
+      "ServiceDate": "2026-05-28",
+      "Cantidad_Reservada__c": 2,
+      "Stock_Verificado__c": true,
+      "En_Backorder__c": false
+    }
+  ]
+}</textarea>
+                    </div>
+                </section>
+                <section class="rubro-panel">
+                    <h2>Campos de referencia</h2>
+                    <div class="rubro-table-wrap">
+                        <table class="rubro-table">
+                            <thead><tr><th>Nombre</th><th>API name</th><th>Tipo</th><th>Requerido</th><th>Descripción</th></tr></thead>
+                            <tbody>
+                                <tr><td>Oportunidad Name</td><td><code>Name</code></td><td>Text(120)</td><td>Sí</td><td>Nombre de la oportunidad.</td></tr>
+                                <tr><td>Fecha Estimada de Cierre</td><td><code>CloseDate</code></td><td>Date</td><td>Sí</td><td>Fecha de cierre estimada.</td></tr>
+                                <tr><td>Stage</td><td><code>StageName</code></td><td>Picklist</td><td>No</td><td>Etapa actual.</td></tr>
+                                <tr><td>Record Type</td><td><code>RecordTypeId</code></td><td>Record Type</td><td>Sí</td><td>Record type de la oportunidad.</td></tr>
+                                <tr><td>Account Name</td><td><code>AccountId</code></td><td>Lookup(Account)</td><td>No</td><td>Cuenta relacionada; puede ir con Salesforce Id o <code>External_ID__c</code>.</td></tr>
+                                <tr><td>Price Book</td><td><code>Pricebook2Id</code></td><td>Lookup(Price Book)</td><td>No</td><td>Pricebook relacionado; usa Salesforce Id.</td></tr>
+                                <tr><td>Rubro</td><td><code>Rubro_Relacion__c</code></td><td>Lookup(Rubro)</td><td>No</td><td>Relación de rubro; puede ir con Salesforce Id o <code>External_ID__c</code>.</td></tr>
+                                <tr><td>Subrubro</td><td><code>Subrubro_Relacion__c</code></td><td>Lookup(Subrubro)</td><td>No</td><td>Relación de subrubro; puede ir con Salesforce Id o <code>External_ID__c</code>.</td></tr>
+                                <tr><td>División</td><td><code>Division_Relacion__c</code></td><td>Lookup(División)</td><td>No</td><td>Relación de división; puede ir con Salesforce Id o <code>External_ID__c</code>.</td></tr>
+                                <tr><td>Sucursal</td><td><code>Sucursal_Relacion__c</code></td><td>Lookup(Sucursal)</td><td>No</td><td>Relación de sucursal; puede ir con Salesforce Id o <code>External_ID__c</code>.</td></tr>
+                                <tr><td>Opportunity Owner</td><td><code>Opportunity_Owner_Custom__c</code></td><td>Lookup(User)</td><td>No</td><td>Dueño comercial; usa Salesforce Id.</td></tr>
+                                <tr><td>Lead</td><td><code>Lead__c</code></td><td>Lookup(Lead)</td><td>No</td><td>Lead relacionado; usa Salesforce Id.</td></tr>
+                                <tr><td>Cotización de Origen</td><td><code>Generated_From_Quote_Id__c</code></td><td>Lookup(Quote)</td><td>No</td><td>Quote origen; usa Salesforce Id.</td></tr>
+                                <tr><td>Oportunidad Correlativo</td><td><code>Oportunidad_Correlativo__c</code></td><td>Auto Number</td><td>No</td><td>Generado por Salesforce.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="rubro-panel">
+                    <h2>Campos de OpportunityLineItem</h2>
+                    <div class="rubro-table-wrap">
+                        <table class="rubro-table">
+                            <thead><tr><th>Nombre</th><th>API name</th><th>Tipo</th><th>Requerido</th><th>Descripción</th></tr></thead>
+                            <tbody>
+                                <tr><td>Oportunidad</td><td><code>OpportunityId</code></td><td>Lookup(Oportunidad)</td><td>Sí</td><td>Oportunidad padre; usa Salesforce Id.</td></tr>
+                                <tr><td>Product</td><td><code>Product2Id</code></td><td>Lookup(Product)</td><td>Sí</td><td>Producto relacionado; puede ir con Salesforce Id o <code>External_ID__c</code>.</td></tr>
+                                <tr><td>Inventario</td><td><code>Inventario__c</code></td><td>Lookup(Inventario)</td><td>Sí</td><td>Inventario vinculado; puede ir con Salesforce Id o <code>External_ID__c</code>.</td></tr>
+                                <tr><td>Quantity</td><td><code>Quantity</code></td><td>Number(10,2)</td><td>No</td><td>Cantidad del ítem.</td></tr>
+                                <tr><td>Sales Price</td><td><code>UnitPrice</code></td><td>Currency(16,2)</td><td>No</td><td>Precio de venta.</td></tr>
+                                <tr><td>List Price</td><td><code>ListPrice</code></td><td>Currency(16,2)</td><td>No</td><td>Precio de lista.</td></tr>
+                                <tr><td>Discount</td><td><code>Discount</code></td><td>Percent(3,2)</td><td>No</td><td>Descuento en porcentaje.</td></tr>
+                                <tr><td>Service Date</td><td><code>ServiceDate</code></td><td>Date</td><td>Sí</td><td>Fecha del servicio.</td></tr>
+                                <tr><td>Cantidad Reservada</td><td><code>Cantidad_Reservada__c</code></td><td>Number(16,2)</td><td>No</td><td>Cantidad reservada.</td></tr>
+                                <tr><td>Stock Verificado</td><td><code>Stock_Verificado__c</code></td><td>Checkbox</td><td>No</td><td>Stock validado.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -2381,7 +3213,7 @@ LIMIT 20</textarea>
                 var name = isUpdate ? 'Maquinaria CAT - Actualizado' : 'Maquinaria CAT';
                 var divisionLine =
                     mode === 'salesforceId'
-                        ? '  "Division__r": "a04XXXXXXXXXXXXXXX",\n'
+                        ? '  "Division__c": "a04XXXXXXXXXXXXXXX",\n'
                         : '  "Division__r": {\n    "External_ID__c": "DIV-001"\n  },\n';
                 return '{\n' +
                     '  "Name": "' + name + '",\n' +
@@ -2547,7 +3379,7 @@ LIMIT 20</textarea>
                 var name = isUpdate ? 'Nuevo CAT - Actualizado' : 'Nuevo CAT';
                 var rubroLine =
                     mode === 'salesforceId'
-                        ? '  "Rubro__r": "a01XXXXXXXXXXXXXXX"\n'
+                        ? '  "Rubro__c": "a01XXXXXXXXXXXXXXX"\n'
                         : '  "Rubro__r": {\n    "External_ID__c": "RUBRO-001"\n  }\n';
                 return '{\n' +
                     '  "Name": "' + name + '",\n' +
@@ -2819,7 +3651,7 @@ LIMIT 20</textarea>
                 var name = isUpdate ? 'Sucursal Centro - Actualizado' : 'Sucursal Centro';
                 var divisionLine =
                     mode === 'salesforceId'
-                        ? '  "Division__r": "a04XXXXXXXXXXXXXXX"\n'
+                        ? '  "Division__c": "a04XXXXXXXXXXXXXXX"\n'
                         : '  "Division__r": {\n    "External_ID__c": "DIV-001"\n  }\n';
                 return '{\n' +
                     '  "Name": "' + name + '",\n' +
@@ -2967,13 +3799,21 @@ LIMIT 20</textarea>
                 var name = isUpdate ? 'Producto Ejemplo - Actualizado' : 'Producto Ejemplo';
                 var related =
                     mode === 'salesforceId'
-                        ? '  "Rubro_Relacion__r": "a06XXXXXXXXXXXXXXX",\n  "Subrubro_Relacion__r": "a05XXXXXXXXXXXXXXX",\n'
+                        ? '  "Rubro_Relacion__c": "a06XXXXXXXXXXXXXXX",\n  "Subrubro_Relacion__c": "a05XXXXXXXXXXXXXXX",\n'
                         : '  "Rubro_Relacion__r": {\n    "External_ID__c": "RUBRO-001"\n  },\n  "Subrubro_Relacion__r": {\n    "External_ID__c": "SUBRUBRO-001"\n  },\n';
                 return '{\n' +
                     '  "Name": "' + name + '",\n' +
                     '  "ProductCode": "PRD-001",\n' +
                     '  "Tipo_de_Negocio__c": "Equipos",\n' +
+                    '  "Family": "Equipo",\n' +
+                    '  "Origen_Creacion__c": "Integracion",\n' +
+                    '  "QuantityUnitOfMeasure": "Each",\n' +
                     related +
+                    '  "AC__c": "AC-001",\n' +
+                    '  "AEX__c": "AEX-001",\n' +
+                    '  "Marca__c": "Marca Ejemplo",\n' +
+                    '  "Descripcion_Larga__c": "<p>Descripción larga de ejemplo</p>",\n' +
+                    '  "Image_Url__c": "https://example.com/image.jpg",\n' +
                     '  "External_ID__c": "PROD-001"\n' +
                     '}';
             }
@@ -3080,6 +3920,717 @@ LIMIT 20</textarea>
 
             loadEndpoints();
             refreshJson();
+        })();
+
+        // Pricebook tab (create/update via /api/pricebooks)
+        (function () {
+            var envRadios = document.querySelectorAll('input[name="pricebooks-env"]');
+            var createEndpoint = document.getElementById('pricebooks-create-endpoint');
+            var updateEndpoint = document.getElementById('pricebooks-update-endpoint');
+            var updateExternalId = document.getElementById('pricebooks-update-external-id');
+            var updateMode = document.getElementById('pricebooks-update-mode');
+            var createJson = document.getElementById('pricebooks-create-json');
+            var updateJson = document.getElementById('pricebooks-update-json');
+            var createBtn = document.getElementById('pricebooks-create-btn');
+            var updateBtn = document.getElementById('pricebooks-update-btn');
+            var createResponse = document.getElementById('pricebooks-create-response');
+            var updateResponse = document.getElementById('pricebooks-update-response');
+
+            if (!envRadios.length || !createEndpoint || !updateEndpoint || !updateExternalId || !updateMode || !createJson || !updateJson || !createBtn || !updateBtn || !createResponse || !updateResponse) return;
+
+            function getEnvironment() {
+                var checked = document.querySelector('input[name="pricebooks-env"]:checked');
+                return checked ? checked.value : 'test';
+            }
+
+            function showResponse(msg, type) {
+                createResponse.textContent = msg;
+                createResponse.className = 'api-response api-response--' + (type || 'info');
+                createResponse.hidden = !msg;
+            }
+
+            function getUpdateEndpoint() {
+                var key = updateExternalId.value.trim() || 'PB-001';
+                var mode = updateMode.value;
+                if (mode === 'salesforceId') {
+                    return 'https://cemcol--devventas.sandbox.my.salesforce.com/services/data/v65.0/sobjects/Pricebook2/' + encodeURIComponent(key);
+                }
+                return 'https://cemcol--devventas.sandbox.my.salesforce.com/services/data/v65.0/sobjects/Pricebook2/External_ID__c/' + encodeURIComponent(key);
+            }
+
+            async function loadEndpoint() {
+                createEndpoint.value = 'Cargando...';
+                try {
+                    var res = await fetch('/api/pricebooks?environment=' + getEnvironment());
+                    var data = await res.json().catch(function () { return null; });
+                    if (!res.ok) throw new Error((data && (data.message || data.error)) || ('HTTP ' + res.status));
+                    createEndpoint.value =
+                        (data && data.endpoints && data.endpoints.create) ||
+                        'https://cemcol--devventas.sandbox.my.salesforce.com/services/data/v65.0/sobjects/Pricebook2';
+                    updateEndpoint.value =
+                        (data && data.endpoints && (data.endpoints.updateExternalId || data.endpoints.updateSalesforceId)) ||
+                        getUpdateEndpoint();
+                } catch (err) {
+                    createEndpoint.value = 'https://cemcol--devventas.sandbox.my.salesforce.com/services/data/v65.0/sobjects/Pricebook2';
+                    updateEndpoint.value = getUpdateEndpoint();
+                }
+            }
+
+            createBtn.addEventListener('click', async function () {
+                var endpoint = createEndpoint.value.trim();
+                var body;
+                try {
+                    body = JSON.parse(createJson.value.trim() || '{}');
+                } catch (e) {
+                    showResponse('JSON inválido: ' + e.message, 'error');
+                    return;
+                }
+                createBtn.disabled = true;
+                createBtn.textContent = 'Enviando…';
+                try {
+                    var res = await fetch('/api/pricebooks', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ endpoint: endpoint, body: body, environment: getEnvironment(), method: 'POST' }),
+                    });
+                    var data = await res.json().catch(function () { return {}; });
+                    showResponse(res.ok ? ('Operación exitosa. ' + JSON.stringify(data)) : ((data.error || data.message || JSON.stringify(data)) + ' (HTTP ' + res.status + ')'), res.ok ? 'success' : 'error');
+                } catch (err) {
+                    showResponse('Error de red: ' + err.message, 'error');
+                }
+                createBtn.disabled = false;
+                createBtn.textContent = 'Enviar creación';
+            });
+
+            updateBtn.addEventListener('click', async function () {
+                var endpoint = updateEndpoint.value.trim() || getUpdateEndpoint();
+                var body;
+                try {
+                    body = JSON.parse(updateJson.value.trim() || '{}');
+                } catch (e) {
+                    showResponse('JSON inválido: ' + e.message, 'error');
+                    updateResponse.hidden = true;
+                    return;
+                }
+                updateBtn.disabled = true;
+                updateBtn.textContent = 'Enviando…';
+                try {
+                    var res = await fetch('/api/pricebooks', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ endpoint: endpoint, body: body, environment: getEnvironment(), method: 'PATCH' }),
+                    });
+                    var data = await res.json().catch(function () { return {}; });
+                    updateResponse.textContent = res.ok ? ('Operación exitosa. ' + JSON.stringify(data)) : ((data.error || data.message || JSON.stringify(data)) + ' (HTTP ' + res.status + ')');
+                    updateResponse.className = 'api-response api-response--' + (res.ok ? 'success' : 'error');
+                    updateResponse.hidden = false;
+                } catch (err) {
+                    updateResponse.textContent = 'Error de red: ' + err.message;
+                    updateResponse.className = 'api-response api-response--error';
+                    updateResponse.hidden = false;
+                }
+                updateBtn.disabled = false;
+                updateBtn.textContent = 'Enviar actualización';
+            });
+
+            envRadios.forEach(function (r) { r.addEventListener('change', loadEndpoint); });
+            updateExternalId.addEventListener('input', function () { updateEndpoint.value = getUpdateEndpoint(); });
+            updateMode.addEventListener('change', function () { updateEndpoint.value = getUpdateEndpoint(); });
+            loadEndpoint();
+            updateEndpoint.value = getUpdateEndpoint();
+        })();
+
+        // Pricebook Entry tab (create/update via /api/pricebookentries)
+        (function () {
+            var envRadios = document.querySelectorAll('input[name="pricebookentries-env"]');
+            var pricebookSelect = document.getElementById('pricebookentries-pricebook-select');
+            var pricebookMode = document.getElementById('pricebookentries-pricebook-mode');
+            var createEndpoint = document.getElementById('pricebookentries-create-endpoint');
+            var updateEndpoint = document.getElementById('pricebookentries-update-endpoint');
+            var updateExternalId = document.getElementById('pricebookentries-update-external-id');
+            var updateMode = document.getElementById('pricebookentries-update-mode');
+            var createJson = document.getElementById('pricebookentries-create-json');
+            var updateJson = document.getElementById('pricebookentries-update-json');
+            var createBtn = document.getElementById('pricebookentries-create-btn');
+            var updateBtn = document.getElementById('pricebookentries-update-btn');
+            var createResponse = document.getElementById('pricebookentries-create-response');
+            var updateResponse = document.getElementById('pricebookentries-update-response');
+            var updateTemplate = null;
+
+            if (!envRadios.length || !pricebookSelect || !pricebookMode || !createEndpoint || !updateEndpoint || !updateExternalId || !updateMode || !createJson || !updateJson || !createBtn || !updateBtn) return;
+
+            function getEnvironment() {
+                var checked = document.querySelector('input[name="pricebookentries-env"]:checked');
+                return checked ? checked.value : 'test';
+            }
+
+            function showResponse(el, msg, type) {
+                el.textContent = msg;
+                el.className = 'api-response api-response--' + (type || 'info');
+                el.hidden = !msg;
+            }
+
+            function updatePricebookJsons() {
+                var pricebookValue = pricebookSelect.value || '01sXXXXXXXXXXXXXXX';
+                var pricebookExternalId = (pricebookSelect.options[pricebookSelect.selectedIndex] && pricebookSelect.options[pricebookSelect.selectedIndex].dataset.externalId) ? pricebookSelect.options[pricebookSelect.selectedIndex].dataset.externalId : 'PB-001';
+                var pricebookSection = pricebookMode.value === 'salesforceId'
+                    ? '  "Pricebook2Id": "' + pricebookValue + '",\n'
+                    : '  "Pricebook2": {\n    "External_ID__c": "' + pricebookExternalId + '"\n  },\n';
+                var productSection = pricebookMode.value === 'salesforceId'
+                    ? '  "Product2Id": "01tXXXXXXXXXXXXXXX"\n'
+                    : '  "Product2": {\n    "External_ID__c": "PROD-001"\n  }\n';
+                createJson.value = '{\n  "UnitPrice": 100,\n  "IsActive": true,\n  "UseStandardPrice": false,\n  "External_ID__c": "PBE-001",\n' + pricebookSection + productSection + '}';
+                updateJson.value = '{\n  "UnitPrice": 120,\n  "IsActive": true,\n  "UseStandardPrice": false,\n' + pricebookSection + productSection + '}';
+            }
+
+            function buildUpdateEndpoint() {
+                var key = updateExternalId.value.trim() || 'PBE-001';
+                if (updateMode.value === 'salesforceId') {
+                    return 'https://cemcol--devventas.sandbox.my.salesforce.com/services/data/v65.0/sobjects/PricebookEntry/' + encodeURIComponent(key);
+                }
+                if (updateTemplate) {
+                    return updateTemplate.replace('{External_ID__c}', encodeURIComponent(key));
+                }
+                return 'https://cemcol--devventas.sandbox.my.salesforce.com/services/data/v65.0/sobjects/PricebookEntry/External_ID__c/' + encodeURIComponent(key);
+            }
+
+            async function loadPricebooks() {
+                pricebookSelect.innerHTML = '<option value="">Cargando...</option>';
+                try {
+                    var res = await fetch('/api/pricebooks?environment=' + getEnvironment());
+                    var data = await res.json().catch(function () { return null; });
+                    if (!res.ok) throw new Error((data && (data.message || data.error)) || ('HTTP ' + res.status));
+                    var pricebooks = (data && data.pricebooks) || [];
+                        pricebookSelect.innerHTML = '';
+                    if (!pricebooks.length) {
+                        pricebookSelect.innerHTML = '<option value="">Sin pricebooks</option>';
+                    } else {
+                        pricebooks.forEach(function (pb) {
+                            var option = document.createElement('option');
+                            option.value = pb.id;
+                            option.dataset.externalId = pb.externalId || '';
+                            option.textContent = (pb.name || pb.id) + (pb.externalId ? ' [' + pb.externalId + ']' : '') + (pb.isStandard ? ' (Standard)' : '');
+                            pricebookSelect.appendChild(option);
+                        });
+                    }
+                    if (pricebookSelect.options.length > 0) {
+                        pricebookSelect.title = 'Pricebooks custom disponibles en Salesforce';
+                    }
+                    updatePricebookJsons();
+                } catch (err) {
+                    pricebookSelect.innerHTML = '<option value="">No se pudo cargar</option>';
+                    updatePricebookJsons();
+                }
+            }
+
+            async function loadEndpoints() {
+                createEndpoint.value = 'Cargando...';
+                updateEndpoint.value = 'Cargando...';
+                try {
+                    var res = await fetch('/api/pricebookentries?environment=' + getEnvironment());
+                    var data = await res.json().catch(function () { return null; });
+                    if (!res.ok) throw new Error((data && (data.message || data.error)) || ('HTTP ' + res.status));
+                    createEndpoint.value =
+                        (data && data.endpoints && data.endpoints.create) ||
+                        (data && data.endpoints && data.endpoints.localEndpoint) ||
+                        '/api/pricebookentries';
+                    updateTemplate =
+                        (data && data.endpoints && data.endpoints.updateExternalId) ||
+                        null;
+                    updateEndpoint.value = buildUpdateEndpoint();
+                } catch (err) {
+                    createEndpoint.value = '/api/pricebookentries';
+                    updateEndpoint.value = buildUpdateEndpoint();
+                }
+            }
+
+            async function send(btn, responseEl, endpointValue, payloadText, method) {
+                var endpoint = endpointValue.trim();
+                var body;
+                try {
+                    body = JSON.parse(payloadText.value.trim() || '{}');
+                } catch (e) {
+                    showResponse(responseEl, 'JSON inválido: ' + e.message, 'error');
+                    return;
+                }
+                btn.disabled = true;
+                var originalLabel = btn.textContent;
+                btn.textContent = 'Enviando…';
+                try {
+                    var res = await fetch('/api/pricebookentries', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ endpoint: endpoint, body: body, environment: getEnvironment(), method: method }),
+                    });
+                    var data = await res.json().catch(function () { return {}; });
+                    showResponse(responseEl, res.ok ? ('Operación exitosa. ' + JSON.stringify(data)) : ((data.error || data.message || JSON.stringify(data)) + ' (HTTP ' + res.status + ')'), res.ok ? 'success' : 'error');
+                } catch (err) {
+                    showResponse(responseEl, 'Error de red: ' + err.message, 'error');
+                }
+                btn.disabled = false;
+                btn.textContent = originalLabel;
+            }
+
+            envRadios.forEach(function (r) { r.addEventListener('change', function () { loadEndpoints(); loadPricebooks(); }); });
+            pricebookSelect.addEventListener('change', updatePricebookJsons);
+            pricebookMode.addEventListener('change', updatePricebookJsons);
+            updateExternalId.addEventListener('input', function () { updateEndpoint.value = buildUpdateEndpoint(); });
+            updateMode.addEventListener('change', function () { updateEndpoint.value = buildUpdateEndpoint(); });
+            createBtn.addEventListener('click', function () { send(createBtn, createResponse, createEndpoint.value, createJson, 'POST'); });
+            updateBtn.addEventListener('click', function () { send(updateBtn, updateResponse, updateEndpoint.value, updateJson, 'PATCH'); });
+
+            loadEndpoints();
+            loadPricebooks();
+        })();
+
+        // Inventario tab (create/update via /api/inventarios)
+        (function () {
+            var envRadios = document.querySelectorAll('input[name="inventario-env"]');
+            var createEndpoint = document.getElementById('inventario-create-endpoint');
+            var updateEndpoint = document.getElementById('inventario-update-endpoint');
+            var updateExternalId = document.getElementById('inventario-update-external-id');
+            var createLookupMode = document.getElementById('inventario-lookup-mode');
+            var updateLookupMode = document.getElementById('inventario-lookup-update-mode');
+            var updateMode = document.getElementById('inventario-update-mode');
+            var createJson = document.getElementById('inventario-create-json');
+            var updateJson = document.getElementById('inventario-update-json');
+            var createBtn = document.getElementById('inventario-create-btn');
+            var updateBtn = document.getElementById('inventario-update-btn');
+            var createResponse = document.getElementById('inventario-create-response');
+            var updateResponse = document.getElementById('inventario-update-response');
+            var updateTemplate = null;
+
+            if (!envRadios.length || !createEndpoint || !updateEndpoint || !updateExternalId || !createLookupMode || !updateLookupMode || !updateMode || !createJson || !updateJson || !createBtn || !updateBtn) return;
+
+            function getEnvironment() {
+                var checked = document.querySelector('input[name="inventario-env"]:checked');
+                return checked ? checked.value : 'test';
+            }
+
+            function showResponse(el, msg, type) {
+                el.textContent = msg;
+                el.className = 'api-response api-response--' + (type || 'info');
+                el.hidden = !msg;
+            }
+
+            function buildProductLookup(mode) {
+                return mode === 'salesforceId'
+                    ? '"01tXXXXXXXXXXXXXXX"'
+                    : '{\n    "External_ID__c": "PROD-001"\n  }';
+            }
+
+            function updateInventarioJsons() {
+                var createLookup = buildProductLookup(createLookupMode.value);
+                var updateLookup = buildProductLookup(updateLookupMode.value);
+                createJson.value = '{\n  "Cantidad_Disponible__c": 10,\n  "Cantidad_Reservada__c": 2,\n  "Punto_de_Reorden__c": 5,\n  "Tipo_de_Reserva__c": "Venta",\n  "Ubicacion__c": "Bodega principal",\n  "External_ID__c": "INV-001",\n  "' + (createLookupMode.value === 'salesforceId' ? 'Producto__c' : 'Producto__r') + '": ' + createLookup + '\n}';
+                updateJson.value = '{\n  "Cantidad_Disponible__c": 12,\n  "Cantidad_Reservada__c": 3,\n  "Punto_de_Reorden__c": 5,\n  "Tipo_de_Reserva__c": "Venta",\n  "Ubicacion__c": "Bodega principal",\n  "' + (updateLookupMode.value === 'salesforceId' ? 'Producto__c' : 'Producto__r') + '": ' + updateLookup + '\n}';
+            }
+
+            function buildUpdateEndpoint() {
+                var key = updateExternalId.value.trim() || 'INV-001';
+                if (updateMode.value === 'salesforceId') {
+                    return 'https://cemcol--devventas.sandbox.my.salesforce.com/services/data/v65.0/sobjects/Inventario__c/' + encodeURIComponent(key);
+                }
+                if (updateTemplate) {
+                    return updateTemplate.replace('{External_ID__c}', encodeURIComponent(key));
+                }
+                return 'https://cemcol--devventas.sandbox.my.salesforce.com/services/data/v65.0/sobjects/Inventario__c/External_ID__c/' + encodeURIComponent(key);
+            }
+
+            async function loadEndpoints() {
+                createEndpoint.value = 'Cargando...';
+                updateEndpoint.value = 'Cargando...';
+                try {
+                    var res = await fetch('/api/inventarios?environment=' + getEnvironment());
+                    var data = await res.json().catch(function () { return null; });
+                    if (!res.ok) throw new Error((data && (data.message || data.error)) || ('HTTP ' + res.status));
+                    createEndpoint.value =
+                        (data && data.endpoints && data.endpoints.create) ||
+                        (data && data.endpoints && data.endpoints.localEndpoint) ||
+                        '/api/inventarios';
+                    updateTemplate =
+                        (data && data.endpoints && data.endpoints.updateExternalId) ||
+                        null;
+                    updateEndpoint.value = buildUpdateEndpoint();
+                } catch (err) {
+                    createEndpoint.value = '/api/inventarios';
+                    updateEndpoint.value = buildUpdateEndpoint();
+                }
+            }
+
+            async function send(btn, responseEl, endpointValue, payloadText, method) {
+                var endpoint = endpointValue.trim();
+                var body;
+                try {
+                    body = JSON.parse(payloadText.value.trim() || '{}');
+                } catch (e) {
+                    showResponse(responseEl, 'JSON inválido: ' + e.message, 'error');
+                    return;
+                }
+                btn.disabled = true;
+                var originalLabel = btn.textContent;
+                btn.textContent = 'Enviando…';
+                try {
+                    var res = await fetch('/api/inventarios', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ endpoint: endpoint, body: body, environment: getEnvironment(), method: method }),
+                    });
+                    var data = await res.json().catch(function () { return {}; });
+                    showResponse(responseEl, res.ok ? ('Operación exitosa. ' + JSON.stringify(data)) : ((data.error || data.message || JSON.stringify(data)) + ' (HTTP ' + res.status + ')'), res.ok ? 'success' : 'error');
+                } catch (err) {
+                    showResponse(responseEl, 'Error de red: ' + err.message, 'error');
+                }
+                btn.disabled = false;
+                btn.textContent = originalLabel;
+            }
+
+            envRadios.forEach(function (r) { r.addEventListener('change', loadEndpoints); });
+            updateExternalId.addEventListener('input', function () { updateEndpoint.value = buildUpdateEndpoint(); });
+            createLookupMode.addEventListener('change', updateInventarioJsons);
+            updateLookupMode.addEventListener('change', updateInventarioJsons);
+            updateMode.addEventListener('change', function () { updateEndpoint.value = buildUpdateEndpoint(); });
+            createBtn.addEventListener('click', function () { send(createBtn, createResponse, createEndpoint.value, createJson, 'POST'); });
+            updateBtn.addEventListener('click', function () { send(updateBtn, updateResponse, updateEndpoint.value, updateJson, 'PATCH'); });
+
+            updateInventarioJsons();
+            loadEndpoints();
+        })();
+
+        // Factura tab (create/update via /api/facturas)
+        (function () {
+            var envRadios = document.querySelectorAll('input[name="factura-env"]');
+            var createEndpoint = document.getElementById('factura-create-endpoint');
+            var updateEndpoint = document.getElementById('factura-update-endpoint');
+            var updateExternalId = document.getElementById('factura-update-external-id');
+            var lookupMode = document.getElementById('factura-lookup-mode');
+            var updateMode = document.getElementById('factura-update-mode');
+            var createJson = document.getElementById('factura-create-json');
+            var updateJson = document.getElementById('factura-update-json');
+            var createBtn = document.getElementById('factura-create-btn');
+            var updateBtn = document.getElementById('factura-update-btn');
+            var createResponse = document.getElementById('factura-create-response');
+            var updateResponse = document.getElementById('factura-update-response');
+            var updateTemplate = null;
+
+            if (!envRadios.length || !createEndpoint || !updateEndpoint || !updateExternalId || !lookupMode || !updateMode || !createJson || !updateJson || !createBtn || !updateBtn) return;
+
+            function getEnvironment() {
+                var checked = document.querySelector('input[name="factura-env"]:checked');
+                return checked ? checked.value : 'test';
+            }
+
+            function showResponse(el, msg, type) {
+                el.textContent = msg;
+                el.className = 'api-response api-response--' + (type || 'info');
+                el.hidden = !msg;
+            }
+
+            function buildAccountLookup(mode) {
+                return mode === 'salesforceId'
+                    ? '"001XXXXXXXXXXXXXXX"'
+                    : '{\n    "External_ID__c": "ACC-001"\n  }';
+            }
+
+            function getApiBase() {
+                return 'https://cemcol--devventas.sandbox.my.salesforce.com/services/data/v65.0/sobjects';
+            }
+
+            function refreshJson() {
+                var accountLookup = buildAccountLookup(lookupMode.value);
+                createJson.value = '{\n  "Name": "Factura 001",\n  "Numero_de_Factura__c": "FAC-001",\n  "External_ID__c": "F001",\n  "Estado__c": "Pendiente",\n  "Estado_de_Pago__c": "No Pagado",\n  "Fecha_de_Factura__c": "2026-06-12",\n  "Fecha_de_Vencimiento__c": "2026-07-12",\n  "Monto_Total__c": 1500,\n  "Subtotal__c": 1350,\n  "Impuesto__c": 150,\n  "' + (lookupMode.value === 'salesforceId' ? 'Account__c' : 'Account__r') + '": ' + accountLookup + ',\n  "Oportunidad__c": "006XXXXXXXXXXXXXXX"\n}';
+                updateJson.value = '{\n  "Estado__c": "Pagada",\n  "Estado_de_Pago__c": "Pagado",\n  "External_ID__c": "F001",\n  "Monto_Total__c": 1500,\n  "Subtotal__c": 1350,\n  "Impuesto__c": 150,\n  "' + (lookupMode.value === 'salesforceId' ? 'Account__c' : 'Account__r') + '": ' + accountLookup + ',\n  "Oportunidad__c": "006XXXXXXXXXXXXXXX"\n}';
+            }
+
+            function buildUpdateEndpoint() {
+                var key = updateExternalId.value.trim() || 'FAC-001';
+                if (updateMode.value === 'salesforceId') {
+                    return 'https://cemcol--devventas.sandbox.my.salesforce.com/services/data/v65.0/sobjects/Factura__c/' + encodeURIComponent(key);
+                }
+                var field = updateMode.value === 'externalId' ? 'External_ID__c' : 'Numero_de_Factura__c';
+                var template = updateTemplate && updateTemplate[field === 'External_ID__c' ? 'updateAltExternalId' : 'updateExternalId'];
+                if (template) return template.replace('{' + field + '}', encodeURIComponent(key));
+                return 'https://cemcol--devventas.sandbox.my.salesforce.com/services/data/v65.0/sobjects/Factura__c/' + field + '/' + encodeURIComponent(key);
+            }
+
+            async function loadEndpoints() {
+                createEndpoint.value = 'Cargando...';
+                updateEndpoint.value = 'Cargando...';
+                try {
+                    var res = await fetch('/api/facturas?environment=' + getEnvironment());
+                    var data = await res.json().catch(function () { return null; });
+                    if (!res.ok) throw new Error((data && (data.message || data.error)) || ('HTTP ' + res.status));
+                    createEndpoint.value = (data && data.endpoints && data.endpoints.create) || (getApiBase() + '/Factura__c');
+                    updateTemplate = (data && data.endpoints) || null;
+                    updateEndpoint.value = buildUpdateEndpoint();
+                } catch (err) {
+                    createEndpoint.value = getApiBase() + '/Factura__c';
+                    updateEndpoint.value = buildUpdateEndpoint();
+                }
+            }
+
+            async function send(btn, responseEl, endpointValue, payloadText, method) {
+                var endpoint = endpointValue.trim();
+                var body;
+                try {
+                    body = JSON.parse(payloadText.value.trim() || '{}');
+                } catch (e) {
+                    showResponse(responseEl, 'JSON inválido: ' + e.message, 'error');
+                    return;
+                }
+                btn.disabled = true;
+                var originalLabel = btn.textContent;
+                btn.textContent = 'Enviando…';
+                try {
+                    var res = await fetch('/api/facturas', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ endpoint: endpoint, body: body, environment: getEnvironment(), method: method }),
+                    });
+                    var data = await res.json().catch(function () { return {}; });
+                    showResponse(responseEl, res.ok ? ('Operación exitosa. ' + JSON.stringify(data)) : ((data.error || data.message || JSON.stringify(data)) + ' (HTTP ' + res.status + ')'), res.ok ? 'success' : 'error');
+                } catch (err) {
+                    showResponse(responseEl, 'Error de red: ' + err.message, 'error');
+                }
+                btn.disabled = false;
+                btn.textContent = originalLabel;
+            }
+
+            envRadios.forEach(function (r) { r.addEventListener('change', loadEndpoints); });
+            lookupMode.addEventListener('change', refreshJson);
+            updateExternalId.addEventListener('input', function () { updateEndpoint.value = buildUpdateEndpoint(); });
+            updateMode.addEventListener('change', function () { refreshJson(); updateEndpoint.value = buildUpdateEndpoint(); });
+            createBtn.addEventListener('click', function () { send(createBtn, createResponse, createEndpoint.value, createJson, 'POST'); });
+            updateBtn.addEventListener('click', function () { send(updateBtn, updateResponse, updateEndpoint.value, updateJson, 'PATCH'); });
+
+            refreshJson();
+            loadEndpoints();
+        })();
+
+        // Cartera tab (create/update via /api/carteras-*)
+        (function () {
+            var assignedLookupMode = document.getElementById('cartera-asignada-lookup-mode');
+            var clientLookupMode = document.getElementById('cartera-cliente-lookup-mode');
+            var assignedEndpoint = document.getElementById('cartera-asignada-endpoint');
+            var clientEndpoint = document.getElementById('cartera-cliente-endpoint');
+            var assignedUpdateEndpoint = document.getElementById('cartera-asignada-update-endpoint');
+            var clientUpdateEndpoint = document.getElementById('cartera-cliente-update-endpoint');
+            var assignedUpdateMode = document.getElementById('cartera-asignada-update-mode');
+            var clientUpdateMode = document.getElementById('cartera-cliente-update-mode');
+            var assignedUpdateExternalId = document.getElementById('cartera-asignada-update-external-id');
+            var clientUpdateExternalId = document.getElementById('cartera-cliente-update-external-id');
+            var assignedJson = document.getElementById('cartera-asignada-json');
+            var assignedUpdateJson = document.getElementById('cartera-asignada-update-json');
+            var clientJson = document.getElementById('cartera-cliente-json');
+            var clientUpdateJson = document.getElementById('cartera-cliente-update-json');
+            var assignedCreateBtn = document.getElementById('cartera-asignada-create-btn');
+            var assignedUpdateBtn = document.getElementById('cartera-asignada-update-btn');
+            var clientCreateBtn = document.getElementById('cartera-cliente-create-btn');
+            var clientUpdateBtn = document.getElementById('cartera-cliente-update-btn');
+            var assignedCreateResponse = document.getElementById('cartera-asignada-response');
+            var assignedUpdateResponse = document.getElementById('cartera-asignada-update-response');
+            var clientCreateResponse = document.getElementById('cartera-cliente-response');
+            var clientUpdateResponse = document.getElementById('cartera-cliente-update-response');
+            if (!assignedLookupMode || !clientLookupMode || !assignedEndpoint || !clientEndpoint || !assignedJson || !clientJson || !assignedUpdateEndpoint || !clientUpdateEndpoint || !assignedUpdateMode || !clientUpdateMode || !assignedUpdateExternalId || !clientUpdateExternalId || !assignedUpdateJson || !clientUpdateJson || !assignedCreateBtn || !assignedUpdateBtn || !clientCreateBtn || !clientUpdateBtn || !assignedCreateResponse || !assignedUpdateResponse || !clientCreateResponse || !clientUpdateResponse) return;
+
+            function getApiBase() {
+                return 'https://cemcol--devventas.sandbox.my.salesforce.com/services/data/v65.0/sobjects';
+            }
+
+            function assignedLookup(mode) {
+                return mode === 'salesforceId'
+                    ? '"005XXXXXXXXXXXXXXX"'
+                    : '{\n    "External_ID__c": "USR-001"\n  }';
+            }
+
+            function clientAccountLookup(mode) {
+                return mode === 'salesforceId'
+                    ? '"001XXXXXXXXXXXXXXX"'
+                    : '{\n    "External_ID__c": "ACC-001"\n  }';
+            }
+
+            function clientAssignedLookup(mode) {
+                return mode === 'salesforceId'
+                    ? '"a01XXXXXXXXXXXXXXX"'
+                    : '{\n    "External_ID__c": "CAR-001"\n  }';
+            }
+
+            function refreshJson() {
+                assignedJson.value = '{\n  "External_ID__c": "CAR-001",\n  "' + (assignedLookupMode.value === 'salesforceId' ? 'User__c' : 'User__r') + '": ' + assignedLookup(assignedLookupMode.value) + ',\n  "Anio__c": 2026,\n  "Estado__c": "Activa",\n  "Frecuencia_de_Visita__c": "Mensual"\n}';
+                assignedUpdateJson.value = '{\n  "External_ID__c": "CAR-001",\n  "' + (assignedUpdateMode.value === 'salesforceId' ? 'User__c' : 'User__r') + '": ' + assignedLookup(assignedUpdateMode.value) + ',\n  "Anio__c": 2026,\n  "Estado__c": "Cerrada",\n  "Frecuencia_de_Visita__c": "Mensual"\n}';
+                clientJson.value = '{\n  "' + (clientLookupMode.value === 'salesforceId' ? 'Account__c' : 'Account__r') + '": ' + clientAccountLookup(clientLookupMode.value) + ',\n  "' + (clientLookupMode.value === 'salesforceId' ? 'Cartera_Asignada__c' : 'Cartera_Asignada__r') + '": ' + clientAssignedLookup(clientLookupMode.value) + ',\n  "External_ID__c": "CAC-001",\n  "Frecuencia_de_Visita__c": 1,\n  "Prioridad__c": "Alta",\n  "Activo__c": true\n}';
+                clientUpdateJson.value = '{\n  "' + (clientUpdateMode.value === 'salesforceId' ? 'Account__c' : 'Account__r') + '": ' + clientAccountLookup(clientUpdateMode.value) + ',\n  "' + (clientUpdateMode.value === 'salesforceId' ? 'Cartera_Asignada__c' : 'Cartera_Asignada__r') + '": ' + clientAssignedLookup(clientUpdateMode.value) + ',\n  "External_ID__c": "CAC-001",\n  "Frecuencia_de_Visita__c": 1,\n  "Prioridad__c": "Media",\n  "Activo__c": true\n}';
+            }
+
+            function buildUpdateEndpoint(base, field, key) {
+                return base + '/' + field + '/' + encodeURIComponent(key || '');
+            }
+
+            function resolveEndpoint(template, field, key, fallbackBase) {
+                var value = key || '';
+                if (template && template.indexOf('{' + field + '}') !== -1) {
+                    return template.replace('{' + field + '}', encodeURIComponent(value));
+                }
+                return buildUpdateEndpoint(fallbackBase, field, value);
+            }
+
+            async function loadEndpoints() {
+                assignedEndpoint.value = 'Cargando...';
+                clientEndpoint.value = 'Cargando...';
+                try {
+                    var assignedRes = await fetch('/api/carteras-asignadas?environment=test');
+                    var assignedData = await assignedRes.json().catch(function () { return null; });
+                    assignedEndpoint.value = (assignedData && assignedData.endpoints && assignedData.endpoints.create) || (getApiBase() + '/Cartera_Asignada__c');
+                    var assignedUpdateField = assignedUpdateMode.value === 'salesforceId' ? 'Id' : 'External_ID__c';
+                    assignedUpdateEndpoint.value = resolveEndpoint((assignedData && assignedData.endpoints && (assignedUpdateField === 'Id' ? assignedData.endpoints.updateSalesforceId : assignedData.endpoints.updateExternalId)) || '', assignedUpdateField, assignedUpdateExternalId.value.trim() || 'CAR-001', getApiBase() + '/Cartera_Asignada__c');
+                } catch (err) {
+                    assignedEndpoint.value = getApiBase() + '/Cartera_Asignada__c';
+                    assignedUpdateEndpoint.value = buildUpdateEndpoint(getApiBase() + '/Cartera_Asignada__c', assignedUpdateMode.value === 'salesforceId' ? 'Id' : 'External_ID__c', assignedUpdateExternalId.value.trim() || 'CAR-001');
+                }
+                try {
+                    var clientRes = await fetch('/api/carteras-clientes?environment=test');
+                    var clientData = await clientRes.json().catch(function () { return null; });
+                    clientEndpoint.value = (clientData && clientData.endpoints && clientData.endpoints.create) || (getApiBase() + '/Cartera_Cliente__c');
+                    var clientUpdateField = clientUpdateMode.value === 'salesforceId' ? 'Id' : 'External_ID__c';
+                    clientUpdateEndpoint.value = resolveEndpoint((clientData && clientData.endpoints && (clientUpdateField === 'Id' ? clientData.endpoints.updateSalesforceId : clientData.endpoints.updateExternalId)) || '', clientUpdateField, clientUpdateExternalId.value.trim() || 'CAC-001', getApiBase() + '/Cartera_Cliente__c');
+                } catch (err) {
+                    clientEndpoint.value = getApiBase() + '/Cartera_Cliente__c';
+                    clientUpdateEndpoint.value = buildUpdateEndpoint(getApiBase() + '/Cartera_Cliente__c', clientUpdateMode.value === 'salesforceId' ? 'Id' : 'External_ID__c', clientUpdateExternalId.value.trim() || 'CAC-001');
+                }
+            }
+
+            function send(endpointEl, payloadEl, responseEl, method, btn) {
+                return fetch('/api/' + (endpointEl.id.indexOf('asignada') !== -1 ? 'carteras-asignadas' : 'carteras-clientes'), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        endpoint: endpointEl.value.trim(),
+                        body: JSON.parse(payloadEl.value.trim() || '{}'),
+                        environment: 'test',
+                        method: method,
+                    }),
+                }).then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data, status: res.status }; }); }).then(function (result) {
+                    responseEl.hidden = false;
+                    responseEl.className = 'api-response cartera-response ' + (result.ok ? 'api-response--success' : 'api-response--error');
+                    responseEl.textContent = result.ok ? ('Operación exitosa. ' + JSON.stringify(result.data)) : ((result.data && (result.data.error || result.data.message)) || 'Error') + ' (HTTP ' + result.status + ')';
+                }).catch(function (err) {
+                    responseEl.hidden = false;
+                    responseEl.className = 'api-response cartera-response api-response--error';
+                    responseEl.textContent = 'Error de red: ' + err.message;
+                });
+            }
+
+            assignedLookupMode.addEventListener('change', refreshJson);
+            clientLookupMode.addEventListener('change', refreshJson);
+            assignedUpdateMode.addEventListener('change', function () { refreshJson(); loadEndpoints(); });
+            clientUpdateMode.addEventListener('change', function () { refreshJson(); loadEndpoints(); });
+            assignedUpdateExternalId.addEventListener('input', loadEndpoints);
+            clientUpdateExternalId.addEventListener('input', loadEndpoints);
+            assignedCreateBtn.addEventListener('click', function () { send(assignedEndpoint, assignedJson, assignedCreateResponse, 'POST', assignedCreateBtn); });
+            assignedUpdateBtn.addEventListener('click', function () { send(assignedUpdateEndpoint, assignedUpdateJson, assignedUpdateResponse, 'PATCH', assignedUpdateBtn); });
+            clientCreateBtn.addEventListener('click', function () { send(clientEndpoint, clientJson, clientCreateResponse, 'POST', clientCreateBtn); });
+            clientUpdateBtn.addEventListener('click', function () { send(clientUpdateEndpoint, clientUpdateJson, clientUpdateResponse, 'PATCH', clientUpdateBtn); });
+            refreshJson();
+            loadEndpoints();
+        })();
+
+        // Opportunity tab helper (toggle lookup format in JSON example)
+        (function () {
+            var lookupMode = document.getElementById('opportunity-lookup-mode');
+            var jsonArea = document.getElementById('opportunity-json');
+            if (!lookupMode || !jsonArea) return;
+
+            var template = {
+                opportunity: {
+                    Name: 'COM00000134',
+                    CloseDate: '2026-05-31',
+                    StageName: 'Facturación',
+                    RecordTypeId: '012XXXXXXXXXXXXXXX',
+                    Type: 'Nuevo',
+                    LeadSource: 'Web',
+                    Probability: 90,
+                    Amount: 62.86,
+                    TotalOpportunityQuantity: 1,
+                    CurrencyIsoCode: 'USD',
+                    Lead_empresa__c: 'Empresa Ejemplo',
+                    Lead_nombre__c: 'Nombre Ejemplo',
+                    Lead_telefono__c: '55555555',
+                    Lead_email__c: 'correo@ejemplo.com',
+                    Tipo_de_Negocio__c: 'Repuestos y Consumibles',
+                    Division_Relacion__c: 'DIV-001',
+                    Rubro_Relacion__c: 'RUBRO-001',
+                    Subrubro_Relacion__c: 'SUBRUBRO-001',
+                    Sucursal_Relacion__c: 'SUC-001',
+                    Pricebook2Id: '01sOx000008sSPJIA2',
+                    AccountId: 'ACC-001',
+                    OwnerId: '005Ox00000c7m0jIAA',
+                    Opportunity_Owner_Custom__c: '005Ox00000c7m0jIAA',
+                    Budget_Confirmed__c: false,
+                    Discovery_Completed__c: false,
+                    ROI_Analysis_Completed__c: false,
+                },
+                opportunityLineItems: [
+                    {
+                        Product2Id: 'PROD-001',
+                        Inventario__c: 'INV-001',
+                        Quantity: 1,
+                        UnitPrice: 73.95,
+                        ListPrice: 73.95,
+                        Discount: 15,
+                        ServiceDate: '2026-05-28',
+                        Cantidad_Reservada__c: 1,
+                        Stock_Verificado__c: true,
+                        En_Backorder__c: false,
+                    },
+                    {
+                        Product2Id: 'PROD-002',
+                        Inventario__c: 'INV-002',
+                        Quantity: 2,
+                        UnitPrice: 125.5,
+                        ListPrice: 125.5,
+                        Discount: 10,
+                        ServiceDate: '2026-05-28',
+                        Cantidad_Reservada__c: 2,
+                        Stock_Verificado__c: true,
+                        En_Backorder__c: false,
+                    },
+                ],
+            };
+
+            function buildJson(useSalesforceId) {
+                function wrapLookup(key) {
+                    if (useSalesforceId) return key === 'AccountId' ? '001XXXXXXXXXXXXXXX' : key === 'Pricebook2Id' ? '01sXXXXXXXXXXXXXXX' : key === 'OwnerId' || key === 'Opportunity_Owner_Custom__c' ? '005XXXXXXXXXXXXXXX' : 'a00XXXXXXXXXXXXXXX';
+                    return { External_ID__c: template.opportunity[key] };
+                }
+                var opportunity = JSON.parse(JSON.stringify(template.opportunity));
+                if (useSalesforceId) {
+                    opportunity.AccountId = '001XXXXXXXXXXXXXXX';
+                    opportunity.Division_Relacion__c = 'a04XXXXXXXXXXXXXXX';
+                    opportunity.Rubro_Relacion__c = 'a06XXXXXXXXXXXXXXX';
+                    opportunity.Subrubro_Relacion__c = 'a05XXXXXXXXXXXXXXX';
+                    opportunity.Sucursal_Relacion__c = 'a07XXXXXXXXXXXXXXX';
+                } else {
+                    opportunity.AccountId = { External_ID__c: 'ACC-001' };
+                    opportunity.Division_Relacion__c = { External_ID__c: 'DIV-001' };
+                    opportunity.Rubro_Relacion__c = { External_ID__c: 'RUBRO-001' };
+                    opportunity.Subrubro_Relacion__c = { External_ID__c: 'SUBRUBRO-001' };
+                    opportunity.Sucursal_Relacion__c = { External_ID__c: 'SUC-001' };
+                }
+                var items = template.opportunityLineItems.map(function (item) {
+                    var copy = JSON.parse(JSON.stringify(item));
+                    copy.Product2Id = useSalesforceId ? '01tXXXXXXXXXXXXXXX' : { External_ID__c: item.Product2Id };
+                    copy.Inventario__c = useSalesforceId ? 'a08XXXXXXXXXXXXXXX' : { External_ID__c: item.Inventario__c };
+                    return copy;
+                });
+                return JSON.stringify({ Opportunity: opportunity, OpportunityLineItems: items }, null, 2);
+            }
+
+            function refresh() {
+                jsonArea.value = buildJson(lookupMode.value === 'salesforceId');
+            }
+
+            lookupMode.addEventListener('change', refresh);
+            refresh();
         })();
 
         // Users tab (Salesforce User list)
