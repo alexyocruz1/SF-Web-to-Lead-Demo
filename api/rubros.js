@@ -68,7 +68,9 @@ async function getSalesforceToken(environment) {
   return await res.json();
 }
 
-function getSuggestedRubroEndpoints(environment) {
+function getSuggestedRubroEndpoints(options) {
+  const environment = options?.environment || 'test';
+  const kind = options?.kind || 'rubro';
   const useProd =
     environment === 'production' ||
     process.env.USE_PRODUCTION === 'true' ||
@@ -77,7 +79,9 @@ function getSuggestedRubroEndpoints(environment) {
   const instance = useProd ? process.env.PRODUCTION_INSTANCE : process.env.TEST_INSTANCE;
   const apiVersion = process.env.SF_API_VERSION;
 
-  const localEndpoint = `/api/rubros?environment=${environment}`;
+  const localEndpoint = kind === 'subrubro'
+    ? `/api/subrubros?environment=${environment}`
+    : `/api/rubros?environment=${environment}`;
   if (!instance || !apiVersion) {
     return {
       create: localEndpoint,
@@ -91,8 +95,8 @@ function getSuggestedRubroEndpoints(environment) {
   return {
     create: localEndpoint,
     update: localEndpoint,
-    directCreate: `https://${instance}/services/data/v${apiVersion}/sobjects/Rubro__c`,
-    directUpdate: `https://${instance}/services/data/v${apiVersion}/sobjects/Rubro__c/External_ID__c/{External_ID__c}`,
+    directCreate: `https://${instance}/services/data/v${apiVersion}/sobjects/${kind === 'subrubro' ? 'Subrubro__c' : 'Rubro__c'}`,
+    directUpdate: `https://${instance}/services/data/v${apiVersion}/sobjects/${kind === 'subrubro' ? 'Subrubro__c' : 'Rubro__c'}/External_ID__c/{External_ID__c}`,
     localEndpoint,
   };
 }
@@ -104,7 +108,7 @@ module.exports = async function handler(req, res) {
     const environment = req.query?.environment || 'test';
     return res.status(200).json({
       environment,
-      endpoints: getSuggestedRubroEndpoints(environment),
+      endpoints: getSuggestedRubroEndpoints({ ...req.query, environment }),
       apiVersion: process.env.SF_API_VERSION,
     });
   }

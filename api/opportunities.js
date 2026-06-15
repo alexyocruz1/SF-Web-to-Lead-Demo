@@ -34,18 +34,22 @@ async function getSalesforceToken(environment) {
   return await res.json();
 }
 
-function getSuggestedEndpoints(environment) {
+function getSuggestedEndpoints(options) {
+  const environment = options?.environment || 'test';
+  const kind = options?.kind || 'opportunity';
   const useProd = environment === 'production' || process.env.USE_PRODUCTION === 'true' || process.env.USE_PRODUCTION === '1';
   const instance = useProd ? process.env.PRODUCTION_INSTANCE : process.env.TEST_INSTANCE;
   const apiVersion = process.env.SF_API_VERSION || '65.0';
-  const localEndpoint = `/api/opportunities?environment=${environment}`;
+  const localEndpoint = kind === 'opportunitylineitem'
+    ? `/api/opportunitylineitems?environment=${environment}`
+    : `/api/opportunities?environment=${environment}`;
   if (!instance) return { create: localEndpoint, localEndpoint };
-  return { create: `https://${instance}/services/data/v${apiVersion}/sobjects/Opportunity`, localEndpoint };
+  return { create: `https://${instance}/services/data/v${apiVersion}/sobjects/${kind === 'opportunitylineitem' ? 'OpportunityLineItem' : 'Opportunity'}`, localEndpoint };
 }
 
 module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method === 'GET') return res.status(200).json({ environment: req.query?.environment || 'test', endpoints: getSuggestedEndpoints(req.query?.environment || 'test') });
+  if (req.method === 'GET') return res.status(200).json({ environment: req.query?.environment || 'test', endpoints: getSuggestedEndpoints({ ...req.query, environment: req.query?.environment || 'test' }) });
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   try {
     const { endpoint, body, environment, method = 'POST' } = req.body || {};

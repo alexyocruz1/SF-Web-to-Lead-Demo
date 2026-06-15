@@ -22,18 +22,12 @@ const classificationsHandler = require('./api/classifications');
 const usersHandler = require('./api/users');
 const leadsReadHandler = require('./api/leads-read');
 const rubrosHandler = require('./api/rubros');
-const subrubrosHandler = require('./api/subrubros');
 const divisionsHandler = require('./api/divisions');
-const sucursalesHandler = require('./api/sucursales');
 const productsHandler = require('./api/products');
 const pricebooksHandler = require('./api/pricebooks');
-const pricebookEntriesHandler = require('./api/pricebookentries');
-const inventariosHandler = require('./api/inventarios');
 const facturasHandler = require('./api/facturas');
 const opportunitiesHandler = require('./api/opportunities');
-const opportunityLineItemsHandler = require('./api/opportunitylineitems');
 const carterasAsignadasHandler = require('./api/carteras-asignadas');
-const carterasClientesHandler = require('./api/carteras-clientes');
 
 // Helper function to convert Express req/res to Vercel-style handler
 function createVercelAdapter(handler) {
@@ -85,19 +79,19 @@ app.all('/api/picklists', createVercelAdapter(picklistsHandler));
 app.all('/api/classifications', createVercelAdapter(classificationsHandler));
 app.all('/api/users', createVercelAdapter(usersHandler));
 app.all('/api/leads-read', createVercelAdapter(leadsReadHandler));
-app.all('/api/rubros', createVercelAdapter(rubrosHandler));
-app.all('/api/subrubros', createVercelAdapter(subrubrosHandler));
-app.all('/api/divisions', createVercelAdapter(divisionsHandler));
-app.all('/api/sucursales', createVercelAdapter(sucursalesHandler));
-app.all('/api/products', createVercelAdapter(productsHandler));
-app.all('/api/pricebooks', createVercelAdapter(pricebooksHandler));
-app.all('/api/pricebookentries', createVercelAdapter(pricebookEntriesHandler));
-app.all('/api/inventarios', createVercelAdapter(inventariosHandler));
+app.all('/api/rubros', createVercelAdapter((req, res) => rubrosHandler({ ...req, query: { ...req.query, kind: 'rubro' } }, res)));
+app.all('/api/subrubros', createVercelAdapter((req, res) => rubrosHandler({ ...req, query: { ...req.query, kind: 'subrubro' } }, res)));
+app.all('/api/divisions', createVercelAdapter((req, res) => divisionsHandler({ ...req, query: { ...req.query, kind: 'division' } }, res)));
+app.all('/api/sucursales', createVercelAdapter((req, res) => divisionsHandler({ ...req, query: { ...req.query, kind: 'sucursal' } }, res)));
+app.all('/api/products', createVercelAdapter((req, res) => productsHandler({ ...req, query: { ...req.query, kind: 'product' } }, res)));
+app.all('/api/inventarios', createVercelAdapter((req, res) => productsHandler({ ...req, query: { ...req.query, kind: 'inventario' } }, res)));
+app.all('/api/pricebooks', createVercelAdapter((req, res) => pricebooksHandler({ ...req, query: { ...req.query, kind: 'pricebook' } }, res)));
+app.all('/api/pricebookentries', createVercelAdapter((req, res) => pricebooksHandler({ ...req, query: { ...req.query, kind: 'pricebookentry' } }, res)));
 app.all('/api/facturas', createVercelAdapter(facturasHandler));
-app.all('/api/opportunities', createVercelAdapter(opportunitiesHandler));
-app.all('/api/opportunitylineitems', createVercelAdapter(opportunityLineItemsHandler));
-app.all('/api/carteras-asignadas', createVercelAdapter(carterasAsignadasHandler));
-app.all('/api/carteras-clientes', createVercelAdapter(carterasClientesHandler));
+app.all('/api/opportunities', createVercelAdapter((req, res) => opportunitiesHandler({ ...req, query: { ...req.query, kind: 'opportunity' } }, res)));
+app.all('/api/opportunitylineitems', createVercelAdapter((req, res) => opportunitiesHandler({ ...req, query: { ...req.query, kind: 'opportunitylineitem' } }, res)));
+app.all('/api/carteras-asignadas', createVercelAdapter((req, res) => carterasAsignadasHandler({ ...req, query: { ...req.query, kind: 'asignada' } }, res)));
+app.all('/api/carteras-clientes', createVercelAdapter((req, res) => carterasAsignadasHandler({ ...req, query: { ...req.query, kind: 'cliente' } }, res)));
 
 // Serve index.html for all routes (SPA-style)
 app.get('*', (req, res) => {

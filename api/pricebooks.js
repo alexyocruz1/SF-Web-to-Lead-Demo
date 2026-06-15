@@ -47,16 +47,20 @@ async function getSalesforceToken(environment) {
   return await res.json();
 }
 
-function getSuggestedEndpoints(environment) {
+function getSuggestedEndpoints(options) {
+  const environment = options?.environment || 'test';
+  const kind = options?.kind || 'pricebook';
   const useProd = environment === 'production' || process.env.USE_PRODUCTION === 'true' || process.env.USE_PRODUCTION === '1';
   const instance = useProd ? process.env.PRODUCTION_INSTANCE : process.env.TEST_INSTANCE;
   const apiVersion = process.env.SF_API_VERSION || '65.0';
-  const localEndpoint = `/api/pricebooks?environment=${environment}`;
+  const localEndpoint = kind === 'pricebookentry'
+    ? `/api/pricebookentries?environment=${environment}`
+    : `/api/pricebooks?environment=${environment}`;
   if (!instance) return { create: localEndpoint, update: localEndpoint, localEndpoint };
   return {
-    create: `https://${instance}/services/data/v${apiVersion}/sobjects/Pricebook2`,
-    updateExternalId: `https://${instance}/services/data/v${apiVersion}/sobjects/Pricebook2/External_ID__c/{External_ID__c}`,
-    updateSalesforceId: `https://${instance}/services/data/v${apiVersion}/sobjects/Pricebook2/{Id}`,
+    create: `https://${instance}/services/data/v${apiVersion}/sobjects/${kind === 'pricebookentry' ? 'PricebookEntry' : 'Pricebook2'}`,
+    updateExternalId: `https://${instance}/services/data/v${apiVersion}/sobjects/${kind === 'pricebookentry' ? 'PricebookEntry' : 'Pricebook2'}/External_ID__c/{External_ID__c}`,
+    updateSalesforceId: `https://${instance}/services/data/v${apiVersion}/sobjects/${kind === 'pricebookentry' ? 'PricebookEntry' : 'Pricebook2'}/{Id}`,
     localEndpoint,
   };
 }
@@ -75,14 +79,14 @@ module.exports = async function handler(req, res) {
       const queryJson = await queryRes.json().catch(function () { return {}; });
       return res.status(200).json({
         environment,
-        endpoints: getSuggestedEndpoints(environment),
+        endpoints: getSuggestedEndpoints({ ...req.query, environment }),
         pricebooks: (queryJson.records || []).map(function (r) {
           return { id: r.Id, name: r.Name, externalId: r.External_ID__c, isStandard: !!r.IsStandard, isActive: !!r.IsActive };
         }),
         queryUrl,
       });
     } catch (error) {
-      return res.status(200).json({ environment, endpoints: getSuggestedEndpoints(environment), pricebooks: [], error: error.message });
+      return res.status(200).json({ environment, endpoints: getSuggestedEndpoints({ ...req.query, environment }), pricebooks: [], error: error.message });
     }
   }
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });

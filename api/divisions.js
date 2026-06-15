@@ -47,16 +47,20 @@ async function getSalesforceToken(environment) {
   return await res.json();
 }
 
-function getSuggestedEndpoints(environment) {
+function getSuggestedEndpoints(options) {
+  const environment = options?.environment || 'test';
+  const kind = options?.kind || 'division';
   const useProd = environment === 'production' || process.env.USE_PRODUCTION === 'true' || process.env.USE_PRODUCTION === '1';
   const instance = useProd ? process.env.PRODUCTION_INSTANCE : process.env.TEST_INSTANCE;
   const apiVersion = process.env.SF_API_VERSION || '65.0';
-  const localEndpoint = `/api/divisions?environment=${environment}`;
+  const localEndpoint = kind === 'sucursal'
+    ? `/api/sucursales?environment=${environment}`
+    : `/api/divisions?environment=${environment}`;
   if (!instance) return { create: localEndpoint, update: localEndpoint, localEndpoint };
   return {
-    create: `https://${instance}/services/data/v${apiVersion}/sobjects/Division__c`,
-    updateExternalId: `https://${instance}/services/data/v${apiVersion}/sobjects/Division__c/External_ID__c/{External_ID__c}`,
-    updateSalesforceId: `https://${instance}/services/data/v${apiVersion}/sobjects/Division__c/{Id}`,
+    create: `https://${instance}/services/data/v${apiVersion}/sobjects/${kind === 'sucursal' ? 'Sucursal__c' : 'Division__c'}`,
+    updateExternalId: `https://${instance}/services/data/v${apiVersion}/sobjects/${kind === 'sucursal' ? 'Sucursal__c' : 'Division__c'}/External_ID__c/{External_ID__c}`,
+    updateSalesforceId: `https://${instance}/services/data/v${apiVersion}/sobjects/${kind === 'sucursal' ? 'Sucursal__c' : 'Division__c'}/{Id}`,
     localEndpoint,
   };
 }
@@ -66,7 +70,7 @@ module.exports = async function handler(req, res) {
 
   if (req.method === 'GET') {
     const environment = req.query?.environment || 'test';
-    return res.status(200).json({ environment, endpoints: getSuggestedEndpoints(environment) });
+    return res.status(200).json({ environment, endpoints: getSuggestedEndpoints({ ...req.query, environment }) });
   }
 
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });

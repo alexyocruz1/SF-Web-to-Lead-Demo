@@ -1,0 +1,10 @@
+{
+  "rewrites": [
+    { "source": "/api/subrubros", "destination": "/api/rubros?kind=subrubro" },
+    { "source": "/api/sucursales", "destination": "/api/divisions?kind=sucursal" },
+    { "source": "/api/inventarios", "destination": "/api/products?kind=inventario" },
+    { "source": "/api/pricebookentries", "destination": "/api/pricebooks?kind=pricebookentry" },
+    { "source": "/api/opportunitylineitems", "destination": "/api/opportunities?kind=opportunitylineitem" },
+    { "source": "/api/carteras-clientes", "destination": "/api/carteras-asignadas?kind=cliente" }
+  ]
+}
