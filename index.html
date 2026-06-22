@@ -3402,15 +3402,15 @@ LIMIT 20</textarea>
                     var data = await res.json().catch(function () { return null; });
                     if (!res.ok) throw new Error((data && (data.message || data.error)) || ('HTTP ' + res.status));
                     createEndpoint.value =
-                        (data && data.endpoints && data.endpoints.create) ||
+                        (data && data.endpoints && (data.endpoints.directCreate || data.endpoints.create)) ||
                         (data && data.endpoints && data.endpoints.localEndpoint) ||
                         '/api/subrubros';
                     updateEndpointTemplate =
-                        (data && data.endpoints && data.endpoints.updateExternalId) ||
+                        (data && data.endpoints && (data.endpoints.directUpdate || data.endpoints.updateExternalId)) ||
                         null;
                     updateEndpoint.value = buildUpdateEndpoint();
                 } catch (err) {
-                    createEndpoint.value = '/api/subrubros';
+                    createEndpoint.value = 'https://cemcol--devventas.sandbox.my.salesforce.com/services/data/v65.0/sobjects/Subrubro__c';
                     updateEndpoint.value = buildUpdateEndpoint();
                 }
             }
