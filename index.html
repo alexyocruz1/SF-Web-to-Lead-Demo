@@ -31,6 +31,7 @@
             <button class="tab" onclick="switchTab('pricebook-entry')">Pricebook Entry</button>
             <button class="tab" onclick="switchTab('inventario')">Inventario</button>
             <button class="tab" onclick="switchTab('factura')">Factura</button>
+            <button class="tab" onclick="switchTab('quote')">Quote</button>
             <button class="tab" onclick="switchTab('cartera')">Cartera</button>
             <button class="tab" onclick="switchTab('opportunity')">Opportunity</button>
         </div>
@@ -1747,6 +1748,118 @@ LIMIT 20</textarea>
                                 <tr><td>Impuesto</td><td><code>Impuesto__c</code></td><td>Currency(16,2)</td><td>No</td><td>Impuesto aplicado.</td></tr>
                                 <tr><td>ERP Sync Date</td><td><code>ERP_Sync_Date__c</code></td><td>Date/Time</td><td>No</td><td>Fecha de sincronización con ERP.</td></tr>
                                 <tr><td>Notas</td><td><code>Notas__c</code></td><td>Long Text Area(32768)</td><td>No</td><td>Comentarios de la factura.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div id="quote" class="tab-content">
+            <div class="rubro-builder">
+                <div class="rubro-hero">
+                    <p class="rubro-eyebrow">Quote sender</p>
+                    <h1>Quote</h1>
+                    <p class="rubro-lead">Envío y actualización de Quote a Salesforce usando External ID.</p>
+                </div>
+
+                <section class="rubro-panel">
+                    <h2>Crear Quote</h2>
+                    <p class="rubro-note">Quote puede referenciar Account y Opportunity por Salesforce Id en este ejemplo.</p>
+                    <div class="api-field">
+                        <label for="quote-create-endpoint">Endpoint</label>
+                        <textarea id="quote-create-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="quote-create-json">Payload</label>
+                        <textarea id="quote-create-json" class="api-json-textarea" rows="18">{
+  "Name": "Quote 001",
+  "External_ID__c": "QTE-001",
+  "OpportunityId": "006XXXXXXXXXXXXXXX",
+  "Status": "Draft",
+  "ExpirationDate": "2026-07-22",
+  "ShippingHandling": 0,
+  "Tax": 0,
+  "Tax_Rate__c": 0,
+  "Serie__c": "QTE",
+  "Serie_ID__c": "QTE-001",
+  "Main_Quote__c": true
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="quote-create-btn" class="api-send-btn">Enviar creación</button>
+                        <div id="quote-create-response" class="api-response" aria-live="polite" hidden></div>
+                    </div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Actualizar Quote</h2>
+                    <div class="api-field">
+                        <label for="quote-update-external-id">External ID</label>
+                        <input type="text" id="quote-update-external-id" class="api-lead-count" value="QTE-001" style="width: 100%; max-width: 420px;" />
+                    </div>
+                    <div class="api-field">
+                        <label for="quote-update-mode">Método de actualización</label>
+                        <select id="quote-update-mode" class="api-lead-count" style="width: 100%; max-width: 420px;">
+                            <option value="externalId" selected>External_ID__c</option>
+                            <option value="salesforceId">Salesforce Id</option>
+                        </select>
+                    </div>
+                    <div class="api-field">
+                        <label for="quote-update-endpoint">Endpoint</label>
+                        <textarea id="quote-update-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="quote-update-json">Payload</label>
+                        <textarea id="quote-update-json" class="api-json-textarea" rows="18">{
+  "Status": "Approved",
+  "External_ID__c": "QTE-001",
+  "OpportunityId": "006XXXXXXXXXXXXXXX",
+  "ExpirationDate": "2026-07-22"
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="quote-update-btn" class="api-send-btn">Enviar actualización</button>
+                        <div id="quote-update-response" class="api-response" aria-live="polite" hidden></div>
+                    </div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Campos de referencia</h2>
+                    <div class="rubro-table-wrap">
+                        <table class="rubro-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre del campo</th>
+                                    <th>API name</th>
+                                    <th>Tipo</th>
+                                    <th>Requerido</th>
+                                    <th>Descripción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Quote Name</td><td><code>Name</code></td><td>Text(255)</td><td>Sí</td><td>Nombre de la cotización.</td></tr>
+                                <tr><td>External ID</td><td><code>External_ID__c</code></td><td>Text(255) Unique</td><td>No</td><td>Clave para crear y actualizar sin duplicar.</td></tr>
+                                <tr><td>Oportunidad</td><td><code>OpportunityId</code></td><td>Master-Detail(Oportunidad)</td><td>Sí</td><td>Oportunidad relacionada.</td></tr>
+                                <tr><td>Account</td><td><code>AccountId</code></td><td>Lookup(Account)</td><td>No</td><td>Cuenta relacionada.</td></tr>
+                                <tr><td>Quote Number</td><td><code>QuoteNumber</code></td><td>Auto Number</td><td>No</td><td>Número generado por Salesforce.</td></tr>
+                                <tr><td>Status</td><td><code>Status</code></td><td>Picklist</td><td>No</td><td>Estado de la cotización.</td></tr>
+                                <tr><td>Expiration Date</td><td><code>ExpirationDate</code></td><td>Date</td><td>No</td><td>Fecha de vencimiento.</td></tr>
+                                <tr><td>Discount</td><td><code>Discount</code></td><td>Percent(3,2)</td><td>No</td><td>Descuento aplicado.</td></tr>
+                                <tr><td>Grand Total</td><td><code>GrandTotal</code></td><td>Currency(16,2)</td><td>No</td><td>Total calculado.</td></tr>
+                                <tr><td>Shipping and Handling</td><td><code>ShippingHandling</code></td><td>Currency(16,2)</td><td>No</td><td>Costo de envío.</td></tr>
+                                <tr><td>Tax</td><td><code>Tax</code></td><td>Currency(16,2)</td><td>No</td><td>Impuesto calculado.</td></tr>
+                                <tr><td>Tax Rate</td><td><code>Tax_Rate__c</code></td><td>Percent(16,2)</td><td>No</td><td>Tasa de impuesto.</td></tr>
+                                <tr><td>Serie</td><td><code>Serie__c</code></td><td>Text(255)</td><td>No</td><td>Serie de la cotización.</td></tr>
+                                <tr><td>Serie ID</td><td><code>Serie_ID__c</code></td><td>Text(255)</td><td>No</td><td>Identificador de serie.</td></tr>
+                                <tr><td>Main Quote</td><td><code>Main_Quote__c</code></td><td>Checkbox</td><td>No</td><td>Marca la cotización principal.</td></tr>
+                                <tr><td>Opportunity Generated</td><td><code>Generated_Opportunity_Id__c</code></td><td>Lookup(Oportunidad)</td><td>No</td><td>Oportunidad generada desde la cotización.</td></tr>
+                                <tr><td>Phone</td><td><code>Phone</code></td><td>Phone</td><td>No</td><td>Teléfono del contacto o cliente.</td></tr>
+                                <tr><td>Email</td><td><code>Email</code></td><td>Email</td><td>No</td><td>Correo electrónico.</td></tr>
+                                <tr><td>Description</td><td><code>Description</code></td><td>Long Text Area(32000)</td><td>No</td><td>Descripción libre.</td></tr>
+                                <tr><td>Quote To Name</td><td><code>QuoteToName</code></td><td>Text(255)</td><td>No</td><td>Nombre del destinatario.</td></tr>
+                                <tr><td>Ship To Name</td><td><code>ShippingName</code></td><td>Text(255)</td><td>No</td><td>Nombre de envío.</td></tr>
+                                <tr><td>Bill To Name</td><td><code>BillingName</code></td><td>Text(255)</td><td>No</td><td>Nombre de facturación.</td></tr>
+                                <tr><td>Additional To Name</td><td><code>AdditionalName</code></td><td>Text(255)</td><td>No</td><td>Nombre adicional.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -4404,6 +4517,85 @@ LIMIT 20</textarea>
             updateBtn.addEventListener('click', function () { send(updateBtn, updateResponse, updateEndpoint.value, updateJson, 'PATCH'); });
 
             refreshJson();
+            loadEndpoints();
+        })();
+
+        // Quote tab (create/update via /api/quotes)
+        (function () {
+            var createEndpoint = document.getElementById('quote-create-endpoint');
+            var updateEndpoint = document.getElementById('quote-update-endpoint');
+            var updateExternalId = document.getElementById('quote-update-external-id');
+            var updateMode = document.getElementById('quote-update-mode');
+            var createJson = document.getElementById('quote-create-json');
+            var updateJson = document.getElementById('quote-update-json');
+            var createBtn = document.getElementById('quote-create-btn');
+            var updateBtn = document.getElementById('quote-update-btn');
+            var createResponse = document.getElementById('quote-create-response');
+            var updateResponse = document.getElementById('quote-update-response');
+            var updateTemplate = null;
+            if (!createEndpoint || !updateEndpoint || !updateExternalId || !updateMode || !createJson || !updateJson || !createBtn || !updateBtn || !createResponse || !updateResponse) return;
+
+            function buildUpdateEndpoint() {
+                var key = updateExternalId.value.trim() || 'QTE-001';
+                if (updateMode.value === 'salesforceId') {
+                    return 'https://cemcol--devventas.sandbox.my.salesforce.com/services/data/v65.0/sobjects/Quote/' + encodeURIComponent(key);
+                }
+                if (updateTemplate) return updateTemplate.replace('{External_ID__c}', encodeURIComponent(key));
+                return 'https://cemcol--devventas.sandbox.my.salesforce.com/services/data/v65.0/sobjects/Quote/External_ID__c/' + encodeURIComponent(key);
+            }
+
+            async function loadEndpoints() {
+                createEndpoint.value = 'Cargando...';
+                updateEndpoint.value = 'Cargando...';
+                try {
+                    var res = await fetch('/api/quotes?environment=test');
+                    var data = await res.json().catch(function () { return null; });
+                    createEndpoint.value = (data && data.endpoints && data.endpoints.create) || 'https://cemcol--devventas.sandbox.my.salesforce.com/services/data/v65.0/sobjects/Quote';
+                    updateTemplate = (data && data.endpoints && data.endpoints.updateExternalId) || null;
+                    updateEndpoint.value = buildUpdateEndpoint();
+                } catch (err) {
+                    createEndpoint.value = 'https://cemcol--devventas.sandbox.my.salesforce.com/services/data/v65.0/sobjects/Quote';
+                    updateEndpoint.value = buildUpdateEndpoint();
+                }
+            }
+
+            function showResponse(el, msg, type) {
+                el.textContent = msg;
+                el.className = 'api-response api-response--' + (type || 'info');
+                el.hidden = !msg;
+            }
+
+            async function send(btn, responseEl, endpointValue, payloadText, method) {
+                var endpoint = endpointValue.trim();
+                var body;
+                try {
+                    body = JSON.parse(payloadText.value.trim() || '{}');
+                } catch (e) {
+                    showResponse(responseEl, 'JSON inválido: ' + e.message, 'error');
+                    return;
+                }
+                btn.disabled = true;
+                var label = btn.textContent;
+                btn.textContent = 'Enviando…';
+                try {
+                    var res = await fetch('/api/quotes', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ endpoint: endpoint, body: body, environment: 'test', method: method }),
+                    });
+                    var data = await res.json().catch(function () { return {}; });
+                    showResponse(responseEl, res.ok ? ('Operación exitosa. ' + JSON.stringify(data)) : ((data.error || data.message || JSON.stringify(data)) + ' (HTTP ' + res.status + ')'), res.ok ? 'success' : 'error');
+                } catch (err) {
+                    showResponse(responseEl, 'Error de red: ' + err.message, 'error');
+                }
+                btn.disabled = false;
+                btn.textContent = label;
+            }
+
+            updateExternalId.addEventListener('input', function () { updateEndpoint.value = buildUpdateEndpoint(); });
+            updateMode.addEventListener('change', function () { updateEndpoint.value = buildUpdateEndpoint(); });
+            createBtn.addEventListener('click', function () { send(createBtn, createResponse, createEndpoint.value, createJson, 'POST'); });
+            updateBtn.addEventListener('click', function () { send(updateBtn, updateResponse, updateEndpoint.value, updateJson, 'PATCH'); });
             loadEndpoints();
         })();
 

@@ -17,8 +17,7 @@ app.use(express.static('.'));
 
 // Import the API handler logic
 const leadsHandler = require('./api/leads');
-const picklistsHandler = require('./api/picklists');
-const classificationsHandler = require('./api/classifications');
+const lookupsHandler = require('./api/lookups');
 const usersHandler = require('./api/users');
 const leadsReadHandler = require('./api/leads-read');
 const rubrosHandler = require('./api/rubros');
@@ -26,6 +25,7 @@ const divisionsHandler = require('./api/divisions');
 const productsHandler = require('./api/products');
 const pricebooksHandler = require('./api/pricebooks');
 const facturasHandler = require('./api/facturas');
+const quotesHandler = require('./api/quotes');
 const opportunitiesHandler = require('./api/opportunities');
 const carterasAsignadasHandler = require('./api/carteras-asignadas');
 
@@ -75,8 +75,8 @@ function createVercelAdapter(handler) {
 
 // Proxy the API endpoints
 app.all('/api/leads', createVercelAdapter(leadsHandler));
-app.all('/api/picklists', createVercelAdapter(picklistsHandler));
-app.all('/api/classifications', createVercelAdapter(classificationsHandler));
+app.all('/api/picklists', createVercelAdapter((req, res) => lookupsHandler({ ...req, query: { ...req.query, kind: 'picklists' } }, res)));
+app.all('/api/classifications', createVercelAdapter((req, res) => lookupsHandler({ ...req, query: { ...req.query, kind: 'classifications' } }, res)));
 app.all('/api/users', createVercelAdapter(usersHandler));
 app.all('/api/leads-read', createVercelAdapter(leadsReadHandler));
 app.all('/api/rubros', createVercelAdapter((req, res) => rubrosHandler({ ...req, query: { ...req.query, kind: 'rubro' } }, res)));
@@ -88,6 +88,7 @@ app.all('/api/inventarios', createVercelAdapter((req, res) => productsHandler({ 
 app.all('/api/pricebooks', createVercelAdapter((req, res) => pricebooksHandler({ ...req, query: { ...req.query, kind: 'pricebook' } }, res)));
 app.all('/api/pricebookentries', createVercelAdapter((req, res) => pricebooksHandler({ ...req, query: { ...req.query, kind: 'pricebookentry' } }, res)));
 app.all('/api/facturas', createVercelAdapter(facturasHandler));
+app.all('/api/quotes', createVercelAdapter(quotesHandler));
 app.all('/api/opportunities', createVercelAdapter((req, res) => opportunitiesHandler({ ...req, query: { ...req.query, kind: 'opportunity' } }, res)));
 app.all('/api/opportunitylineitems', createVercelAdapter((req, res) => opportunitiesHandler({ ...req, query: { ...req.query, kind: 'opportunitylineitem' } }, res)));
 app.all('/api/carteras-asignadas', createVercelAdapter((req, res) => carterasAsignadasHandler({ ...req, query: { ...req.query, kind: 'asignada' } }, res)));
