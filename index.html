@@ -4433,8 +4433,8 @@ LIMIT 20</textarea>
             function updateInventarioJsons() {
                 var createLookup = buildProductLookup(createLookupMode.value);
                 var updateLookup = buildProductLookup(updateLookupMode.value);
-                createJson.value = '{\n  "Cantidad_Disponible__c": 10,\n  "Cantidad_Reservada__c": 2,\n  "Punto_de_Reorden__c": 5,\n  "Tipo_de_Reserva__c": "Venta",\n  "Ubicacion__c": "Bodega principal",\n  "External_ID__c": "INV-001",\n  "' + (createLookupMode.value === 'salesforceId' ? 'Producto__c' : 'Producto__r') + '": ' + createLookup + '\n}';
-                updateJson.value = '{\n  "Cantidad_Disponible__c": 12,\n  "Cantidad_Reservada__c": 3,\n  "Punto_de_Reorden__c": 5,\n  "Tipo_de_Reserva__c": "Venta",\n  "Ubicacion__c": "Bodega principal",\n  "' + (updateLookupMode.value === 'salesforceId' ? 'Producto__c' : 'Producto__r') + '": ' + updateLookup + '\n}';
+                createJson.value = '{\n  "Cantidad_Disponible__c": 10,\n  "Cantidad_Reservada__c": 2,\n  "Punto_de_Reorden__c": 5,\n  "Tipo_de_Reserva__c": "Venta",\n  "Ubicacion__c": "Bodega principal",\n  "External_ID__c": "INV-001",\n  "' + (createLookupMode.value === 'salesforceId' ? 'Producto__c' : 'Producto__r') + '": ' + createLookup + ',\n"' + (createLookupMode.value === 'salesforceId' ? 'Sucursal__c' : 'Sucursal__r') + '": ' + createLookup + '\n}';
+                updateJson.value = '{\n  "Cantidad_Disponible__c": 12,\n  "Cantidad_Reservada__c": 3,\n  "Punto_de_Reorden__c": 5,\n  "Tipo_de_Reserva__c": "Venta",\n  "Ubicacion__c": "Bodega principal",\n  "' + (updateLookupMode.value === 'salesforceId' ? 'Producto__c' : 'Producto__r') + '": ' + updateLookup + ',\n"' + (updateLookupMode.value === 'salesforceId' ? 'Sucursal__c' : 'Sucursal__r') + '": ' + updateLookup + '\n}';
             }
 
             function buildUpdateEndpoint() {
