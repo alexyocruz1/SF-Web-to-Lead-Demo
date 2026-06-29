@@ -89,6 +89,7 @@ app.all('/api/pricebooks', createVercelAdapter((req, res) => pricebooksHandler({
 app.all('/api/pricebookentries', createVercelAdapter((req, res) => pricebooksHandler({ ...req, query: { ...req.query, kind: 'pricebookentry' } }, res)));
 app.all('/api/facturas', createVercelAdapter(facturasHandler));
 app.all('/api/quotes', createVercelAdapter(quotesHandler));
+app.all('/api/quotelineitems', createVercelAdapter((req, res) => quotesHandler({ ...req, query: { ...req.query, kind: 'quoteLineItem' } }, res)));
 app.all('/api/opportunities', createVercelAdapter((req, res) => opportunitiesHandler({ ...req, query: { ...req.query, kind: 'opportunity' } }, res)));
 app.all('/api/opportunitylineitems', createVercelAdapter((req, res) => opportunitiesHandler({ ...req, query: { ...req.query, kind: 'opportunitylineitem' } }, res)));
 app.all('/api/carteras-asignadas', createVercelAdapter((req, res) => carterasAsignadasHandler({ ...req, query: { ...req.query, kind: 'asignada' } }, res)));
@@ -114,8 +115,9 @@ app.listen(PORT, () => {
   console.log(`  - http://localhost:${PORT}/api/products`);
   console.log(`  - http://localhost:${PORT}/api/pricebooks`);
   console.log(`  - http://localhost:${PORT}/api/pricebookentries`);
-  console.log(`  - http://localhost:${PORT}/api/inventarios`);
   console.log(`  - http://localhost:${PORT}/api/facturas`);
+  console.log(`  - http://localhost:${PORT}/api/quotes`);
+  console.log(`  - http://localhost:${PORT}/api/quotelineitems`);
   console.log(`  - http://localhost:${PORT}/api/opportunities`);
   console.log(`  - http://localhost:${PORT}/api/opportunitylineitems`);
   console.log(`  - http://localhost:${PORT}/api/carteras-asignadas`);

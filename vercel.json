@@ -2,6 +2,7 @@
   "rewrites": [
     { "source": "/api/picklists", "destination": "/api/lookups?kind=picklists" },
     { "source": "/api/classifications", "destination": "/api/lookups?kind=classifications" },
+    { "source": "/api/quotelineitems", "destination": "/api/quotes?kind=quoteLineItem" },
     { "source": "/api/subrubros", "destination": "/api/rubros?kind=subrubro" },
     { "source": "/api/sucursales", "destination": "/api/divisions?kind=sucursal" },
     { "source": "/api/inventarios", "destination": "/api/products?kind=inventario" },
