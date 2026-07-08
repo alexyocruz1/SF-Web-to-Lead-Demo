@@ -36,19 +36,18 @@ function getInstanceHost(environment) {
 }
 
 async function getSalesforceToken(environment) {
-  const clientId = process.env.CLIENT_KEY;
-  const tokenUrl = getTokenUrl(environment);
-
   const useProd =
     environment === 'production' ||
     process.env.USE_PRODUCTION === 'true' ||
     process.env.USE_PRODUCTION === '1';
+  const clientId = useProd ? process.env.CLIENT_KEY_PROD : process.env.CLIENT_KEY;
+  const tokenUrl = getTokenUrl(environment);
   const username = useProd ? process.env.PRODUCTION_USERNAME : process.env.TEST_USERNAME;
   let privateKeyOrPath = useProd
     ? process.env.SF_JWT_PRIVATE_PRODUCTION_KEY
     : process.env.SF_JWT_PRIVATE_TEST_KEY;
 
-  if (!clientId) throw new Error('CLIENT_KEY must be set in env');
+  if (!clientId) throw new Error(`${useProd ? 'CLIENT_KEY_PROD' : 'CLIENT_KEY'} must be set in env`);
   if (!privateKeyOrPath) {
     throw new Error(
       `${useProd ? 'SF_JWT_PRIVATE_PRODUCTION_KEY' : 'SF_JWT_PRIVATE_TEST_KEY'} must be set in env`
@@ -77,6 +76,7 @@ async function getSalesforceToken(environment) {
     sub: username,
     aud: audience,
     exp: Math.floor(Date.now() / 1000) + 5 * 60,
+    sc: 'api',
   };
 
   const assertion = jwt.sign(claims, privateKey, { algorithm: 'RS256' });

@@ -4,17 +4,17 @@ const path = require('path');
 
 async function getSalesforceToken(environment) {
   const isProduction = environment === 'production';
-  const clientKey = process.env.CLIENT_KEY;
+  const clientKey = isProduction ? process.env.CLIENT_KEY_PROD : process.env.CLIENT_KEY;
   const username = isProduction ? process.env.PRODUCTION_USERNAME : process.env.TEST_USERNAME;
   const tokenUrl = isProduction ? process.env.PRODUCTION_URL : process.env.TEST_URL;
   const keyEnvVar = isProduction ? process.env.SF_JWT_PRIVATE_PRODUCTION_KEY : process.env.SF_JWT_PRIVATE_TEST_KEY;
-  if (!clientKey) throw new Error('CLIENT_KEY must be set');
+  if (!clientKey) throw new Error(`${isProduction ? 'CLIENT_KEY_PROD' : 'CLIENT_KEY'} must be set`);
   if (!username) throw new Error(`${isProduction ? 'PRODUCTION_USERNAME' : 'TEST_USERNAME'} must be set`);
   if (!keyEnvVar) throw new Error(`${isProduction ? 'SF_JWT_PRIVATE_PRODUCTION_KEY' : 'SF_JWT_PRIVATE_TEST_KEY'} must be set`);
   let privateKey;
   if (keyEnvVar.includes('-----BEGIN')) privateKey = keyEnvVar.replace(/\\n/g, '\n').trim();
   else privateKey = fs.readFileSync(path.resolve(keyEnvVar), 'utf8').trim();
-  const jwtPayload = { iss: clientKey, sub: username, aud: tokenUrl.includes('test.salesforce.com') ? 'https://test.salesforce.com' : 'https://login.salesforce.com', exp: Math.floor(Date.now() / 1000) + 300 };
+  const jwtPayload = { iss: clientKey, sub: username, aud: tokenUrl.includes('test.salesforce.com') ? 'https://test.salesforce.com' : 'https://login.salesforce.com', exp: Math.floor(Date.now() / 1000) + 300, sc: 'api' };
   const assertion = jwt.sign(jwtPayload, privateKey, { algorithm: 'RS256' });
   const params = new URLSearchParams({ grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer', assertion });
   const response = await fetch(tokenUrl, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });

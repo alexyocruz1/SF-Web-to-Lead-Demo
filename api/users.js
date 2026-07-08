@@ -5,11 +5,11 @@ const path = require('path');
 async function getSalesforceToken(environment) {
   const isProduction = environment === 'production';
 
-  const clientKey = process.env.CLIENT_KEY;
+  const clientKey = isProduction ? process.env.CLIENT_KEY_PROD : process.env.CLIENT_KEY;
   const username = isProduction ? process.env.PRODUCTION_USERNAME : process.env.TEST_USERNAME;
   const tokenUrl = isProduction ? process.env.PRODUCTION_URL : process.env.TEST_URL;
 
-  if (!clientKey) throw new Error('CLIENT_KEY must be set');
+  if (!clientKey) throw new Error(`${isProduction ? 'CLIENT_KEY_PROD' : 'CLIENT_KEY'} must be set`);
   if (!username) throw new Error(`${isProduction ? 'PRODUCTION_USERNAME' : 'TEST_USERNAME'} must be set`);
   if (!tokenUrl) throw new Error(`${isProduction ? 'PRODUCTION_URL' : 'TEST_URL'} must be set`);
 
@@ -30,11 +30,12 @@ async function getSalesforceToken(environment) {
     throw new Error('Failed to read private key: ' + err.message);
   }
 
-  const jwtPayload = {
+const jwtPayload = {
     iss: clientKey,
     sub: username,
     aud: tokenUrl.includes('test.salesforce.com') ? 'https://test.salesforce.com' : 'https://login.salesforce.com',
     exp: Math.floor(Date.now() / 1000) + 60 * 5, // 5 minutes
+    sc: 'api',
   };
 
   let assertion;

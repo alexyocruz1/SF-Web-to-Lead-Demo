@@ -11,12 +11,12 @@ function getTokenUrl(environment) {
 }
 
 async function getSalesforceToken(environment) {
-  const clientId = process.env.CLIENT_KEY;
-  const tokenUrl = getTokenUrl(environment);
   const useProd = environment === 'production' || process.env.USE_PRODUCTION === 'true' || process.env.USE_PRODUCTION === '1';
+  const clientId = useProd ? process.env.CLIENT_KEY_PROD : process.env.CLIENT_KEY;
+  const tokenUrl = getTokenUrl(environment);
   const username = useProd ? process.env.PRODUCTION_USERNAME : process.env.TEST_USERNAME;
   const privateKeyOrPath = useProd ? process.env.SF_JWT_PRIVATE_PRODUCTION_KEY : process.env.SF_JWT_PRIVATE_TEST_KEY;
-  if (!clientId) throw new Error('CLIENT_KEY must be set in env');
+  if (!clientId) throw new Error(`${useProd ? 'CLIENT_KEY_PROD' : 'CLIENT_KEY'} must be set in env`);
   if (!username) throw new Error(`${useProd ? 'PRODUCTION_USERNAME' : 'TEST_USERNAME'} must be set in env`);
   if (!privateKeyOrPath) throw new Error(`${useProd ? 'SF_JWT_PRIVATE_PRODUCTION_KEY' : 'SF_JWT_PRIVATE_TEST_KEY'} must be set in env`);
 
@@ -28,7 +28,7 @@ async function getSalesforceToken(environment) {
     privateKey = fs.readFileSync(keyPath, 'utf8').trim();
   }
 
-  const assertion = jwt.sign({ iss: clientId, sub: username, aud: tokenUrl.includes('test.salesforce.com') ? 'https://test.salesforce.com' : 'https://login.salesforce.com', exp: Math.floor(Date.now() / 1000) + 300 }, privateKey, { algorithm: 'RS256' });
+  const assertion = jwt.sign({ iss: clientId, sub: username, aud: tokenUrl.includes('test.salesforce.com') ? 'https://test.salesforce.com' : 'https://login.salesforce.com', exp: Math.floor(Date.now() / 1000) + 300, sc: 'api' }, privateKey, { algorithm: 'RS256' });
   const res = await fetch(tokenUrl, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer', assertion }).toString() });
   if (!res.ok) throw new Error(`Salesforce token error (${res.status}): ${await res.text()}`);
   return await res.json();
