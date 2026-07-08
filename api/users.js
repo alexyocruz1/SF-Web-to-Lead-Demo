@@ -101,6 +101,34 @@ function getSuggestedUserEndpoint(environment) {
   return `https://${instance}/services/data/v${apiVersion}/query`;
 }
 
+function getSuggestedCrudEndpoints(kind, environment) {
+  const useProd =
+    environment === 'production' ||
+    process.env.USE_PRODUCTION === 'true' ||
+    process.env.USE_PRODUCTION === '1';
+
+  const instance = useProd ? process.env.PRODUCTION_INSTANCE : process.env.TEST_INSTANCE;
+  const apiVersion = process.env.SF_API_VERSION || '65.0';
+  const objectApiName = kind === 'contact' ? 'Contact' : 'Account';
+  const localEndpoint = `/api/users?kind=${kind}&environment=${environment}`;
+
+  if (!instance) {
+    return {
+      create: localEndpoint,
+      updateExternalId: localEndpoint,
+      updateSalesforceId: localEndpoint,
+      localEndpoint,
+    };
+  }
+
+  return {
+    create: `https://${instance}/services/data/v${apiVersion}/sobjects/${objectApiName}`,
+    updateExternalId: `https://${instance}/services/data/v${apiVersion}/sobjects/${objectApiName}/External_ID__c/{External_ID__c}`,
+    updateSalesforceId: `https://${instance}/services/data/v${apiVersion}/sobjects/${objectApiName}/{Id}`,
+    localEndpoint,
+  };
+}
+
 module.exports = async (req, res) => {
   // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -108,10 +136,57 @@ module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== 'GET' && req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { environment = 'test' } = req.query;
+    const kind = req.query?.kind || req.body?.kind;
+    const environment = req.query?.environment || req.body?.environment || 'test';
+
+    if (kind === 'account' || kind === 'contact') {
+      if (req.method === 'GET') {
+        return res.status(200).json({
+          environment,
+          kind,
+          endpoints: getSuggestedCrudEndpoints(kind, environment),
+        });
+      }
+
+      const { endpoint, body, method = 'POST' } = req.body || {};
+      if (!endpoint || typeof endpoint !== 'string') return res.status(400).json({ error: 'endpoint is required' });
+
+      const isSalesforce = /salesforce\.com|force\.com/i.test(endpoint);
+      let actualEndpoint = endpoint;
+      const headers = { 'Content-Type': 'application/json' };
+
+      if (isSalesforce) {
+        const tokenResponse = await getSalesforceToken(environment);
+        headers.Authorization = `Bearer ${tokenResponse.access_token}`;
+        const match = endpoint.match(/(\/services\/data\/.+)$/);
+        if (match) actualEndpoint = tokenResponse.instance_url + match[1];
+      }
+
+      const proxyRes = await fetch(actualEndpoint, {
+        method,
+        headers,
+        body: method === 'GET' ? undefined : JSON.stringify(body || {}),
+      });
+
+      const text = await proxyRes.text();
+      let json = {};
+      try {
+        json = text ? JSON.parse(text) : {};
+      } catch (_) {
+        json = { raw: text };
+      }
+
+      if (!proxyRes.ok) {
+        return res.status(proxyRes.status).json({ error: json.message || json[0]?.message || text, details: json });
+      }
+
+      return res.status(200).json(json);
+    }
+
+    if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
     const apiVersion = process.env.SF_API_VERSION || '65.0';
 
     const tokenResponse = await getSalesforceToken(environment);
@@ -142,4 +217,3 @@ module.exports = async (req, res) => {
     });
   }
 };
-

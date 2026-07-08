@@ -35,6 +35,7 @@
             <button class="tab" onclick="switchTab('quotelineitem')">Quote Line Item</button>
             <button class="tab" onclick="switchTab('cartera')">Cartera</button>
             <button class="tab" onclick="switchTab('opportunity')">Opportunity</button>
+            <button class="tab" onclick="switchTab('account-contact')">Account / Contact</button>
         </div>
 
         <!-- copy and paste the CEMCOL Comercial Web-to-Lead form code here -->
@@ -1280,7 +1281,9 @@ LIMIT 20</textarea>
                                 <tr><td>AC</td><td><code>AC__c</code></td><td>Text(255)</td><td>No</td><td>Campo libre AC.</td></tr>
                                 <tr><td>Active</td><td><code>IsActive</code></td><td>Checkbox</td><td>No</td><td>Indica si el producto está activo.</td></tr>
                                 <tr><td>AEX</td><td><code>AEX__c</code></td><td>Text(255)</td><td>No</td><td>Campo libre AEX.</td></tr>
+                                <tr><td>IsSegment</td><td><code>IsSegment__c</code></td><td>Checkbox</td><td>No</td><td>Marca segmentos de producto.</td></tr>
                                 <tr><td>Descripcion Larga</td><td><code>Descripcion_Larga__c</code></td><td>Rich Text Area(32768)</td><td>No</td><td>Descripción extendida del producto.</td></tr>
+                                <tr><td>Nombre de Segmento</td><td><code>Nombre_de_Segmento__c</code></td><td>Text(255)</td><td>No</td><td>Nombre del segmento.</td></tr>
                                 <tr><td>Image Url</td><td><code>Image_Url__c</code></td><td>URL(255)</td><td>No</td><td>URL de la imagen principal.</td></tr>
                                 <tr><td>Marca</td><td><code>Marca__c</code></td><td>Text(255)</td><td>No</td><td>Marca comercial del producto.</td></tr>
                                 <tr><td>Origen Creacion</td><td><code>Origen_Creacion__c</code></td><td>Picklist</td><td>No</td><td>Valores: Salesforce, Integracion, Carga de Datos.</td></tr>
@@ -2013,6 +2016,10 @@ LIMIT 20</textarea>
                                 <tr><td>Quote</td><td><code>QuoteId</code></td><td>Master-Detail(Quote)</td><td>Sí</td><td>Cotización principal del item.</td></tr>
                                 <tr><td>Product</td><td><code>Product2Id</code></td><td>Lookup(Product)</td><td>No</td><td>Producto relacionado.</td></tr>
                                 <tr><td>Inventario</td><td><code>Inventario__c</code></td><td>Lookup(Inventario)</td><td>Sí</td><td>Inventario relacionado.</td></tr>
+                                <tr><td>Nombre de Segmento</td><td><code>Nombre_de_Segmento__c</code></td><td>Text(255)</td><td>No</td><td>Nombre del segmento.</td></tr>
+                                <tr><td>Numero de Segmento</td><td><code>Numero_de_Segmento__c</code></td><td>Number(18,0)</td><td>No</td><td>Número del segmento.</td></tr>
+                                <tr><td>Linea Padre</td><td><code>Linea_Padre__c</code></td><td>Lookup(Quote Line Item)</td><td>No</td><td>Línea padre del segmento.</td></tr>
+                                <tr><td>IsSegment</td><td><code>IsSegment__c</code></td><td>Checkbox</td><td>No</td><td>Marca líneas de segmento.</td></tr>
                                 <tr><td>Quantity</td><td><code>Quantity</code></td><td>Number(10,2)</td><td>No</td><td>Cantidad cotizada.</td></tr>
                                 <tr><td>Sales Price</td><td><code>UnitPrice</code></td><td>Currency(16,2)</td><td>No</td><td>Precio de venta.</td></tr>
                                 <tr><td>List Price</td><td><code>ListPrice</code></td><td>Currency(16,2)</td><td>No</td><td>Precio de lista.</td></tr>
@@ -2361,6 +2368,11 @@ LIMIT 20</textarea>
                                 <tr><td>Oportunidad</td><td><code>OpportunityId</code></td><td>Lookup(Oportunidad)</td><td>Sí</td><td>Oportunidad padre; usa Salesforce Id.</td></tr>
                                 <tr><td>Product</td><td><code>Product2Id</code></td><td>Lookup(Product)</td><td>Sí</td><td>Producto relacionado; puede ir con Salesforce Id o <code>External_ID__c</code>.</td></tr>
                                 <tr><td>Inventario</td><td><code>Inventario__c</code></td><td>Lookup(Inventario)</td><td>Sí</td><td>Inventario vinculado; puede ir con Salesforce Id o <code>External_ID__c</code>.</td></tr>
+                                <tr><td>IsSegment</td><td><code>IsSegment__c</code></td><td>Checkbox</td><td>No</td><td>Marca líneas de segmento.</td></tr>
+                                <tr><td>Nombre de Segmento</td><td><code>Nombre_de_Segmento__c</code></td><td>Text(255)</td><td>No</td><td>Nombre del segmento.</td></tr>
+                                <tr><td>Numero de Segmento</td><td><code>Numero_de_Segmento__c</code></td><td>Number(18,0)</td><td>No</td><td>Número del segmento.</td></tr>
+                                <tr><td>Rubro Segmento</td><td><code>Rubro_Segmento__c</code></td><td>Lookup(Rubro)</td><td>No</td><td>Rubro del segmento.</td></tr>
+                                <tr><td>Subrubro Segmento</td><td><code>Subrubro_Segmento__c</code></td><td>Lookup(Subrubro)</td><td>No</td><td>Subrubro del segmento.</td></tr>
                                 <tr><td>Quantity</td><td><code>Quantity</code></td><td>Number(10,2)</td><td>No</td><td>Cantidad del ítem.</td></tr>
                                 <tr><td>Sales Price</td><td><code>UnitPrice</code></td><td>Currency(16,2)</td><td>No</td><td>Precio de venta.</td></tr>
                                 <tr><td>List Price</td><td><code>ListPrice</code></td><td>Currency(16,2)</td><td>No</td><td>Precio de lista.</td></tr>
@@ -2368,6 +2380,216 @@ LIMIT 20</textarea>
                                 <tr><td>Service Date</td><td><code>ServiceDate</code></td><td>Date</td><td>Sí</td><td>Fecha del servicio.</td></tr>
                                 <tr><td>Cantidad Reservada</td><td><code>Cantidad_Reservada__c</code></td><td>Number(16,2)</td><td>No</td><td>Cantidad reservada.</td></tr>
                                 <tr><td>Stock Verificado</td><td><code>Stock_Verificado__c</code></td><td>Checkbox</td><td>No</td><td>Stock validado.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div id="account-contact" class="tab-content">
+            <div class="rubro-builder">
+                <div class="rubro-hero">
+                    <p class="rubro-eyebrow">Account / Contact sender</p>
+                    <h1>Account y Contact</h1>
+                    <p class="rubro-lead">Este tab crea y actualiza Cliente/Cuenta y Contacto, con soporte para TEST y PRODUCTION.</p>
+                </div>
+
+                <section class="rubro-panel">
+                    <h2>Account</h2>
+                    <div class="api-field">
+                        <label class="api-env-label">Entorno</label>
+                        <div class="api-env-radios">
+                            <label class="api-env-radio">
+                                <input type="radio" name="account-env" value="test" id="account-env-test" checked />
+                                <span>TEST</span>
+                            </label>
+                            <label class="api-env-radio">
+                                <input type="radio" name="account-env" value="production" id="account-env-production" />
+                                <span>PRODUCTION</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="api-field">
+                        <label for="account-create-endpoint">Endpoint creación</label>
+                        <textarea id="account-create-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="account-create-json">Payload creación</label>
+                        <textarea id="account-create-json" class="api-json-textarea" rows="14">{
+  "Name": "Cuenta ejemplo",
+  "External_ID__c": "ACC-001",
+  "Codigo_Cuenta__c": "C-001",
+  "AccountNumber": "12345",
+  "Phone": "55555555",
+  "Correo__c": "cuenta@ejemplo.com",
+  "Type": "Cliente",
+  "Pais__c": "Honduras"
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="account-create-btn" class="api-send-btn">Enviar creación</button>
+                        <div id="account-create-response" class="api-response" aria-live="polite" hidden></div>
+                    </div>
+
+                    <div class="api-field">
+                        <label for="account-update-mode">Tipo de actualización</label>
+                        <select id="account-update-mode" class="api-lead-count" style="width:100%;max-width:420px;">
+                            <option value="externalId" selected>External_ID__c</option>
+                            <option value="salesforceId">Salesforce Id</option>
+                        </select>
+                    </div>
+                    <div class="api-field">
+                        <label for="account-update-external-id">External ID / Id</label>
+                        <input type="text" id="account-update-external-id" class="api-lead-count" value="ACC-001" style="width:100%;max-width:420px;" />
+                    </div>
+                    <div class="api-field">
+                        <label for="account-update-endpoint">Endpoint actualización</label>
+                        <textarea id="account-update-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="account-update-json">Payload actualización</label>
+                        <textarea id="account-update-json" class="api-json-textarea" rows="10">{
+  "Name": "Cuenta ejemplo actualizada",
+  "Phone": "55550000"
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="account-update-btn" class="api-send-btn">Enviar actualización</button>
+                        <div id="account-update-response" class="api-response" aria-live="polite" hidden></div>
+                    </div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Campos de Account</h2>
+                    <div class="rubro-table-wrap">
+                        <table class="rubro-table">
+                            <thead>
+                                <tr><th>Nombre del campo</th><th>API name</th><th>Tipo</th><th>Requerido</th><th>Descripción</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Account Name</td><td><code>Name</code></td><td>Name</td><td>Sí</td><td>Nombre de la cuenta.</td></tr>
+                                <tr><td>External ID</td><td><code>External_ID__c</code></td><td>Text(255)</td><td>Sí</td><td>Clave externa para crear y actualizar.</td></tr>
+                                <tr><td>Account Number</td><td><code>AccountNumber</code></td><td>Text(40)</td><td>No</td><td>Número de cuenta.</td></tr>
+                                <tr><td>Account Owner</td><td><code>OwnerId</code></td><td>Lookup(User)</td><td>Sí</td><td>Propietario de la cuenta.</td></tr>
+                                <tr><td>Account Source</td><td><code>AccountSource</code></td><td>Picklist</td><td>No</td><td>Origen de la cuenta.</td></tr>
+                                <tr><td>Billing Address</td><td><code>BillingAddress</code></td><td>Address</td><td>No</td><td>Dirección de facturación.</td></tr>
+                                <tr><td>Correo electrónico</td><td><code>Correo__c</code></td><td>Email</td><td>No</td><td>Correo principal de la cuenta.</td></tr>
+                                <tr><td>Código de Cuenta</td><td><code>Codigo_Cuenta__c</code></td><td>Text(50)</td><td>No</td><td>Código interno de la cuenta.</td></tr>
+                                <tr><td>Cuenta ID</td><td><code>Cuenta_ID__c</code></td><td>Text(10)</td><td>No</td><td>Identificador corto de cuenta.</td></tr>
+                                <tr><td>Description</td><td><code>Description</code></td><td>Long Text Area(32000)</td><td>No</td><td>Descripción de la cuenta.</td></tr>
+                                <tr><td>ERP Account Code</td><td><code>ERP_Account_Code__c</code></td><td>Text(255)</td><td>No</td><td>Código ERP de cuenta.</td></tr>
+                                <tr><td>Es Cuenta Generica?</td><td><code>EsCuentaGenerica__c</code></td><td>Checkbox</td><td>No</td><td>Marca cuentas genéricas.</td></tr>
+                                <tr><td>Forma de Contacto</td><td><code>Forma_de_Contacto__c</code></td><td>Text(255)</td><td>No</td><td>Forma preferida de contacto.</td></tr>
+                                <tr><td>ID Nacional</td><td><code>ID_Nacional__c</code></td><td>Text(50)</td><td>No</td><td>Identificación nacional.</td></tr>
+                                <tr><td>Industry</td><td><code>Industry</code></td><td>Picklist</td><td>No</td><td>Industria de la cuenta.</td></tr>
+                                <tr><td>Ownership</td><td><code>Ownership</code></td><td>Picklist</td><td>No</td><td>Tipo de propiedad.</td></tr>
+                                <tr><td>Parent Account</td><td><code>ParentId</code></td><td>Hierarchy</td><td>No</td><td>Cuenta padre.</td></tr>
+                                <tr><td>País</td><td><code>Pais__c</code></td><td>Picklist</td><td>No</td><td>País de la cuenta.</td></tr>
+                                <tr><td>Phone</td><td><code>Phone</code></td><td>Phone</td><td>No</td><td>Teléfono principal.</td></tr>
+                                <tr><td>Shipping Address</td><td><code>ShippingAddress</code></td><td>Address</td><td>No</td><td>Dirección de envío.</td></tr>
+                                <tr><td>Source System ID</td><td><code>SourceSystemIdentifier</code></td><td>Text(85)</td><td>No</td><td>Id del sistema origen.</td></tr>
+                                <tr><td>Telefono 2</td><td><code>Telefono_2__c</code></td><td>Phone</td><td>No</td><td>Segundo teléfono.</td></tr>
+                                <tr><td>Type</td><td><code>Type</code></td><td>Picklist</td><td>No</td><td>Tipo de cuenta.</td></tr>
+                                <tr><td>Website</td><td><code>Website</code></td><td>URL(255)</td><td>No</td><td>Sitio web.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Contact</h2>
+                    <div class="api-field">
+                        <label class="api-env-label">Entorno</label>
+                        <div class="api-env-radios">
+                            <label class="api-env-radio">
+                                <input type="radio" name="contact-env" value="test" id="contact-env-test" checked />
+                                <span>TEST</span>
+                            </label>
+                            <label class="api-env-radio">
+                                <input type="radio" name="contact-env" value="production" id="contact-env-production" />
+                                <span>PRODUCTION</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="api-field">
+                        <label for="contact-create-endpoint">Endpoint creación</label>
+                        <textarea id="contact-create-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="contact-create-json">Payload creación</label>
+                        <textarea id="contact-create-json" class="api-json-textarea" rows="14">{
+  "FirstName": "Ana",
+  "LastName": "Pérez",
+  "MiddleName": "María",
+  "Email": "contacto@ejemplo.com",
+  "AccountId": "001XXXXXXXXXXXXXXX",
+  "External_ID__c": "CON-001",
+  "Phone": "55555555"
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="contact-create-btn" class="api-send-btn">Enviar creación</button>
+                        <div id="contact-create-response" class="api-response" aria-live="polite" hidden></div>
+                    </div>
+
+                    <div class="api-field">
+                        <label for="contact-update-mode">Tipo de actualización</label>
+                        <select id="contact-update-mode" class="api-lead-count" style="width:100%;max-width:420px;">
+                            <option value="externalId" selected>External_ID__c</option>
+                            <option value="salesforceId">Salesforce Id</option>
+                        </select>
+                    </div>
+                    <div class="api-field">
+                        <label for="contact-update-external-id">External ID / Id</label>
+                        <input type="text" id="contact-update-external-id" class="api-lead-count" value="CON-001" style="width:100%;max-width:420px;" />
+                    </div>
+                    <div class="api-field">
+                        <label for="contact-update-endpoint">Endpoint actualización</label>
+                        <textarea id="contact-update-endpoint" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                    </div>
+                    <div class="api-field">
+                        <label for="contact-update-json">Payload actualización</label>
+                        <textarea id="contact-update-json" class="api-json-textarea" rows="10">{
+  "Phone": "55550000",
+  "Email": "contacto.nuevo@ejemplo.com"
+}</textarea>
+                    </div>
+                    <div class="api-field api-leads-actions">
+                        <button type="button" id="contact-update-btn" class="api-send-btn">Enviar actualización</button>
+                        <div id="contact-update-response" class="api-response" aria-live="polite" hidden></div>
+                    </div>
+                </section>
+
+                <section class="rubro-panel">
+                    <h2>Campos de Contact</h2>
+                    <div class="rubro-table-wrap">
+                        <table class="rubro-table">
+                            <thead>
+                                <tr><th>Nombre del campo</th><th>API name</th><th>Tipo</th><th>Requerido</th><th>Descripción</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Account Name</td><td><code>AccountId</code></td><td>Lookup(Account)</td><td>Sí</td><td>Cuenta asociada; puede ser Id o referencia externa según la vista.</td></tr>
+                                <tr><td>Name</td><td><code>Name</code></td><td>Compound</td><td>No</td><td>Campo compuesto del nombre completo.</td></tr>
+                                <tr><td>First Name</td><td><code>FirstName</code></td><td>Text(40)</td><td>No</td><td>Nombre.</td></tr>
+                                <tr><td>Last Name</td><td><code>LastName</code></td><td>Text(80)</td><td>No</td><td>Apellido.</td></tr>
+                                <tr><td>Middle Name</td><td><code>MiddleName</code></td><td>Text(40)</td><td>No</td><td>Segundo nombre.</td></tr>
+                                <tr><td>Email</td><td><code>Email</code></td><td>Email</td><td>Sí</td><td>Correo electrónico.</td></tr>
+                                <tr><td>Phone</td><td><code>Phone</code></td><td>Phone</td><td>No</td><td>Teléfono principal.</td></tr>
+                                <tr><td>Mobile</td><td><code>MobilePhone</code></td><td>Phone</td><td>No</td><td>Teléfono móvil.</td></tr>
+                                <tr><td>Owner</td><td><code>OwnerId</code></td><td>Lookup(User)</td><td>Sí</td><td>Propietario del contacto.</td></tr>
+                                <tr><td>Creation Source</td><td><code>ContactSource</code></td><td>Picklist</td><td>No</td><td>Origen del contacto.</td></tr>
+                                <tr><td>Department</td><td><code>Department</code></td><td>Text(80)</td><td>No</td><td>Departamento.</td></tr>
+                                <tr><td>Department Group</td><td><code>DepartmentGroup</code></td><td>Picklist</td><td>No</td><td>Grupo del departamento.</td></tr>
+                                <tr><td>Description</td><td><code>Description</code></td><td>Long Text Area(32000)</td><td>No</td><td>Descripción del contacto.</td></tr>
+                                <tr><td>Do Not Call</td><td><code>DoNotCall</code></td><td>Checkbox</td><td>No</td><td>No llamar.</td></tr>
+                                <tr><td>Fax</td><td><code>Fax</code></td><td>Phone</td><td>No</td><td>Fax.</td></tr>
+                                <tr><td>Fax Opt Out</td><td><code>HasOptedOutOfFax</code></td><td>Checkbox</td><td>No</td><td>Exclusión de fax.</td></tr>
+                                <tr><td>Forma de Contacto</td><td><code>Forma_de_Contacto__c</code></td><td>Text(255)</td><td>No</td><td>Forma preferida de contacto.</td></tr>
+                                <tr><td>Lead Source</td><td><code>LeadSource</code></td><td>Picklist</td><td>No</td><td>Origen comercial.</td></tr>
+                                <tr><td>Mailing Address</td><td><code>MailingAddress</code></td><td>Address</td><td>No</td><td>Dirección postal.</td></tr>
+                                <tr><td>Reports To</td><td><code>ReportsToId</code></td><td>Lookup(Contact)</td><td>No</td><td>Contacto jefe directo.</td></tr>
+                                <tr><td>Send to ERP</td><td><code>Send_to_ERP__c</code></td><td>Checkbox</td><td>No</td><td>Marca para sincronizar ERP.</td></tr>
+                                <tr><td>Title</td><td><code>Title</code></td><td>Text(128)</td><td>No</td><td>Cargo del contacto.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -5034,6 +5256,11 @@ LIMIT 20</textarea>
                     {
                         Product2Id: 'PROD-001',
                         Inventario__c: 'INV-001',
+                        IsSegment__c: false,
+                        Nombre_de_Segmento__c: '',
+                        Numero_de_Segmento__c: 1,
+                        Rubro_Segmento__c: 'RUBRO-001',
+                        Subrubro_Segmento__c: 'SUBRUBRO-001',
                         Quantity: 1,
                         UnitPrice: 73.95,
                         ListPrice: 73.95,
@@ -5046,6 +5273,11 @@ LIMIT 20</textarea>
                     {
                         Product2Id: 'PROD-002',
                         Inventario__c: 'INV-002',
+                        IsSegment__c: false,
+                        Nombre_de_Segmento__c: '',
+                        Numero_de_Segmento__c: 2,
+                        Rubro_Segmento__c: 'RUBRO-002',
+                        Subrubro_Segmento__c: 'SUBRUBRO-002',
                         Quantity: 2,
                         UnitPrice: 125.5,
                         ListPrice: 125.5,
@@ -5079,8 +5311,10 @@ LIMIT 20</textarea>
                 }
                 var items = template.opportunityLineItems.map(function (item) {
                     var copy = JSON.parse(JSON.stringify(item));
-                    copy.Product2Id = useSalesforceId ? '01tXXXXXXXXXXXXXXX' : { External_ID__c: item.Product2 };
+                    copy.Product2Id = useSalesforceId ? '01tXXXXXXXXXXXXXXX' : { External_ID__c: item.Product2Id };
                     copy.Inventario__c = useSalesforceId ? 'a08XXXXXXXXXXXXXXX' : { External_ID__c: item.Inventario__c };
+                    copy.Rubro_Segmento__c = useSalesforceId ? 'a06XXXXXXXXXXXXXXX' : { External_ID__c: item.Rubro_Segmento__c };
+                    copy.Subrubro_Segmento__c = useSalesforceId ? 'a05XXXXXXXXXXXXXXX' : { External_ID__c: item.Subrubro_Segmento__c };
                     return copy;
                 });
                 return JSON.stringify({ Opportunity: opportunity, OpportunityLineItems: items }, null, 2);
@@ -5092,6 +5326,111 @@ LIMIT 20</textarea>
 
             lookupMode.addEventListener('change', refresh);
             refresh();
+        })();
+
+        // Account / Contact tab
+        (function () {
+            var accountEnvRadios = document.querySelectorAll('input[name="account-env"]');
+            var contactEnvRadios = document.querySelectorAll('input[name="contact-env"]');
+
+            var accountCreateEndpoint = document.getElementById('account-create-endpoint');
+            var accountCreateJson = document.getElementById('account-create-json');
+            var accountCreateBtn = document.getElementById('account-create-btn');
+            var accountCreateResponse = document.getElementById('account-create-response');
+            var accountUpdateMode = document.getElementById('account-update-mode');
+            var accountUpdateExternalId = document.getElementById('account-update-external-id');
+            var accountUpdateEndpoint = document.getElementById('account-update-endpoint');
+            var accountUpdateJson = document.getElementById('account-update-json');
+            var accountUpdateBtn = document.getElementById('account-update-btn');
+            var accountUpdateResponse = document.getElementById('account-update-response');
+
+            var contactCreateEndpoint = document.getElementById('contact-create-endpoint');
+            var contactCreateJson = document.getElementById('contact-create-json');
+            var contactCreateBtn = document.getElementById('contact-create-btn');
+            var contactCreateResponse = document.getElementById('contact-create-response');
+            var contactUpdateMode = document.getElementById('contact-update-mode');
+            var contactUpdateExternalId = document.getElementById('contact-update-external-id');
+            var contactUpdateEndpoint = document.getElementById('contact-update-endpoint');
+            var contactUpdateJson = document.getElementById('contact-update-json');
+            var contactUpdateBtn = document.getElementById('contact-update-btn');
+            var contactUpdateResponse = document.getElementById('contact-update-response');
+
+            if (!accountCreateEndpoint || !accountCreateBtn || !accountUpdateMode || !contactCreateEndpoint || !contactCreateBtn || !contactUpdateMode) return;
+
+            function getEnvironment(name) {
+                var checked = document.querySelector('input[name="' + name + '"]:checked');
+                return checked ? checked.value : 'test';
+            }
+
+            function getCrudBase(kind, environment) {
+                var useProd = environment === 'production';
+                var instance = useProd ? 'cemcol.my.salesforce.com' : 'cemcol--devventas.sandbox.my.salesforce.com';
+                return 'https://' + instance + '/services/data/v65.0/sobjects/' + kind;
+            }
+
+            function getAccountUpdateField() {
+                return accountUpdateMode.value === 'salesforceId' ? 'Id' : 'External_ID__c';
+            }
+
+            function getContactUpdateField() {
+                return contactUpdateMode.value === 'salesforceId' ? 'Id' : 'External_ID__c';
+            }
+
+            function buildUpdateEndpoint(base, field, value) {
+                return base + '/' + field + '/' + encodeURIComponent(value || '');
+            }
+
+            function refreshAccountEndpoints() {
+                var env = getEnvironment('account-env');
+                var base = getCrudBase('Account', env);
+                accountCreateEndpoint.value = base;
+                accountUpdateEndpoint.value = buildUpdateEndpoint(base, getAccountUpdateField(), accountUpdateExternalId.value.trim() || 'ACC-001');
+            }
+
+            function refreshContactEndpoints() {
+                var env = getEnvironment('contact-env');
+                var base = getCrudBase('Contact', env);
+                contactCreateEndpoint.value = base;
+                contactUpdateEndpoint.value = buildUpdateEndpoint(base, getContactUpdateField(), contactUpdateExternalId.value.trim() || 'CON-001');
+            }
+
+            function sendCrud(path, endpointEl, payloadEl, responseEl, method) {
+                return fetch(path, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        endpoint: endpointEl.value.trim(),
+                        body: JSON.parse(payloadEl.value.trim() || '{}'),
+                        environment: endpointEl.id.indexOf('account') !== -1 ? getEnvironment('account-env') : getEnvironment('contact-env'),
+                        method: method,
+                    }),
+                }).then(function (res) {
+                    return res.json().then(function (data) {
+                        return { ok: res.ok, data: data, status: res.status };
+                    });
+                }).then(function (result) {
+                    responseEl.hidden = false;
+                    responseEl.className = 'api-response ' + (result.ok ? 'api-response--success' : 'api-response--error');
+                    responseEl.textContent = result.ok ? ('Operación exitosa. ' + JSON.stringify(result.data)) : ((result.data && (result.data.error || result.data.message)) || 'Error') + ' (HTTP ' + result.status + ')';
+                }).catch(function (err) {
+                    responseEl.hidden = false;
+                    responseEl.className = 'api-response api-response--error';
+                    responseEl.textContent = 'Error de red: ' + err.message;
+                });
+            }
+
+            accountEnvRadios.forEach(function (radio) { radio.addEventListener('change', refreshAccountEndpoints); });
+            contactEnvRadios.forEach(function (radio) { radio.addEventListener('change', refreshContactEndpoints); });
+            accountUpdateMode.addEventListener('change', refreshAccountEndpoints);
+            accountUpdateExternalId.addEventListener('input', refreshAccountEndpoints);
+            contactUpdateMode.addEventListener('change', refreshContactEndpoints);
+            contactUpdateExternalId.addEventListener('input', refreshContactEndpoints);
+            accountCreateBtn.addEventListener('click', function () { sendCrud('/api/users?kind=account', accountCreateEndpoint, accountCreateJson, accountCreateResponse, 'POST'); });
+            accountUpdateBtn.addEventListener('click', function () { sendCrud('/api/users?kind=account', accountUpdateEndpoint, accountUpdateJson, accountUpdateResponse, 'PATCH'); });
+            contactCreateBtn.addEventListener('click', function () { sendCrud('/api/users?kind=contact', contactCreateEndpoint, contactCreateJson, contactCreateResponse, 'POST'); });
+            contactUpdateBtn.addEventListener('click', function () { sendCrud('/api/users?kind=contact', contactUpdateEndpoint, contactUpdateJson, contactUpdateResponse, 'PATCH'); });
+            refreshAccountEndpoints();
+            refreshContactEndpoints();
         })();
 
         // Users tab (Salesforce User list)
