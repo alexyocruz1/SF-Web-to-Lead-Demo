@@ -2059,6 +2059,7 @@ LIMIT 20</textarea>
                 <section class="rubro-panel">
                     <h2>Cartera Asignada</h2>
                     <p class="rubro-note">Cartera Asignada también se crea y actualiza en Salesforce usando External ID.</p>
+                    <p class="rubro-note"><code>Anio__c</code>, <code>Fecha_Inicio__c</code>, <code>Fecha_Fin__c</code>, <code>Estado__c</code> y <code>Numero_de_Periodos__c</code> son opcionales: si se omiten, Salesforce aplica año/rango actual, Estado = Activa y 4 periodos por defecto.</p>
                     <div class="api-field">
                         <label for="cartera-asignada-lookup-mode">Modo de referencia</label>
                         <select id="cartera-asignada-lookup-mode" class="api-lead-count" style="width: 100%; max-width: 420px;">
@@ -2077,8 +2078,10 @@ LIMIT 20</textarea>
   "External_ID__c": "CAR-001",
   "User__c": "005XXXXXXXXXXXXXXX",
   "Anio__c": 2026,
+  "Fecha_Inicio__c": "2026-01-01",
+  "Fecha_Fin__c": "2026-12-31",
   "Estado__c": "Activa",
-  "Frecuencia_de_Visita__c": "Mensual"
+  "Numero_de_Periodos__c": 4
 }</textarea>
                     </div>
                     <div class="api-field api-leads-actions">
@@ -2111,7 +2114,7 @@ LIMIT 20</textarea>
   "User__c": "005XXXXXXXXXXXXXXX",
   "Anio__c": 2026,
   "Estado__c": "Cerrada",
-  "Frecuencia_de_Visita__c": "Mensual"
+  "Numero_de_Periodos__c": 4
 }</textarea>
                     </div>
                     <div class="api-field api-leads-actions">
@@ -2123,6 +2126,7 @@ LIMIT 20</textarea>
                 <section class="rubro-panel">
                     <h2>Cartera Cliente</h2>
                     <p class="rubro-note">Cartera Cliente depende de Account y de la Cartera Asignada relacionada.</p>
+                    <p class="rubro-note"><code>PAR__c</code> es la cantidad de visitas anuales objetivo para esta cuenta (se reparte entre los periodos de la Cartera Asignada). <code>Activo__c</code> es opcional - por defecto <code>true</code> si se omite.</p>
                     <div class="api-field">
                         <label for="cartera-cliente-lookup-mode">Modo de referencia</label>
                         <select id="cartera-cliente-lookup-mode" class="api-lead-count" style="width: 100%; max-width: 420px;">
@@ -2141,7 +2145,7 @@ LIMIT 20</textarea>
   "Account__c": "001XXXXXXXXXXXXXXX",
   "Cartera_Asignada__c": "CAR-001",
   "External_ID__c": "CAC-001",
-  "Frecuencia_de_Visita__c": 1,
+  "PAR__c": 13,
   "Prioridad__c": "Alta",
   "Activo__c": true
 }</textarea>
@@ -2154,6 +2158,7 @@ LIMIT 20</textarea>
 
                 <section class="rubro-panel">
                     <h2>Actualizar Cartera Cliente</h2>
+                    <p class="rubro-note">Ejemplo: re-sincronizar un PAR distinto (13 → 16) para una cuenta que ya tenía periodos generados - Salesforce ajusta el periodo actual y los futuros, sin tocar los ya cerrados ni las visitas ya realizadas.</p>
                     <div class="api-field">
                         <label for="cartera-cliente-update-external-id">External ID</label>
                         <input type="text" id="cartera-cliente-update-external-id" class="api-lead-count" value="CAC-001" style="width: 100%; max-width: 420px;" />
@@ -2175,7 +2180,7 @@ LIMIT 20</textarea>
   "Account__c": "001XXXXXXXXXXXXXXX",
   "Cartera_Asignada__c": "CAR-001",
   "External_ID__c": "CAC-001",
-  "Frecuencia_de_Visita__c": 1,
+  "PAR__c": 16,
   "Prioridad__c": "Media",
   "Activo__c": true
 }</textarea>
@@ -2187,33 +2192,54 @@ LIMIT 20</textarea>
                 </section>
 
                 <section class="rubro-panel">
-                    <h2>JSON para sistema externo</h2>
+                    <h2>JSON para sistema externo (reporte mensual)</h2>
+                    <p class="rubro-note">Salesforce envía esto al final de cada mes, uno por rep con cartera activa. Todos los campos ya se calculan y mantienen automáticamente en Cartera_Asignada__c (rollups + fórmula), no requieren cálculo adicional al momento de enviar.</p>
                     <div class="api-field">
                         <label for="cartera-json">Payload</label>
-                        <textarea id="cartera-json" class="api-json-textarea" rows="10">{
-  "Cartera_Asignada__c": {
-    "External_ID__c": "CAR-001",
-    "User__c": "005XXXXXXXXXXXXXXX",
-    "Anio__c": 2026,
-    "Estado__c": "Activa",
-    "ActividadesCompletadas": 10
-  }
+                        <textarea id="cartera-json" class="api-json-textarea" rows="14">{
+  "reportes": [
+    {
+      "repExternalId": "REP-2026-001",
+      "anio": 2026,
+      "periodoActual": 2,
+      "totalClientes": 24,
+      "totalCumplidos": 15,
+      "totalEnRiesgo": 6,
+      "totalAtrasados": 3,
+      "porcentajeCumplimiento": 78.50
+    }
+  ]
 }</textarea>
                     </div>
                 </section>
 
                 <section class="rubro-panel">
                     <h2>Campos de Cartera Asignada</h2>
+                    <p class="rubro-note">Campos que envía el sistema externo:</p>
                     <div class="rubro-table-wrap">
                         <table class="rubro-table">
                             <thead><tr><th>Nombre</th><th>API name</th><th>Tipo</th><th>Requerido</th><th>Descripción</th></tr></thead>
                             <tbody>
-                                <tr><td>Año</td><td><code>Anio__c</code></td><td>Number(4,0)</td><td>No</td><td>Año de la cartera.</td></tr>
-                                <tr><td>Estado</td><td><code>Estado__c</code></td><td>Picklist</td><td>No</td><td>Valores: Borrador, Activa, Cerrada, Cancelada.</td></tr>
-                                <tr><td>External ID</td><td><code>External_ID__c</code></td><td>Text(255) Unique</td><td>Sí</td><td>Clave para crear y actualizar.</td></tr>
-                                <tr><td>Frecuencia de Visita</td><td><code>Frecuencia_de_Visita__c</code></td><td>Picklist</td><td>No</td><td>Semanal, Quincenal, Mensual, Trimestral, Semestral.</td></tr>
-                                <tr><td>User</td><td><code>User__c</code></td><td>Lookup(User)</td><td>Sí</td><td>Usuario responsable.</td></tr>
-                                <tr><td>Nombre</td><td><code>Name</code></td><td>Auto Number</td><td>No</td><td>Generado automáticamente por Salesforce.</td></tr>
+                                <tr><td>External ID</td><td><code>External_ID__c</code></td><td>Text(255) Unique</td><td>Sí</td><td>Clave para crear y actualizar (upsert).</td></tr>
+                                <tr><td>User</td><td><code>User__c</code></td><td>Lookup(User)</td><td>Sí</td><td>Usuario/rep responsable. Resolver primero por <code>User.External_ID__c</code> vía SOQL.</td></tr>
+                                <tr><td>Año</td><td><code>Anio__c</code></td><td>Number(4,0)</td><td>No</td><td>Opcional - si se omite, año actual.</td></tr>
+                                <tr><td>Fecha Inicio</td><td><code>Fecha_Inicio__c</code></td><td>Date</td><td>No</td><td>Opcional - si se omite, 1-ene del año actual.</td></tr>
+                                <tr><td>Fecha Fin</td><td><code>Fecha_Fin__c</code></td><td>Date</td><td>No</td><td>Opcional - si se omite, 31-dic del año actual.</td></tr>
+                                <tr><td>Estado</td><td><code>Estado__c</code></td><td>Picklist</td><td>No</td><td>Borrador, Activa, Cerrada, Cancelada. Opcional - por defecto Activa.</td></tr>
+                                <tr><td>Numero de Periodos</td><td><code>Numero_de_Periodos__c</code></td><td>Number(2,0)</td><td>No</td><td>Cuántos periodos en el año (4 = trimestres). Opcional - por defecto 4.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="rubro-note">Campos que calcula y mantiene Salesforce (no los envíes - son de solo lectura para el sistema externo):</p>
+                    <div class="rubro-table-wrap">
+                        <table class="rubro-table">
+                            <thead><tr><th>Nombre</th><th>API name</th><th>Tipo</th><th>Descripción</th></tr></thead>
+                            <tbody>
+                                <tr><td>Periodo Actual</td><td><code>Periodo_Actual__c</code></td><td>Number</td><td>Número del periodo en curso.</td></tr>
+                                <tr><td>Total Clientes</td><td><code>Total_Clientes__c</code></td><td>Number (rollup)</td><td>Cuenta de Cartera_Cliente__c activos.</td></tr>
+                                <tr><td>Total Cumplidos / En Riesgo / Atrasados</td><td><code>Total_Cumplidos__c</code> / <code>Total_En_Riesgo__c</code> / <code>Total_Atrasados__c</code></td><td>Number (rollup)</td><td>Cuenta de clientes por estado de cumplimiento del periodo actual.</td></tr>
+                                <tr><td>Porcentaje de Cumplimiento</td><td><code>Porcentaje_Cumplimiento__c</code></td><td>Number (fórmula)</td><td>Realizadas / Esperado a hoy, agregado.</td></tr>
+                                <tr><td>Nombre</td><td><code>Name</code></td><td>Auto Number</td><td>Generado automáticamente.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -2221,17 +2247,29 @@ LIMIT 20</textarea>
 
                 <section class="rubro-panel">
                     <h2>Campos de Cartera Cliente</h2>
+                    <p class="rubro-note">Campos que envía el sistema externo:</p>
                     <div class="rubro-table-wrap">
                         <table class="rubro-table">
                             <thead><tr><th>Nombre</th><th>API name</th><th>Tipo</th><th>Requerido</th><th>Descripción</th></tr></thead>
                             <tbody>
-                                <tr><td>Account</td><td><code>Account__c</code></td><td>Lookup(Account)</td><td>Sí</td><td>Cuenta asociada.</td></tr>
-                                <tr><td>Cartera Asignada</td><td><code>Cartera_Asignada__c</code></td><td>Master-Detail(Cartera Asignada)</td><td>Sí</td><td>Relación con la cartera asignada.</td></tr>
-                                <tr><td>External ID</td><td><code>External_ID__c</code></td><td>Text(255) Unique</td><td>Sí</td><td>Clave para crear y actualizar.</td></tr>
-                                <tr><td>Frecuencia de Visita</td><td><code>Frecuencia_de_Visita__c</code></td><td>Number(18,0)</td><td>No</td><td>Número de visitas esperadas.</td></tr>
+                                <tr><td>External ID</td><td><code>External_ID__c</code></td><td>Text(255) Unique</td><td>Sí</td><td>Clave para crear y actualizar (upsert).</td></tr>
+                                <tr><td>Account</td><td><code>Account__c</code></td><td>Lookup(Account)</td><td>Sí</td><td>Cuenta asociada. Resolver primero por <code>Account.External_ID__c</code> vía SOQL.</td></tr>
+                                <tr><td>Cartera Asignada</td><td><code>Cartera_Asignada__c</code></td><td>Master-Detail(Cartera Asignada)</td><td>Sí</td><td>Relación con la cartera asignada (usa <code>@{referenceId.id}</code> en el mismo Composite call).</td></tr>
+                                <tr><td>PAR</td><td><code>PAR__c</code></td><td>Number(4,0)</td><td>No</td><td>Visitas anuales objetivo para esta cuenta - se reparte entre los periodos.</td></tr>
                                 <tr><td>Prioridad</td><td><code>Prioridad__c</code></td><td>Picklist</td><td>No</td><td>Alta, Media, Baja.</td></tr>
-                                <tr><td>Activo</td><td><code>Activo__c</code></td><td>Checkbox</td><td>No</td><td>Estado activo del registro.</td></tr>
-                                <tr><td>Nombre</td><td><code>Name</code></td><td>Auto Number</td><td>No</td><td>Generado automáticamente por Salesforce.</td></tr>
+                                <tr><td>Activo</td><td><code>Activo__c</code></td><td>Checkbox</td><td>No</td><td>Opcional - por defecto <code>true</code> si se omite.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="rubro-note">Campos que calcula y mantiene Salesforce (no los envíes):</p>
+                    <div class="rubro-table-wrap">
+                        <table class="rubro-table">
+                            <thead><tr><th>Nombre</th><th>API name</th><th>Tipo</th><th>Descripción</th></tr></thead>
+                            <tbody>
+                                <tr><td>Estado de Cumplimiento Actual</td><td><code>Estado_Cumplimiento_Actual__c</code></td><td>Picklist</td><td>Cumplido, En Riesgo, Atrasado - snapshot del periodo actual.</td></tr>
+                                <tr><td>Realizadas/Esperado/Faltan Periodo Actual</td><td><code>Realizadas_Periodo_Actual__c</code> / <code>Esperado_Periodo_Actual__c</code> / <code>Faltan_Periodo_Actual__c</code></td><td>Number</td><td>Snapshot del periodo en curso.</td></tr>
+                                <tr><td>Faltan (Año)</td><td><code>Faltan_Anual__c</code></td><td>Number (fórmula)</td><td>PAR menos el total realizado en el año.</td></tr>
+                                <tr><td>Nombre</td><td><code>Name</code></td><td>Auto Number</td><td>Generado automáticamente.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -5139,10 +5177,10 @@ LIMIT 20</textarea>
             }
 
             function refreshJson() {
-                assignedJson.value = '{\n  "External_ID__c": "CAR-001",\n  "' + (assignedLookupMode.value === 'salesforceId' ? 'User__c' : 'User__r') + '": ' + assignedLookup(assignedLookupMode.value) + ',\n  "Anio__c": 2026,\n  "Estado__c": "Activa",\n  "Frecuencia_de_Visita__c": "Mensual"\n}';
-                assignedUpdateJson.value = '{\n  "External_ID__c": "CAR-001",\n  "' + (assignedUpdateMode.value === 'salesforceId' ? 'User__c' : 'User__r') + '": ' + assignedLookup(assignedUpdateMode.value) + ',\n  "Anio__c": 2026,\n  "Estado__c": "Cerrada",\n  "Frecuencia_de_Visita__c": "Mensual"\n}';
-                clientJson.value = '{\n  "' + (clientLookupMode.value === 'salesforceId' ? 'Account__c' : 'Account__r') + '": ' + clientAccountLookup(clientLookupMode.value) + ',\n  "' + (clientLookupMode.value === 'salesforceId' ? 'Cartera_Asignada__c' : 'Cartera_Asignada__r') + '": ' + clientAssignedLookup(clientLookupMode.value) + ',\n  "External_ID__c": "CAC-001",\n  "Frecuencia_de_Visita__c": 1,\n  "Prioridad__c": "Alta",\n  "Activo__c": true\n}';
-                clientUpdateJson.value = '{\n  "' + (clientUpdateMode.value === 'salesforceId' ? 'Account__c' : 'Account__r') + '": ' + clientAccountLookup(clientUpdateMode.value) + ',\n  "' + (clientUpdateMode.value === 'salesforceId' ? 'Cartera_Asignada__c' : 'Cartera_Asignada__r') + '": ' + clientAssignedLookup(clientUpdateMode.value) + ',\n  "External_ID__c": "CAC-001",\n  "Frecuencia_de_Visita__c": 1,\n  "Prioridad__c": "Media",\n  "Activo__c": true\n}';
+                assignedJson.value = '{\n  "External_ID__c": "CAR-001",\n  "' + (assignedLookupMode.value === 'salesforceId' ? 'User__c' : 'User__r') + '": ' + assignedLookup(assignedLookupMode.value) + ',\n  "Anio__c": 2026,\n  "Fecha_Inicio__c": "2026-01-01",\n  "Fecha_Fin__c": "2026-12-31",\n  "Estado__c": "Activa",\n  "Numero_de_Periodos__c": 4\n}';
+                assignedUpdateJson.value = '{\n  "' + (assignedUpdateMode.value === 'salesforceId' ? 'User__c' : 'User__r') + '": ' + assignedLookup(assignedUpdateMode.value) + ',\n  "Anio__c": 2026,\n  "Estado__c": "Cerrada",\n  "Numero_de_Periodos__c": 4\n}';
+                clientJson.value = '{\n  "' + (clientLookupMode.value === 'salesforceId' ? 'Account__c' : 'Account__r') + '": ' + clientAccountLookup(clientLookupMode.value) + ',\n  "' + (clientLookupMode.value === 'salesforceId' ? 'Cartera_Asignada__c' : 'Cartera_Asignada__r') + '": ' + clientAssignedLookup(clientLookupMode.value) + ',\n  "External_ID__c": "CAC-001",\n  "PAR__c": 13,\n  "Prioridad__c": "Alta",\n  "Activo__c": true\n}';
+                clientUpdateJson.value = '{\n  "' + (clientUpdateMode.value === 'salesforceId' ? 'Account__c' : 'Account__r') + '": ' + clientAccountLookup(clientUpdateMode.value) + ',\n  "' + (clientUpdateMode.value === 'salesforceId' ? 'Cartera_Asignada__c' : 'Cartera_Asignada__r') + '": ' + clientAssignedLookup(clientUpdateMode.value) + ',\n  "PAR__c": 16,\n  "Prioridad__c": "Media",\n  "Activo__c": true\n}';
             }
 
             function buildUpdateEndpoint(base, field, key) {
@@ -5203,6 +5241,7 @@ LIMIT 20</textarea>
                 });
             }
 
+            envRadios.forEach(function (radio) { radio.addEventListener('change', loadEndpoints); });
             assignedLookupMode.addEventListener('change', refreshJson);
             clientLookupMode.addEventListener('change', refreshJson);
             assignedUpdateMode.addEventListener('change', function () { refreshJson(); loadEndpoints(); });
