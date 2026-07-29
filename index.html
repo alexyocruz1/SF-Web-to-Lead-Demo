@@ -2502,33 +2502,41 @@ LIMIT 20</textarea>
                     <div class="rubro-table-wrap">
                         <table class="rubro-table">
                             <thead>
-                                <tr><th>Nombre del campo</th><th>API name</th><th>Tipo</th><th>Requerido</th><th>Descripción</th></tr>
+                                <tr><th>Nombre del campo</th><th>API name</th><th>Tipo</th><th>Requerido</th><th>Opciones</th><th>Descripción</th></tr>
                             </thead>
                             <tbody>
-                                <tr><td>Account Name</td><td><code>Name</code></td><td>Name</td><td>Sí</td><td>Nombre de la cuenta.</td></tr>
-                                <tr><td>External ID</td><td><code>External_ID__c</code></td><td>Text(255)</td><td>Sí</td><td>Clave externa para crear y actualizar.</td></tr>
-                                <tr><td>Account Number</td><td><code>AccountNumber</code></td><td>Text(40)</td><td>No</td><td>Número de cuenta.</td></tr>
-                                <tr><td>Account Owner</td><td><code>OwnerId</code></td><td>Lookup(User)</td><td>Sí</td><td>Propietario de la cuenta.</td></tr>
-                                <tr><td>Account Source</td><td><code>AccountSource</code></td><td>Picklist</td><td>No</td><td>Origen de la cuenta.</td></tr>
-                                <tr><td>Billing Address</td><td><code>BillingAddress</code></td><td>Address</td><td>No</td><td>Dirección de facturación.</td></tr>
-                                <tr><td>Correo electrónico</td><td><code>Correo__c</code></td><td>Email</td><td>No</td><td>Correo principal de la cuenta.</td></tr>
-                                <tr><td>Código de Cuenta</td><td><code>Codigo_Cuenta__c</code></td><td>Text(50)</td><td>No</td><td>Código interno de la cuenta.</td></tr>
-                                <tr><td>Cuenta ID</td><td><code>Cuenta_ID__c</code></td><td>Text(10)</td><td>No</td><td>Identificador corto de cuenta.</td></tr>
-                                <tr><td>Description</td><td><code>Description</code></td><td>Long Text Area(32000)</td><td>No</td><td>Descripción de la cuenta.</td></tr>
-                                <tr><td>ERP Account Code</td><td><code>ERP_Account_Code__c</code></td><td>Text(255)</td><td>No</td><td>Código ERP de cuenta.</td></tr>
-                                <tr><td>Es Cuenta Generica?</td><td><code>EsCuentaGenerica__c</code></td><td>Checkbox</td><td>No</td><td>Marca cuentas genéricas.</td></tr>
-                                <tr><td>Forma de Contacto</td><td><code>Forma_de_Contacto__c</code></td><td>Text(255)</td><td>No</td><td>Forma preferida de contacto.</td></tr>
-                                <tr><td>ID Nacional</td><td><code>ID_Nacional__c</code></td><td>Text(50)</td><td>No</td><td>Identificación nacional.</td></tr>
-                                <tr><td>Industry</td><td><code>Industry</code></td><td>Picklist</td><td>No</td><td>Industria de la cuenta.</td></tr>
-                                <tr><td>Ownership</td><td><code>Ownership</code></td><td>Picklist</td><td>No</td><td>Tipo de propiedad.</td></tr>
-                                <tr><td>Parent Account</td><td><code>ParentId</code></td><td>Hierarchy</td><td>No</td><td>Cuenta padre.</td></tr>
-                                <tr><td>País</td><td><code>Pais__c</code></td><td>Picklist</td><td>No</td><td>País de la cuenta.</td></tr>
-                                <tr><td>Phone</td><td><code>Phone</code></td><td>Phone</td><td>No</td><td>Teléfono principal.</td></tr>
-                                <tr><td>Shipping Address</td><td><code>ShippingAddress</code></td><td>Address</td><td>No</td><td>Dirección de envío.</td></tr>
-                                <tr><td>Source System ID</td><td><code>SourceSystemIdentifier</code></td><td>Text(85)</td><td>No</td><td>Id del sistema origen.</td></tr>
-                                <tr><td>Telefono 2</td><td><code>Telefono_2__c</code></td><td>Phone</td><td>No</td><td>Segundo teléfono.</td></tr>
-                                <tr><td>Type</td><td><code>Type</code></td><td>Picklist</td><td>No</td><td>Tipo de cuenta.</td></tr>
-                                <tr><td>Website</td><td><code>Website</code></td><td>URL(255)</td><td>No</td><td>Sitio web.</td></tr>
+                                <tr><td>Account Name</td><td><code>Name</code></td><td>Name</td><td>Sí</td><td>—</td><td>Nombre de la cuenta.</td></tr>
+                                <tr><td>External ID</td><td><code>External_ID__c</code></td><td>Text(255)</td><td>Sí</td><td>—</td><td>Clave externa para crear y actualizar.</td></tr>
+                                <tr><td>Account Number</td><td><code>AccountNumber</code></td><td>Text(40)</td><td>No</td><td>—</td><td>Número de cuenta.</td></tr>
+                                <tr><td>Account Owner</td><td><code>OwnerId</code></td><td>Lookup(User)</td><td>Sí</td><td>—</td><td>Propietario de la cuenta.</td></tr>
+                                <tr><td>Account Source</td><td><code>AccountSource</code></td><td>Picklist</td><td>No</td><td>Whatsapp; Facebook; Instagram; PaginaWeb; Evento; VisitaFabrica; OLGA; PP; DMTCatRental; ReferenciaEmpleado; CIPSA; CARMIX; Web to Lead; Email; PSE Ventas; PSE Marketing</td><td>Origen de la cuenta.</td></tr>
+                                <tr><td>Annual Revenue</td><td><code>AnnualRevenue</code></td><td>Currency</td><td>No</td><td>—</td><td>Ingresos anuales de la cuenta.</td></tr>
+                                <tr><td>Billing Address</td><td><code>BillingAddress</code></td><td>Address</td><td>No</td><td>—</td><td>Dirección de facturación.</td></tr>
+                                <tr><td>Correo electrónico</td><td><code>Correo__c</code></td><td>Email</td><td>No</td><td>—</td><td>Correo principal de la cuenta.</td></tr>
+                                <tr><td>Código de Cuenta</td><td><code>Codigo_Cuenta__c</code></td><td>Text(50)</td><td>No</td><td>—</td><td>Código interno de la cuenta.</td></tr>
+                                <tr><td>Cuenta ID</td><td><code>Cuenta_ID__c</code></td><td>Text(10)</td><td>No</td><td>—</td><td>Identificador corto de cuenta.</td></tr>
+                                <tr><td>Description</td><td><code>Description</code></td><td>Long Text Area(32000)</td><td>No</td><td>—</td><td>Descripción de la cuenta.</td></tr>
+                                <tr><td>Employees</td><td><code>NumberOfEmployees</code></td><td>Number</td><td>No</td><td>—</td><td>Cantidad de empleados.</td></tr>
+                                <tr><td>ERP Account Code</td><td><code>ERP_Account_Code__c</code></td><td>Text(255)</td><td>No</td><td>—</td><td>Código ERP de cuenta.</td></tr>
+                                <tr><td>Es Cuenta Generica?</td><td><code>EsCuentaGenerica__c</code></td><td>Checkbox</td><td>No</td><td>—</td><td>Marca cuentas genéricas.</td></tr>
+                                <tr><td>Account Fax</td><td><code>Fax</code></td><td>Phone</td><td>No</td><td>—</td><td>Fax de la cuenta.</td></tr>
+                                <tr><td>Forma de Contacto</td><td><code>Forma_de_Contacto__c</code></td><td>Text(255)</td><td>No</td><td>—</td><td>Forma preferida de contacto.</td></tr>
+                                <tr><td>Identidad 1</td><td><code>Identidad_1__c</code></td><td>Text(255)</td><td>No</td><td>—</td><td>Identidad tributaria 1.</td></tr>
+                                <tr><td>Identidad 2</td><td><code>Identidad_2__c</code></td><td>Text(255)</td><td>No</td><td>—</td><td>Identidad tributaria 2.</td></tr>
+                                <tr><td>ID Nacional</td><td><code>ID_Nacional__c</code></td><td>Text(50)</td><td>No</td><td>—</td><td>Identificación nacional.</td></tr>
+                                <tr><td>Industry</td><td><code>Industry</code></td><td>Picklist</td><td>No</td><td>Agriculture; Apparel; Banking; Biotechnology; Chemicals; Communications; Construction; Consulting; Education; Electronics; Energy; Engineering; Entertainment; Environmental; Finance; Food & Beverage; Government; Healthcare; Hospitality; Insurance; Machinery; Manufacturing; Media; Not For Profit; Other; Recreation; Retail; Shipping; Technology; Telecommunications; Transportation; Utilities</td><td>Industria de la cuenta.</td></tr>
+                                <tr><td>Account Currency</td><td><code>CurrencyIsoCode</code></td><td>Picklist</td><td>No</td><td>HNL; NIO; USD</td><td>Moneda de la cuenta.</td></tr>
+                                <tr><td>Ownership</td><td><code>Ownership</code></td><td>Picklist</td><td>No</td><td>Public; Private; Subsidiary; Other</td><td>Tipo de propiedad.</td></tr>
+                                <tr><td>Parent Account</td><td><code>ParentId</code></td><td>Hierarchy</td><td>No</td><td>—</td><td>Cuenta padre.</td></tr>
+                                <tr><td>País</td><td><code>Pais__c</code></td><td>Picklist</td><td>No</td><td>Honduras; El Salvador; Nicaragua</td><td>País de la cuenta.</td></tr>
+                                <tr><td>Phone</td><td><code>Phone</code></td><td>Phone</td><td>No</td><td>—</td><td>Teléfono principal.</td></tr>
+                                <tr><td>Account Rating</td><td><code>Rating</code></td><td>Picklist</td><td>No</td><td>Hot; Warm; Cold</td><td>Calificación de la cuenta.</td></tr>
+                                <tr><td>Shipping Address</td><td><code>ShippingAddress</code></td><td>Address</td><td>No</td><td>—</td><td>Dirección de envío.</td></tr>
+                                <tr><td>Account Site</td><td><code>Site</code></td><td>Text(80)</td><td>No</td><td>—</td><td>Sitio o sucursal de la cuenta.</td></tr>
+                                <tr><td>Source System ID</td><td><code>SourceSystemIdentifier</code></td><td>Text(85)</td><td>No</td><td>—</td><td>Id del sistema origen.</td></tr>
+                                <tr><td>Telefono 2</td><td><code>Telefono_2__c</code></td><td>Phone</td><td>No</td><td>—</td><td>Segundo teléfono.</td></tr>
+                                <tr><td>Type</td><td><code>Type</code></td><td>Picklist</td><td>No</td><td>Analyst; Competitor; Customer; Integrator; Investor; Partner; Press; Prospect; Reseller; Other</td><td>Tipo de cuenta.</td></tr>
+                                <tr><td>Website</td><td><code>Website</code></td><td>URL(255)</td><td>No</td><td>—</td><td>Sitio web.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -2603,31 +2611,48 @@ LIMIT 20</textarea>
                     <div class="rubro-table-wrap">
                         <table class="rubro-table">
                             <thead>
-                                <tr><th>Nombre del campo</th><th>API name</th><th>Tipo</th><th>Requerido</th><th>Descripción</th></tr>
+                                <tr><th>Nombre del campo</th><th>API name</th><th>Tipo</th><th>Requerido</th><th>Opciones</th><th>Descripción</th></tr>
                             </thead>
                             <tbody>
-                                <tr><td>Account Name</td><td><code>AccountId</code></td><td>Lookup(Account)</td><td>Sí</td><td>Cuenta asociada; puede ser Id o referencia externa según la vista.</td></tr>
-                                <tr><td>Name</td><td><code>Name</code></td><td>Compound</td><td>No</td><td>Campo compuesto del nombre completo.</td></tr>
-                                <tr><td>First Name</td><td><code>FirstName</code></td><td>Text(40)</td><td>No</td><td>Nombre.</td></tr>
-                                <tr><td>Last Name</td><td><code>LastName</code></td><td>Text(80)</td><td>No</td><td>Apellido.</td></tr>
-                                <tr><td>Middle Name</td><td><code>MiddleName</code></td><td>Text(40)</td><td>No</td><td>Segundo nombre.</td></tr>
-                                <tr><td>Email</td><td><code>Email</code></td><td>Email</td><td>Sí</td><td>Correo electrónico.</td></tr>
-                                <tr><td>Phone</td><td><code>Phone</code></td><td>Phone</td><td>No</td><td>Teléfono principal.</td></tr>
-                                <tr><td>Mobile</td><td><code>MobilePhone</code></td><td>Phone</td><td>No</td><td>Teléfono móvil.</td></tr>
-                                <tr><td>Owner</td><td><code>OwnerId</code></td><td>Lookup(User)</td><td>Sí</td><td>Propietario del contacto.</td></tr>
-                                <tr><td>Creation Source</td><td><code>ContactSource</code></td><td>Picklist</td><td>No</td><td>Origen del contacto.</td></tr>
-                                <tr><td>Department</td><td><code>Department</code></td><td>Text(80)</td><td>No</td><td>Departamento.</td></tr>
-                                <tr><td>Department Group</td><td><code>DepartmentGroup</code></td><td>Picklist</td><td>No</td><td>Grupo del departamento.</td></tr>
-                                <tr><td>Description</td><td><code>Description</code></td><td>Long Text Area(32000)</td><td>No</td><td>Descripción del contacto.</td></tr>
-                                <tr><td>Do Not Call</td><td><code>DoNotCall</code></td><td>Checkbox</td><td>No</td><td>No llamar.</td></tr>
-                                <tr><td>Fax</td><td><code>Fax</code></td><td>Phone</td><td>No</td><td>Fax.</td></tr>
-                                <tr><td>Fax Opt Out</td><td><code>HasOptedOutOfFax</code></td><td>Checkbox</td><td>No</td><td>Exclusión de fax.</td></tr>
-                                <tr><td>Forma de Contacto</td><td><code>Forma_de_Contacto__c</code></td><td>Text(255)</td><td>No</td><td>Forma preferida de contacto.</td></tr>
-                                <tr><td>Lead Source</td><td><code>LeadSource</code></td><td>Picklist</td><td>No</td><td>Origen comercial.</td></tr>
-                                <tr><td>Mailing Address</td><td><code>MailingAddress</code></td><td>Address</td><td>No</td><td>Dirección postal.</td></tr>
-                                <tr><td>Reports To</td><td><code>ReportsToId</code></td><td>Lookup(Contact)</td><td>No</td><td>Contacto jefe directo.</td></tr>
-                                <tr><td>Send to ERP</td><td><code>Send_to_ERP__c</code></td><td>Checkbox</td><td>No</td><td>Marca para sincronizar ERP.</td></tr>
-                                <tr><td>Title</td><td><code>Title</code></td><td>Text(128)</td><td>No</td><td>Cargo del contacto.</td></tr>
+                                <tr><td>Account Name</td><td><code>AccountId</code></td><td>Lookup(Account)</td><td>Sí</td><td>—</td><td>Cuenta asociada; puede ser Id o referencia externa según la vista.</td></tr>
+                                <tr><td>Name</td><td><code>Name</code></td><td>Compound</td><td>No</td><td>—</td><td>Campo compuesto del nombre completo.</td></tr>
+                                <tr><td>First Name</td><td><code>FirstName</code></td><td>Text(40)</td><td>No</td><td>—</td><td>Nombre.</td></tr>
+                                <tr><td>Last Name</td><td><code>LastName</code></td><td>Text(80)</td><td>No</td><td>—</td><td>Apellido.</td></tr>
+                                <tr><td>Middle Name</td><td><code>MiddleName</code></td><td>Text(40)</td><td>No</td><td>—</td><td>Segundo nombre.</td></tr>
+                                <tr><td>Salutation</td><td><code>Salutation</code></td><td>Picklist</td><td>No</td><td>Sr.; Srta.; Sra.; Dr.; Prof.</td><td>Tratamiento del contacto.</td></tr>
+                                <tr><td>Assistant's Name</td><td><code>AssistantName</code></td><td>Text(40)</td><td>No</td><td>—</td><td>Nombre del asistente.</td></tr>
+                                <tr><td>Asst. Phone</td><td><code>AssistantPhone</code></td><td>Phone</td><td>No</td><td>—</td><td>Teléfono del asistente.</td></tr>
+                                <tr><td>Birthdate</td><td><code>Birthdate</code></td><td>Date</td><td>No</td><td>—</td><td>Fecha de nacimiento.</td></tr>
+                                <tr><td>Buyer Attributes</td><td><code>BuyerAttributes</code></td><td>Multipicklist</td><td>No</td><td>Detractor; DecisionMaker; Buyer; ExecutiveSponsor; Champion; BusinessUser; Evaluator; TechnicalExpert</td><td>Atributos del comprador en el proceso de compra.</td></tr>
+                                <tr><td>Contact Currency</td><td><code>CurrencyIsoCode</code></td><td>Picklist</td><td>No</td><td>HNL; NIO; USD</td><td>Moneda del contacto.</td></tr>
+                                <tr><td>Email</td><td><code>Email</code></td><td>Email</td><td>Sí</td><td>—</td><td>Correo electrónico.</td></tr>
+                                <tr><td>Email Opt Out</td><td><code>HasOptedOutOfEmail</code></td><td>Checkbox</td><td>No</td><td>—</td><td>Exclusión de correo electrónico.</td></tr>
+                                <tr><td>ERP Account Code</td><td><code>ERP_Account_Code__c</code></td><td>Text(255)</td><td>No</td><td>—</td><td>Código ERP asociado al contacto.</td></tr>
+                                <tr><td>ERP Sync Date</td><td><code>ERP_Sync_Date__c</code></td><td>DateTime</td><td>No</td><td>—</td><td>Fecha de última sincronización con el ERP.</td></tr>
+                                <tr><td>ERP Sync Error</td><td><code>ERP_Sync_Error__c</code></td><td>Text(255)</td><td>No</td><td>—</td><td>Error de la última sincronización con el ERP.</td></tr>
+                                <tr><td>ERP Sync Status</td><td><code>ERP_Sync_Status__c</code></td><td>Picklist</td><td>No</td><td>Pendiente; Sincronizado; Error</td><td>Estado de sincronización con el ERP.</td></tr>
+                                <tr><td>Phone</td><td><code>Phone</code></td><td>Phone</td><td>No</td><td>—</td><td>Teléfono principal.</td></tr>
+                                <tr><td>Mobile</td><td><code>MobilePhone</code></td><td>Phone</td><td>No</td><td>—</td><td>Teléfono móvil.</td></tr>
+                                <tr><td>Home Phone</td><td><code>HomePhone</code></td><td>Phone</td><td>No</td><td>—</td><td>Teléfono de casa.</td></tr>
+                                <tr><td>Other Phone</td><td><code>OtherPhone</code></td><td>Phone</td><td>No</td><td>—</td><td>Teléfono alternativo.</td></tr>
+                                <tr><td>Owner</td><td><code>OwnerId</code></td><td>Lookup(User)</td><td>Sí</td><td>—</td><td>Propietario del contacto.</td></tr>
+                                <tr><td>Creation Source</td><td><code>ContactSource</code></td><td>Picklist</td><td>No</td><td>Auto Create; Email Message; Meeting Digest; Seller Home</td><td>Origen del contacto.</td></tr>
+                                <tr><td>Department</td><td><code>Department</code></td><td>Text(80)</td><td>No</td><td>—</td><td>Departamento.</td></tr>
+                                <tr><td>Department Group</td><td><code>DepartmentGroup</code></td><td>Picklist</td><td>No</td><td>chiefExecutive; sales; finance; tech; support; legal; humanResources; customerSuccess; marketing; other</td><td>Grupo del departamento.</td></tr>
+                                <tr><td>Description</td><td><code>Description</code></td><td>Long Text Area(32000)</td><td>No</td><td>—</td><td>Descripción del contacto.</td></tr>
+                                <tr><td>Do Not Call</td><td><code>DoNotCall</code></td><td>Checkbox</td><td>No</td><td>—</td><td>No llamar.</td></tr>
+                                <tr><td>Fax</td><td><code>Fax</code></td><td>Phone</td><td>No</td><td>—</td><td>Fax.</td></tr>
+                                <tr><td>Fax Opt Out</td><td><code>HasOptedOutOfFax</code></td><td>Checkbox</td><td>No</td><td>—</td><td>Exclusión de fax.</td></tr>
+                                <tr><td>Forma de Contacto</td><td><code>Forma_de_Contacto__c</code></td><td>Text(255)</td><td>No</td><td>—</td><td>Forma preferida de contacto.</td></tr>
+                                <tr><td>Gender Identity</td><td><code>GenderIdentity</code></td><td>Picklist</td><td>No</td><td>Male; Female; Nonbinary; Not Listed</td><td>Identidad de género.</td></tr>
+                                <tr><td>Lead Source</td><td><code>LeadSource</code></td><td>Picklist</td><td>No</td><td>Whatsapp; Facebook; Instagram; PaginaWeb; Evento; VisitaFabrica; OLGA; PP; DMTCatRental; ReferenciaEmpleado; CIPSA; CARMIX; Web to Lead; Email; PSE Ventas; PSE Marketing</td><td>Origen comercial.</td></tr>
+                                <tr><td>Mailing Address</td><td><code>MailingAddress</code></td><td>Address</td><td>No</td><td>—</td><td>Dirección postal.</td></tr>
+                                <tr><td>Other Address</td><td><code>OtherAddress</code></td><td>Address</td><td>No</td><td>—</td><td>Dirección alternativa.</td></tr>
+                                <tr><td>Pronouns</td><td><code>Pronouns</code></td><td>Picklist</td><td>No</td><td>He/Him; She/Her; They/Them; He/They; She/They; Not Listed</td><td>Pronombres del contacto.</td></tr>
+                                <tr><td>Reports To</td><td><code>ReportsToId</code></td><td>Lookup(Contact)</td><td>No</td><td>—</td><td>Contacto jefe directo.</td></tr>
+                                <tr><td>Send to ERP</td><td><code>Send_to_ERP__c</code></td><td>Checkbox</td><td>No</td><td>—</td><td>Marca para sincronizar ERP.</td></tr>
+                                <tr><td>Seniority Level</td><td><code>TitleType</code></td><td>Picklist</td><td>No</td><td>ceo; executive; vp; directorOrManager; individualContributor</td><td>Nivel de seniority del cargo.</td></tr>
+                                <tr><td>Title</td><td><code>Title</code></td><td>Text(128)</td><td>No</td><td>—</td><td>Cargo del contacto.</td></tr>
                             </tbody>
                         </table>
                     </div>
