@@ -21,6 +21,7 @@
             <button class="tab" onclick="switchTab('dynamic')">LEADS NEW HOLLAND</button>
             <button class="tab" onclick="switchTab('api-leads')">Leads OLGA</button>
             <button class="tab" onclick="switchTab('api-leads-get')">Consultar Leads</button>
+            <button class="tab" onclick="switchTab('wtl-leads')">Web to Lead</button>
             <button class="tab" onclick="switchTab('users')">User</button>
             <button class="tab" onclick="switchTab('rubro')">Rubro</button>
             <button class="tab" onclick="switchTab('subrubro')">Subrubro</button>
@@ -612,6 +613,57 @@ LIMIT 20</textarea>
                                 <tr>
                                     <td colspan="4" style="padding: 10px 12px; color: #666;">Sin resultados.</td>
                                 </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="wtl-leads" class="tab-content">
+            <div class="api-leads-container">
+                <div class="api-field">
+                    <label class="api-env-label">Entorno</label>
+                    <div class="api-env-radios">
+                        <label class="api-env-radio">
+                            <input type="radio" name="wtl-env" value="test" id="wtl-env-test" checked />
+                            <span>TEST</span>
+                        </label>
+                        <label class="api-env-radio">
+                            <input type="radio" name="wtl-env" value="production" id="wtl-env-production" />
+                            <span>PRODUCTION</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="api-field">
+                    <label>Filtro (fijo)</label>
+                    <textarea readonly class="api-endpoint-readonly" rows="1">LeadSource = 'Web to Lead' AND IsDeleted = false</textarea>
+                </div>
+                <div class="api-field">
+                    <label for="wtl-limit">Límite de resultados</label>
+                    <input type="number" id="wtl-limit" class="api-lead-count" min="1" max="200" value="50" style="width:100%;max-width:220px;" />
+                </div>
+                <div class="api-field">
+                    <label for="wtl-soql-preview">SOQL generado</label>
+                    <textarea id="wtl-soql-preview" readonly class="api-endpoint-readonly" rows="3"></textarea>
+                </div>
+                <div class="api-field api-leads-actions">
+                    <button type="button" id="wtl-query-btn" class="api-send-btn">Consultar</button>
+                    <div id="wtl-message" class="api-response" aria-live="polite" hidden></div>
+                </div>
+                <div class="api-field">
+                    <label for="wtl-response">Respuesta JSON</label>
+                    <textarea id="wtl-response" readonly class="api-json-textarea" rows="14" placeholder="La respuesta aparecerá aquí..."></textarea>
+                </div>
+                <div class="api-field">
+                    <label>Leads (todos los campos devueltos)</label>
+                    <div style="overflow-x: auto;">
+                        <table id="wtl-table" style="width: 100%; border-collapse: collapse;">
+                            <thead id="wtl-thead">
+                                <tr><th style="text-align: left; padding: 10px 12px; border-bottom: 1px solid #eee;">Id</th></tr>
+                            </thead>
+                            <tbody id="wtl-tbody">
+                                <tr><td style="padding: 10px 12px; color: #666;">Sin resultados.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -3748,6 +3800,101 @@ LIMIT 20</textarea>
 
             updateModeSections();
             loadSuggestedEndpoint();
+        })();
+
+        // Web to Lead tab (read-only: Leads with LeadSource = 'Web to Lead', via /api/leads-read)
+        (function () {
+            var envRadios = document.querySelectorAll('input[name="wtl-env"]');
+            var limitInput = document.getElementById('wtl-limit');
+            var soqlPreview = document.getElementById('wtl-soql-preview');
+            var queryBtn = document.getElementById('wtl-query-btn');
+            var messageEl = document.getElementById('wtl-message');
+            var responseEl = document.getElementById('wtl-response');
+            var thead = document.getElementById('wtl-thead');
+            var tbody = document.getElementById('wtl-tbody');
+
+            if (!envRadios.length || !limitInput || !soqlPreview || !queryBtn || !messageEl || !responseEl || !thead || !tbody) return;
+
+            function getEnvironment() {
+                var checked = document.querySelector('input[name="wtl-env"]:checked');
+                return checked ? checked.value : 'test';
+            }
+
+            function getLimit() {
+                var n = parseInt(limitInput.value, 10);
+                if (!n || n < 1) n = 1;
+                if (n > 200) n = 200;
+                return n;
+            }
+
+            function buildSoql() {
+                return "SELECT FIELDS(ALL) FROM Lead WHERE LeadSource = 'Web to Lead' AND IsDeleted = false ORDER BY CreatedDate DESC LIMIT " + getLimit();
+            }
+
+            function refreshSoqlPreview() {
+                soqlPreview.value = buildSoql();
+            }
+
+            function showMessage(msg, type) {
+                messageEl.textContent = msg;
+                messageEl.className = 'api-response api-response--' + (type || 'info');
+                messageEl.hidden = !msg;
+            }
+
+            function renderTable(records) {
+                if (!records || !records.length) {
+                    thead.innerHTML = '<tr><th style="text-align: left; padding: 10px 12px; border-bottom: 1px solid #eee;">Id</th></tr>';
+                    tbody.innerHTML = '<tr><td style="padding: 10px 12px; color: #666;">Sin resultados.</td></tr>';
+                    return;
+                }
+
+                var columns = Object.keys(records[0]).filter(function (k) { return k !== 'attributes'; });
+
+                thead.innerHTML = '<tr>' + columns.map(function (c) {
+                    return '<th style="text-align: left; padding: 10px 12px; border-bottom: 1px solid #eee; white-space: nowrap;">' + c + '</th>';
+                }).join('') + '</tr>';
+
+                tbody.innerHTML = records.map(function (r) {
+                    return '<tr>' + columns.map(function (c) {
+                        var v = r[c];
+                        var text = v === null || v === undefined ? '' : (typeof v === 'object' ? JSON.stringify(v) : String(v));
+                        return '<td style="padding: 10px 12px; border-bottom: 1px solid #f2f2f2; white-space: nowrap;">' + text + '</td>';
+                    }).join('') + '</tr>';
+                }).join('');
+            }
+
+            queryBtn.addEventListener('click', async function () {
+                showMessage('');
+                queryBtn.disabled = true;
+                queryBtn.textContent = 'Consultando…';
+                responseEl.value = '';
+                try {
+                    var res = await fetch('/api/leads-read', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ environment: getEnvironment(), mode: 'query', soql: buildSoql() }),
+                    });
+                    var json = await res.json().catch(function () { return { error: res.statusText }; });
+                    responseEl.value = JSON.stringify(json, null, 2);
+                    if (!res.ok) {
+                        showMessage((json.error || JSON.stringify(json)) + ' (HTTP ' + res.status + ')', 'error');
+                        renderTable(null);
+                        return;
+                    }
+                    showMessage('Consulta exitosa.', 'success');
+                    renderTable(json.data && Array.isArray(json.data.records) ? json.data.records : []);
+                } catch (err) {
+                    showMessage('Error de red: ' + err.message, 'error');
+                    renderTable(null);
+                }
+                queryBtn.disabled = false;
+                queryBtn.textContent = 'Consultar';
+            });
+
+            envRadios.forEach(function (radio) { radio.addEventListener('change', refreshSoqlPreview); });
+            limitInput.addEventListener('input', refreshSoqlPreview);
+
+            refreshSoqlPreview();
         })();
 
         // Rubro tab (create/update via /api/rubros)
